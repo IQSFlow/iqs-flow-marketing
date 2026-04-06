@@ -76,88 +76,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ─── What We Are / Are Not ─── */}
-      <section style={{ padding: "80px 32px", borderBottom: `1px solid ${ink[100]}` }}>
-        <div style={{ maxWidth: 1120, margin: "0 auto" }}>
-          <div style={{ maxWidth: 600, marginBottom: 48 }}>
-            <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.8px", marginBottom: 16 }}>
-              What IQS Flow is not
-            </h2>
-            <p style={{ fontSize: 17, color: ink[500], lineHeight: 1.7, margin: 0 }}>
-              We are not another tool for cleaning companies to manage their
-              crews. Your vendors already have those tools. IQS Flow is the
-              quality oversight platform that sits on top, giving you,
-              the client, independent visibility into what is actually happening
-              across your sites.
-            </p>
-          </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }} className="about-not-grid">
-            <div style={{ background: "#ffffff", borderRadius: 10, padding: "28px 24px", border: `1px solid ${ink[100]}`, borderLeft: "3px solid #ef4444" }}>
-              <div style={{ fontWeight: 700, fontSize: 13, color: "#ef4444", marginBottom: 16, letterSpacing: "0.04em", textTransform: "uppercase" }}>
-                We are not
-              </div>
-              <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 10 }}>
-                {[
-                  "A janitorial scheduling tool",
-                  "A cleaning company CRM",
-                  "A vendor-side inspection app",
-                  "A supply chain ordering system",
-                ].map((item) => (
-                  <li key={item} style={{ fontSize: 14, color: ink[500], display: "flex", gap: 8, alignItems: "center" }}>
-                    <span style={{ color: "#ef4444", fontWeight: 700, fontSize: 12 }}>&#10007;</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div style={{ background: "#ffffff", borderRadius: 10, padding: "28px 24px", border: `1px solid ${ink[100]}`, borderLeft: "3px solid #059669" }}>
-              <div style={{ fontWeight: 700, fontSize: 13, color: "#059669", marginBottom: 16, letterSpacing: "0.04em", textTransform: "uppercase" }}>
-                We are
-              </div>
-              <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 10 }}>
-                {[
-                  "A client-side quality oversight platform",
-                  "A multi-vendor monitoring dashboard",
-                  "An independent compliance scoring engine",
-                  "A cross-site quality intelligence tool",
-                ].map((item) => (
-                  <li key={item} style={{ fontSize: 14, color: ink[500], display: "flex", gap: 8, alignItems: "center" }}>
-                    <span style={{ color: "#059669", fontWeight: 700, fontSize: 12 }}>&#10003;</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── Values ─── */}
-      <section style={{ padding: "80px 32px", background: ink[25], borderBottom: `1px solid ${ink[100]}` }}>
-        <div style={{ maxWidth: 1120, margin: "0 auto" }}>
-          <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.8px", marginBottom: 48 }}>
-            What Drives Us
-          </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }} className="about-values-grid">
-            {([
-              { icon: Eye, title: "Client Transparency", desc: "The organization paying for cleaning services should have full visibility into the quality of work, not just what the vendor chooses to share." },
-              { icon: ShieldCheck, title: "Independent Verification", desc: "Quality data should be collected independently, not self-reported. Our inspection and tracking tools give you verifiable, objective metrics." },
-              { icon: BarChart3, title: "Data-Driven Decisions", desc: "Contract renewals, vendor selection, and quality improvements should be based on data, not anecdotes. IQS Flow gives you the numbers." },
-              { icon: Scale, title: "Industry Standards", desc: "Built-in compliance frameworks (APPA, ISSA, Skytrax, Joint Commission) so you can measure every vendor against the same standards." },
-              { icon: Globe, title: "Multi-Site Scale", desc: "Whether you manage 5 locations or 500, IQS Flow gives you portfolio-wide visibility with drill-down to every individual site." },
-              { icon: Lock, title: "Security First", desc: "Encrypted sessions, role-based access control, and audit logging for every action. Your quality data is secure and yours alone." },
-            ] as const).map(({ icon: Icon, title, desc }) => (
-              <div key={title} style={{ padding: "24px 0", borderTop: `1px solid ${ink[100]}` }}>
-                <Icon size={20} style={{ color: accent, marginBottom: 16 }} />
-                <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>{title}</h3>
-                <p style={{ fontSize: 14, color: ink[500], lineHeight: 1.65, margin: 0 }}>{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ─── Leadership ─── */}
       <section style={{ padding: "80px 32px", borderBottom: `1px solid ${ink[100]}` }}>
         <div style={{ maxWidth: 1120, margin: "0 auto" }}>
@@ -215,6 +133,31 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* ─── Values ─── */}
+      <section style={{ padding: "80px 32px", background: ink[25], borderBottom: `1px solid ${ink[100]}` }}>
+        <div style={{ maxWidth: 1120, margin: "0 auto" }}>
+          <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.8px", marginBottom: 48 }}>
+            What Drives Us
+          </h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }} className="about-values-grid">
+            {([
+              { icon: Eye, title: "Client Transparency", desc: "The organization paying for cleaning services should have full visibility into the quality of work, not just what the vendor chooses to share." },
+              { icon: ShieldCheck, title: "Independent Verification", desc: "Quality data should be collected independently, not self-reported. Our inspection and tracking tools give you verifiable, objective metrics." },
+              { icon: BarChart3, title: "Data-Driven Decisions", desc: "Contract renewals, vendor selection, and quality improvements should be based on data, not anecdotes. IQS Flow gives you the numbers." },
+              { icon: Scale, title: "Industry Standards", desc: "Built-in compliance frameworks (APPA, ISSA, Skytrax, Joint Commission) so you can measure every vendor against the same standards." },
+              { icon: Globe, title: "Multi-Site Scale", desc: "Whether you manage 5 locations or 500, IQS Flow gives you portfolio-wide visibility with drill-down to every individual site." },
+              { icon: Lock, title: "Security First", desc: "Encrypted sessions, role-based access control, and audit logging for every action. Your quality data is secure and yours alone." },
+            ] as const).map(({ icon: Icon, title, desc }) => (
+              <div key={title} style={{ padding: "24px 0", borderTop: `1px solid ${ink[100]}` }}>
+                <Icon size={20} style={{ color: accent, marginBottom: 16 }} />
+                <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>{title}</h3>
+                <p style={{ fontSize: 14, color: ink[500], lineHeight: 1.65, margin: 0 }}>{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ─── CTA ─── */}
       <section style={{ padding: "80px 32px", background: ink[900] }}>
         <div style={{ maxWidth: 640, margin: "0 auto", textAlign: "center" }}>
@@ -241,7 +184,6 @@ export default function AboutPage() {
       <style>{`
         @media (max-width: 767px) {
           .about-mission-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
-          .about-not-grid { grid-template-columns: 1fr !important; }
           .about-values-grid { grid-template-columns: 1fr !important; }
           .about-team-grid { grid-template-columns: 1fr !important; }
           .about-team-card { flex-direction: column !important; }
