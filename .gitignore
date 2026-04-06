@@ -11,3 +11,6 @@ next-env.d.ts
 .claude/scheduled_tasks.lock
 .claude/reports/
 .superpowers/
+
+.claude/skills/
+.agents/
