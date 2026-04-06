@@ -58,12 +58,12 @@ const INDUSTRIES = [
     ],
     testimonial: {
       quote:
-        "We reduced vendor billing disputes by 60% in the first quarter. Every task is now timestamped, geolocated, and photo-verified. We don't argue about what got done - we just show the data.",
-      name: "Chief Operating Officer",
-      org: "Major International Airport",
+        "Clients deserve the same quality data their vendors keep internally. IQS Flow makes every task timestamped, geolocated, and photo-verified so there is nothing to argue about.",
+      name: "Venice Collier",
+      org: "CEO & Founder, IQS",
     },
-    stat: "45% Increase in On-Time Cleaning",
-    statSub: "Average across aviation clients",
+    stat: "Gate-level task tracking",
+    statSub: "Platform capability",
     altLayout: false,
   },
   {
@@ -99,12 +99,12 @@ const INDUSTRIES = [
     ],
     testimonial: {
       quote:
-        "We manage four vendors across three terminals. IQS Flow gave us the first unified view of their performance we've ever had. We cut cleaning-related passenger complaints by 38%.",
-      name: "Director of Operations",
-      org: "International Airport Authority",
+        "IQS Flow was built because we saw operations teams managing dozens of vendors with no unified view. The platform gives you one dashboard for every contractor, every terminal, every shift.",
+      name: "Venice Collier",
+      org: "CEO & Founder, IQS",
     },
-    stat: "38% Reduction in Cleaning Complaints",
-    statSub: "Across airport operations clients",
+    stat: "Cross-vendor dashboards",
+    statSub: "Platform capability",
     altLayout: true,
   },
   {
@@ -140,12 +140,12 @@ const INDUSTRIES = [
     ],
     testimonial: {
       quote:
-        "Our last JCAHO survey took half the prep time it used to. I pulled the full environmental services compliance report in three clicks. The surveyors were impressed - and so were we.",
-      name: "VP of Operations & Environmental Services",
-      org: "Regional Health System",
+        "We built IQS Flow with healthcare compliance in mind from day one. The platform generates audit-ready documentation automatically so your team spends time on care, not paperwork.",
+      name: "Venice Collier",
+      org: "CEO & Founder, IQS",
     },
-    stat: "98% Audit Readiness Rate",
-    statSub: "Across healthcare operations clients",
+    stat: "JCAHO-ready compliance",
+    statSub: "Platform capability",
     altLayout: false,
   },
   {
@@ -181,12 +181,12 @@ const INDUSTRIES = [
     ],
     testimonial: {
       quote:
-        "For the first time, I can see every vendor, every building, and every quality score on one screen. We renegotiated two vendor contracts based solely on the data IQS Flow surfaced.",
-      name: "Head of Operations, Americas",
-      org: "Fortune 500 Real Estate Portfolio",
+        "When you manage hundreds of branches with multiple vendors, you need one source of truth. IQS Flow scores every location on a unified rubric so contract decisions are backed by data.",
+      name: "Venice Collier",
+      org: "CEO & Founder, IQS",
     },
-    stat: "30% Reduction in Vendor Costs",
-    statSub: "After contract renegotiation with data",
+    stat: "Vendor scorecard analytics",
+    statSub: "Platform capability",
     altLayout: true,
   },
 ];

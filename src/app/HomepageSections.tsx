@@ -21,7 +21,11 @@ import {
   XCircle,
   CheckCircle2,
   BadgeCheck,
+  Users,
+  Shield,
+  Radio,
 } from "lucide-react";
+import { marketing } from "@/lib/design-tokens";
 
 /* ─── Golden ratio & proportional constants ─── */
 const PHI = 1.618;
@@ -29,24 +33,10 @@ const SECTION_Y = 120; // base vertical rhythm
 const CONTENT_MAX = 1120;
 const NARROW_MAX = 720;
 
-/* ─── Color palette: ink + single accent ─── */
-const ink = {
-  900: "#0a0f1a",
-  800: "#0f172a",
-  700: "#1e293b",
-  600: "#334155",
-  500: "#475569",
-  400: "#64748b",
-  300: "#94a3b8",
-  200: "#cbd5e1",
-  100: "#e2e8f0",
-  50: "#f1f5f9",
-  25: "#f8fafc",
-};
-
-const accent = "#2563eb";
-const accentDark = "#1e40af";
-/* palette: accentLight = "#dbeafe" */
+/* ─── Color palette from design tokens ─── */
+const ink = marketing.ink;
+const accent = marketing.accent;
+const accentDark = marketing.accentDark;
 
 /* ─── Animated counter hook ─── */
 function useCountUp(target: number, duration = 2000, start = false) {
@@ -253,66 +243,52 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* Right: proof metrics panel */}
+        {/* Right: capability badges */}
         <div
           style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
             ...revealStyle(inView, 0.15),
           }}
         >
-          <div
-            style={{
-              background: ink[800],
-              borderRadius: 12,
-              padding: "40px 36px",
-              position: "relative",
-              overflow: "hidden",
-            }}
-          >
-            {/* Subtle grid texture */}
+          {([
+            { icon: Users, title: "Multi-vendor visibility", desc: "Compare every contractor on a unified rubric across all your sites." },
+            { icon: Shield, title: "Real-time inspections", desc: "GPS-verified, photo-documented audits with live compliance scoring." },
+            { icon: Radio, title: "Compliance automation", desc: "6 built-in frameworks score every site against industry standards." },
+          ] as const).map(({ icon: Icon, title, desc }, i) => (
             <div
+              key={title}
               style={{
-                position: "absolute",
-                inset: 0,
-                backgroundImage:
-                  "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
-                backgroundSize: "48px 48px",
-                pointerEvents: "none",
+                background: ink[25],
+                border: `1px solid ${ink[100]}`,
+                borderRadius: 10,
+                padding: "24px 20px",
+                display: "flex",
+                gap: 16,
+                alignItems: "flex-start",
               }}
-            />
-            <div style={{ position: "relative" }}>
-              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: ink[400], marginBottom: 32 }}>
-                Platform metrics
+            >
+              <div
+                style={{
+                  width: 40,
+                  height: 40,
+                  background: i === 0 ? accent : ink[800],
+                  borderRadius: 8,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                }}
+              >
+                <Icon size={20} style={{ color: "#ffffff" }} />
               </div>
-              {[
-                { value: "500+", label: "Facilities managed" },
-                { value: "98%", label: "Compliance pass rate" },
-                { value: "30%", label: "Average cost reduction" },
-              ].map(({ value, label }, i) => (
-                <div
-                  key={label}
-                  style={{
-                    borderTop: i > 0 ? `1px solid rgba(255,255,255,0.06)` : "none",
-                    paddingTop: i > 0 ? 24 : 0,
-                    marginTop: i > 0 ? 24 : 0,
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: 40,
-                      fontWeight: 800,
-                      letterSpacing: "-1.5px",
-                      lineHeight: 1,
-                      color: "#ffffff",
-                      marginBottom: 4,
-                    }}
-                  >
-                    {value}
-                  </div>
-                  <div style={{ fontSize: 14, color: ink[400], fontWeight: 500 }}>{label}</div>
-                </div>
-              ))}
+              <div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: ink[900], marginBottom: 4 }}>{title}</div>
+                <div style={{ fontSize: 13, color: ink[400], lineHeight: 1.55 }}>{desc}</div>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
 
@@ -335,7 +311,7 @@ export function SocialProofBar() {
   const { ref, inView } = useInView(0.3);
 
   const items = [
-    { stat: "Multi-Site", label: "Visibility across every location" },
+    { stat: "4 Portals", label: "Admin, manager, worker, client" },
     { stat: "6 Frameworks", label: "Compliance standards built in" },
     { stat: "Real-Time", label: "GPS tracking & live dashboards" },
     { stat: "Vendor-Agnostic", label: "Works with any service provider" },
@@ -914,8 +890,8 @@ const industries = [
     id: "airlines",
     label: "Airlines",
     icon: Plane,
-    stat: "400+",
-    statLabel: "Gates tracked daily",
+    stat: "Gate-level",
+    statLabel: "Tracking & verification",
     title: "Every gate, every turn, every airport.",
     painPoints: [
       "Vendor-reported cleaning completion with no independent verification",
@@ -928,15 +904,15 @@ const industries = [
       "Gate-level compliance scoring",
       "Multi-vendor performance comparison",
     ],
-    quote: "We went from monthly PDF reports to live dashboards. Our team can now hold vendors accountable the same day an issue occurs.",
-    role: "VP Operations, Major US Airline",
+    quote: "We built IQS Flow so operations teams can hold vendors accountable with data, not promises. Every task is tracked, every inspection is verified.",
+    role: "Venice Collier, CEO & Founder",
   },
   {
     id: "airports",
     label: "Airports",
     icon: Plane,
-    stat: "99%",
-    statLabel: "Inspection coverage",
+    stat: "Zone-by-zone",
+    statLabel: "Inspections & scoring",
     title: "Terminal-wide visibility, terminal by terminal.",
     painPoints: [
       "Terminal cleaning contractors report their own pass/fail metrics",
@@ -949,15 +925,15 @@ const industries = [
       "Digital inspections with photo capture",
       "Automated compliance scoring",
     ],
-    quote: "IQS Flow gave our operations team a live view of every terminal without adding headcount. We finally have an independent record to stand behind.",
-    role: "Director of Operations, Major US Airport",
+    quote: "Airport operations teams need one view across every terminal and vendor. IQS Flow delivers that with GPS-verified inspections and automated compliance scoring.",
+    role: "Venice Collier, CEO & Founder",
   },
   {
     id: "corporate",
     label: "Banks & Corporate",
     icon: Building2,
-    stat: "30%",
-    statLabel: "Average cost reduction",
+    stat: "Scorecard",
+    statLabel: "Vendor analytics",
     title: "Hundreds of branches, one quality standard.",
     painPoints: [
       "Hundreds of locations with different contractors, standards, and reporting",
@@ -970,15 +946,15 @@ const industries = [
       "Multi-vendor performance dashboards",
       "Branch-level compliance reporting",
     ],
-    quote: "We renegotiated three vendor contracts using IQS Flow data. The ROI paid for the platform in the first quarter.",
-    role: "COO, Fortune 500 Real Estate Portfolio",
+    quote: "After 15 years managing vendor operations, I built IQS Flow because clients deserve the same quality data their vendors keep internally.",
+    role: "Venice Collier, CEO & Founder",
   },
   {
     id: "healthcare",
     label: "Healthcare",
     icon: Hospital,
-    stat: "99.2%",
-    statLabel: "Audit pass rate",
+    stat: "JCAHO-ready",
+    statLabel: "Compliance tracking",
     title: "Compliance-grade cleanliness, verified.",
     painPoints: [
       "Regulatory inspections require complete, timestamped documentation",
@@ -991,8 +967,8 @@ const industries = [
       "Complete audit trails",
       "Independent verification of cleaning quality",
     ],
-    quote: "IQS Flow gave us the documentation infrastructure we needed to pass our next JCAHO review with confidence.",
-    role: "Director of Environmental Services, Regional Health System",
+    quote: "Healthcare compliance requires complete, timestamped documentation. IQS Flow generates audit-ready records automatically so your team can focus on patient care.",
+    role: "Venice Collier, CEO & Founder",
   },
 ];
 
@@ -1448,9 +1424,9 @@ export function StatsCTASection() {
           }}
           className="stats-grid"
         >
-          <AnimatedStat target={500} suffix="+" label="Facilities managed" inView={inView} delay={0} />
-          <AnimatedStat target={98} suffix="%" label="Compliance pass rate" inView={inView} delay={0.1} />
-          <AnimatedStat target={30} suffix="%" label="Average cost reduction" inView={inView} delay={0.2} />
+          <AnimatedStat target={4} suffix="" label="Role-based portals" inView={inView} delay={0} />
+          <AnimatedStat target={6} suffix="" label="Compliance frameworks" inView={inView} delay={0.1} />
+          <AnimatedStat target={3} suffix="" label="Industry verticals" inView={inView} delay={0.2} />
         </div>
 
         {/* CTA */}
