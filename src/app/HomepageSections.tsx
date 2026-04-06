@@ -970,6 +970,27 @@ const industries = [
     quote: "Healthcare compliance requires complete, timestamped documentation. IQS Flow generates audit-ready records automatically so your team can focus on patient care.",
     role: "Venice Collier, CEO & Founder",
   },
+  {
+    id: "maintenance",
+    label: "Maintenance",
+    icon: ClipboardCheck,
+    stat: "Work order",
+    statLabel: "Lifecycle tracking",
+    title: "Every asset, every schedule, every vendor.",
+    painPoints: [
+      "Reactive maintenance driven by tenant complaints, not preventive schedules",
+      "No visibility into vendor response times or completion quality",
+      "Paper-based work orders with no audit trail or SLA tracking",
+    ],
+    features: [
+      "Preventive maintenance scheduling",
+      "Work order lifecycle tracking",
+      "Vendor SLA monitoring and scoring",
+      "Photo-verified task completion",
+    ],
+    quote: "Facility maintenance teams juggle dozens of vendors and thousands of assets. IQS Flow brings it all into one platform with real accountability.",
+    role: "Venice Collier, CEO & Founder",
+  },
 ];
 
 export function IndustrySolutionsSection() {
