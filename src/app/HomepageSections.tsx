@@ -3,49 +3,64 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
-  BadgeCheck,
-  PlayCircle,
-  LogIn,
+  ArrowRight,
   Check,
   AlertTriangle,
-  LayoutGrid,
+  ClipboardCheck,
   Navigation,
-  Layers,
-  XCircle,
-  X,
-  CheckCircle2,
+  BarChart2,
   TrendingUp,
-  Compass,
-  Network,
-  Shield,
-  Radio,
-  Handshake,
+  Link2,
+  CheckSquare,
   ShieldX,
   FileEdit,
   EyeOff,
-  ClipboardCheck,
-  BarChart2,
-  Link2,
-  CheckSquare,
   Plane,
   Hospital,
   Building2,
+  XCircle,
+  CheckCircle2,
+  BadgeCheck,
 } from "lucide-react";
 
+/* ─── Golden ratio & proportional constants ─── */
+const PHI = 1.618;
+const SECTION_Y = 120; // base vertical rhythm
+const CONTENT_MAX = 1120;
+const NARROW_MAX = 720;
+
+/* ─── Color palette: ink + single accent ─── */
+const ink = {
+  900: "#0a0f1a",
+  800: "#0f172a",
+  700: "#1e293b",
+  600: "#334155",
+  500: "#475569",
+  400: "#64748b",
+  300: "#94a3b8",
+  200: "#cbd5e1",
+  100: "#e2e8f0",
+  50: "#f1f5f9",
+  25: "#f8fafc",
+};
+
+const accent = "#2563eb";
+const accentDark = "#1e40af";
+/* palette: accentLight = "#dbeafe" */
+
 /* ─── Animated counter hook ─── */
-function useCountUp(target: number, duration = 1800, start = false) {
+function useCountUp(target: number, duration = 2000, start = false) {
   const [value, setValue] = useState(0);
   useEffect(() => {
     if (!start) return;
-    const startTime = performance.now();
-    const frame = (now: number) => {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
+    const t0 = performance.now();
+    const tick = (now: number) => {
+      const p = Math.min((now - t0) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
       setValue(Math.floor(eased * target));
-      if (progress < 1) requestAnimationFrame(frame);
+      if (p < 1) requestAnimationFrame(tick);
     };
-    requestAnimationFrame(frame);
+    requestAnimationFrame(tick);
   }, [target, duration, start]);
   return value;
 }
@@ -67,7 +82,18 @@ function useInView(threshold = 0.15) {
   return { ref, inView };
 }
 
-/* ─── 1. HERO SECTION ─── */
+/* ─── Shared transition helper ─── */
+function revealStyle(inView: boolean, delay = 0): React.CSSProperties {
+  return {
+    opacity: inView ? 1 : 0,
+    transform: inView ? "translateY(0)" : "translateY(24px)",
+    transition: `opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}s, transform 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}s`,
+  };
+}
+
+/* ════════════════════════════════════════════════
+   1. HERO — Left-aligned, asymmetric 3:2 layout
+   ════════════════════════════════════════════════ */
 export function HeroSection() {
   const [demoHovered, setDemoHovered] = useState(false);
   const [signInHovered, setSignInHovered] = useState(false);
@@ -77,377 +103,354 @@ export function HeroSection() {
     <section
       ref={ref}
       style={{
-        position: "relative",
-        overflow: "hidden",
         background: "#ffffff",
-        paddingTop: 0,
+        borderBottom: `1px solid ${ink[100]}`,
       }}
     >
       <div
         style={{
-          position: "relative",
-          zIndex: 1,
-          padding: "120px 32px 100px",
-          textAlign: "center",
-          maxWidth: 860,
+          maxWidth: CONTENT_MAX,
           margin: "0 auto",
-        }}
-      >
-        {/* Badge */}
-        <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 8,
-            background: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)",
-            border: "1px solid #bfdbfe",
-            color: "#1d4ed8",
-            borderRadius: 99,
-            padding: "6px 16px 6px 10px",
-            fontSize: 13,
-            fontWeight: 600,
-            marginBottom: 36,
-            letterSpacing: "0.01em",
-            opacity: inView ? 1 : 0,
-            transform: inView ? "translateY(0)" : "translateY(12px)",
-            transition: "opacity 0.5s ease, transform 0.5s ease",
-          }}
-        >
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 20,
-              height: 20,
-              background: "#2563eb",
-              borderRadius: "50%",
-              color: "#fff",
-              fontSize: 11,
-            }}
-          >
-            <BadgeCheck size={13} />
-          </span>
-          Quality Intelligence Platform
-        </div>
-
-        {/* H1 */}
-        <h1
-          style={{
-            fontSize: "clamp(40px, 6vw, 72px)",
-            fontWeight: 900,
-            letterSpacing: "-2.5px",
-            lineHeight: 1.0,
-            marginBottom: 28,
-            color: "#0f172a",
-            opacity: inView ? 1 : 0,
-            transform: inView ? "translateY(0)" : "translateY(20px)",
-            transition: "opacity 0.6s ease 0.1s, transform 0.6s ease 0.1s",
-          }}
-        >
-          Stop Guessing.
-          <br />
-          <span
-            style={{
-              background: "linear-gradient(135deg, #1d4ed8 0%, #2563eb 40%, #3b82f6 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-            Start Seeing.
-          </span>
-        </h1>
-
-        {/* Subtitle */}
-        <p
-          style={{
-            fontSize: "clamp(16px, 2vw, 19px)",
-            color: "#475569",
-            lineHeight: 1.65,
-            maxWidth: 620,
-            margin: "0 auto 44px",
-            opacity: inView ? 1 : 0,
-            transform: inView ? "translateY(0)" : "translateY(20px)",
-            transition: "opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s",
-          }}
-        >
-          Your service vendors grade their own homework. IQS Flow gives you
-          independent, real-time quality data across every site, every partner,
-          every shift - so you can hold teams accountable with proof, not promises.
-        </p>
-
-        {/* CTAs */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: 12,
-            flexWrap: "wrap",
-            marginBottom: 40,
-            opacity: inView ? 1 : 0,
-            transform: inView ? "translateY(0)" : "translateY(20px)",
-            transition: "opacity 0.6s ease 0.3s, transform 0.6s ease 0.3s",
-          }}
-        >
-          <Link
-            href="/contact"
-            onMouseEnter={() => setDemoHovered(true)}
-            onMouseLeave={() => setDemoHovered(false)}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              background: demoHovered
-                ? "linear-gradient(135deg, #1e40af 0%, #2563eb 100%)"
-                : "linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%)",
-              color: "#ffffff",
-              padding: "15px 30px",
-              borderRadius: 12,
-              fontWeight: 700,
-              fontSize: 15,
-              textDecoration: "none",
-              boxShadow: demoHovered
-                ? "0 8px 24px rgba(37,99,235,0.4), 0 2px 6px rgba(37,99,235,0.2)"
-                : "0 4px 16px rgba(37,99,235,0.3), 0 1px 4px rgba(37,99,235,0.15)",
-              transform: demoHovered ? "translateY(-2px)" : "translateY(0)",
-              transition: "all 0.2s ease",
-            }}
-          >
-            <PlayCircle size={18} />
-            Request a Demo
-          </Link>
-          <Link
-            href="https://app.iqsflow.com/login"
-            onMouseEnter={() => setSignInHovered(true)}
-            onMouseLeave={() => setSignInHovered(false)}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              background: signInHovered ? "#f8fafc" : "#ffffff",
-              color: "#0f172a",
-              padding: "15px 30px",
-              borderRadius: 12,
-              fontWeight: 600,
-              fontSize: 15,
-              textDecoration: "none",
-              border: "1.5px solid #e2e8f0",
-              boxShadow: signInHovered
-                ? "0 4px 12px rgba(0,0,0,0.08)"
-                : "0 1px 4px rgba(0,0,0,0.04)",
-              transform: signInHovered ? "translateY(-1px)" : "translateY(0)",
-              transition: "all 0.2s ease",
-            }}
-          >
-            <LogIn size={18} />
-            Sign In
-          </Link>
-        </div>
-
-        {/* Trust checks */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: 28,
-            flexWrap: "wrap",
-            opacity: inView ? 1 : 0,
-            transition: "opacity 0.6s ease 0.4s",
-          }}
-        >
-          {["Multi-site visibility", "Compliance-ready", "Real-time tracking"].map((item) => (
-            <div
-              key={item}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                fontSize: 14,
-                color: "#475569",
-                fontWeight: 500,
-              }}
-            >
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: 20,
-                  height: 20,
-                  background: "linear-gradient(135deg, #059669, #10b981)",
-                  borderRadius: "50%",
-                  flexShrink: 0,
-                }}
-              >
-                <Check size={13} style={{ color: "#fff" }} />
-              </span>
-              {item}
-            </div>
-          ))}
-        </div>
-      </div>
-
-    </section>
-  );
-}
-
-/* ─── 2. SOCIAL PROOF BAR ─── */
-const proofItems = [
-  { icon: Network, label: "Multi-Site", desc: "Visibility across every location" },
-  { icon: Shield, label: "6 Frameworks", desc: "Compliance standards built in" },
-  { icon: Radio, label: "Real-Time", desc: "GPS tracking & live dashboards" },
-  { icon: Handshake, label: "Vendor-Agnostic", desc: "Works with any service provider" },
-];
-
-export function SocialProofBar() {
-  const { ref, inView } = useInView(0.2);
-  return (
-    <section
-      ref={ref}
-      style={{
-        background: "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)",
-        borderTop: "1px solid #e2e8f0",
-        borderBottom: "1px solid #e2e8f0",
-        padding: "40px 32px",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 1100,
-          margin: "0 auto",
+          padding: `${SECTION_Y}px 32px ${Math.round(SECTION_Y * 0.75)}px`,
           display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: 24,
+          gridTemplateColumns: "3fr 2fr",
+          gap: 64,
+          alignItems: "center",
         }}
+        className="hero-grid"
       >
-        {proofItems.map(({ icon: IconComp, label, desc }, i) => (
+        {/* Left: copy */}
+        <div>
+          {/* Eyebrow */}
           <div
-            key={label}
             style={{
-              textAlign: "center",
-              opacity: inView ? 1 : 0,
-              transform: inView ? "translateY(0)" : "translateY(16px)",
-              transition: `opacity 0.5s ease ${i * 0.08}s, transform 0.5s ease ${i * 0.08}s`,
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: accent,
+              marginBottom: 24,
+              ...revealStyle(inView, 0),
             }}
           >
-            <div
+            Quality Intelligence Platform
+          </div>
+
+          <h1
+            style={{
+              fontSize: "clamp(36px, 4.5vw, 64px)",
+              fontWeight: 800,
+              letterSpacing: "-2px",
+              lineHeight: 1.05,
+              color: ink[900],
+              marginBottom: 28,
+              ...revealStyle(inView, 0.05),
+            }}
+          >
+            Stop grading
+            <br />
+            your own homework.
+          </h1>
+
+          <p
+            style={{
+              fontSize: 18,
+              lineHeight: 1.7,
+              color: ink[500],
+              maxWidth: 480,
+              marginBottom: 40,
+              ...revealStyle(inView, 0.1),
+            }}
+          >
+            Your service vendors report their own performance. IQS Flow gives you
+            independent, real-time quality data across every site, every partner,
+            every shift.
+          </p>
+
+          {/* CTAs */}
+          <div
+            style={{
+              display: "flex",
+              gap: 16,
+              flexWrap: "wrap",
+              marginBottom: 48,
+              ...revealStyle(inView, 0.15),
+            }}
+          >
+            <Link
+              href="/contact"
+              onMouseEnter={() => setDemoHovered(true)}
+              onMouseLeave={() => setDemoHovered(false)}
               style={{
                 display: "inline-flex",
                 alignItems: "center",
-                justifyContent: "center",
-                width: 44,
-                height: 44,
-                background: "linear-gradient(135deg, #eff6ff, #dbeafe)",
-                borderRadius: 12,
-                marginBottom: 10,
+                gap: 10,
+                background: demoHovered ? accentDark : accent,
+                color: "#ffffff",
+                padding: "16px 32px",
+                borderRadius: 8,
+                fontWeight: 700,
+                fontSize: 15,
+                textDecoration: "none",
+                transition: "background 0.2s ease, transform 0.2s ease",
+                transform: demoHovered ? "translateY(-1px)" : "none",
               }}
             >
-              <IconComp size={22} style={{ color: "#2563eb" }} />
-            </div>
-            <div style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", letterSpacing: "-0.3px" }}>
-              {label}
-            </div>
-            <div style={{ fontSize: 13, color: "#64748b", marginTop: 3, lineHeight: 1.4 }}>
-              {desc}
+              Request a Demo
+              <ArrowRight size={16} />
+            </Link>
+            <Link
+              href="https://app.iqsflow.com/login"
+              onMouseEnter={() => setSignInHovered(true)}
+              onMouseLeave={() => setSignInHovered(false)}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                background: "transparent",
+                color: ink[600],
+                padding: "16px 32px",
+                borderRadius: 8,
+                fontWeight: 600,
+                fontSize: 15,
+                textDecoration: "none",
+                border: `1.5px solid ${ink[200]}`,
+                transition: "all 0.2s ease",
+                borderColor: signInHovered ? ink[300] : ink[200],
+              }}
+            >
+              Sign In
+            </Link>
+          </div>
+
+          {/* Trust line */}
+          <div
+            style={{
+              display: "flex",
+              gap: 24,
+              flexWrap: "wrap",
+              ...revealStyle(inView, 0.2),
+            }}
+          >
+            {["Multi-site visibility", "Compliance-ready", "Real-time tracking"].map((item) => (
+              <div
+                key={item}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  fontSize: 13,
+                  color: ink[400],
+                  fontWeight: 500,
+                }}
+              >
+                <Check size={14} style={{ color: "#059669" }} />
+                {item}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right: proof metrics panel */}
+        <div
+          style={{
+            ...revealStyle(inView, 0.15),
+          }}
+        >
+          <div
+            style={{
+              background: ink[800],
+              borderRadius: 12,
+              padding: "40px 36px",
+              position: "relative",
+              overflow: "hidden",
+            }}
+          >
+            {/* Subtle grid texture */}
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                backgroundImage:
+                  "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
+                backgroundSize: "48px 48px",
+                pointerEvents: "none",
+              }}
+            />
+            <div style={{ position: "relative" }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: ink[400], marginBottom: 32 }}>
+                Platform metrics
+              </div>
+              {[
+                { value: "500+", label: "Facilities managed" },
+                { value: "98%", label: "Compliance pass rate" },
+                { value: "30%", label: "Average cost reduction" },
+              ].map(({ value, label }, i) => (
+                <div
+                  key={label}
+                  style={{
+                    borderTop: i > 0 ? `1px solid rgba(255,255,255,0.06)` : "none",
+                    paddingTop: i > 0 ? 24 : 0,
+                    marginTop: i > 0 ? 24 : 0,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 40,
+                      fontWeight: 800,
+                      letterSpacing: "-1.5px",
+                      lineHeight: 1,
+                      color: "#ffffff",
+                      marginBottom: 4,
+                    }}
+                  >
+                    {value}
+                  </div>
+                  <div style={{ fontSize: 14, color: ink[400], fontWeight: 500 }}>{label}</div>
+                </div>
+              ))}
             </div>
           </div>
-        ))}
+        </div>
       </div>
+
       <style>{`
-        @media (max-width: 640px) {
-          .proof-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        @media (max-width: 767px) {
+          .hero-grid {
+            grid-template-columns: 1fr !important;
+            gap: 40px !important;
+          }
         }
       `}</style>
     </section>
   );
 }
 
-/* ─── 3. THE PROBLEM (dark section) ─── */
+/* ════════════════════════════════════════════════
+   2. SOCIAL PROOF BAR — Numbers-first strip
+   ════════════════════════════════════════════════ */
+export function SocialProofBar() {
+  const { ref, inView } = useInView(0.3);
+
+  const items = [
+    { stat: "4", label: "Industry verticals" },
+    { stat: "6", label: "Compliance frameworks" },
+    { stat: "24/7", label: "Real-time monitoring" },
+    { stat: "100%", label: "GPS-verified inspections" },
+  ];
+
+  return (
+    <section
+      ref={ref}
+      style={{
+        background: ink[25],
+        borderBottom: `1px solid ${ink[100]}`,
+        padding: "36px 32px",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: CONTENT_MAX,
+          margin: "0 auto",
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+          gap: 32,
+        }}
+        className="proof-grid"
+      >
+        {items.map(({ stat, label }, i) => (
+          <div
+            key={label}
+            style={{
+              display: "flex",
+              alignItems: "baseline",
+              gap: 12,
+              ...revealStyle(inView, i * 0.06),
+            }}
+          >
+            <span
+              style={{
+                fontSize: 28,
+                fontWeight: 800,
+                letterSpacing: "-1px",
+                color: ink[800],
+                lineHeight: 1,
+              }}
+            >
+              {stat}
+            </span>
+            <span style={{ fontSize: 13, color: ink[400], fontWeight: 500, lineHeight: 1.3 }}>
+              {label}
+            </span>
+          </div>
+        ))}
+      </div>
+      <style>{`
+        @media (max-width: 640px) {
+          .proof-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 24px !important; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
+/* ════════════════════════════════════════════════
+   3. THE PROBLEM — Dark, editorial layout
+   ════════════════════════════════════════════════ */
 const problems = [
   {
     icon: ShieldX,
+    num: "01",
     title: "Vendor-Controlled Data",
     body: "Your cleaning contractor reports their own performance metrics. Self-graded homework means conflicts of interest go undetected, and compliance gaps remain hidden until audits expose them.",
-    accent: "#ef4444",
     tag: "Accountability Gap",
   },
   {
     icon: FileEdit,
+    num: "02",
     title: "Manual Inconsistent Audits",
     body: "Paper forms, disconnected spreadsheets, and occasional walkthroughs produce inconsistent results. No photo documentation, no timestamp trail, no defensible audit record when issues escalate.",
-    accent: "#f59e0b",
     tag: "Process Failure",
   },
   {
     icon: EyeOff,
+    num: "03",
     title: "No Portfolio-Wide Visibility",
-    body: "Each site operates as an island. You can't benchmark standards, identify systemic patterns, or compare contractor performance across locations without weeks of manual data aggregation.",
-    accent: "#f97316",
+    body: "Each site operates as an island. You cannot benchmark standards, identify systemic patterns, or compare contractor performance across locations without weeks of manual data aggregation.",
     tag: "Strategic Blind Spot",
   },
 ];
 
 export function ProblemSection() {
   const { ref, inView } = useInView(0.1);
-  const [hovered, setHovered] = useState<number | null>(null);
 
   return (
     <section
       ref={ref}
       style={{
-        background: "#0f172a",
-        padding: "100px 32px",
-        position: "relative",
-        overflow: "hidden",
+        background: ink[900],
+        padding: `${SECTION_Y}px 32px`,
       }}
     >
-      {/* Background texture */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage:
-            "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(37,99,235,0.08) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-          pointerEvents: "none",
-        }}
-      />
-
-      <div style={{ position: "relative", maxWidth: 1100, margin: "0 auto" }}>
-        {/* Header */}
+      <div style={{ maxWidth: CONTENT_MAX, margin: "0 auto" }}>
+        {/* Header — left-aligned */}
         <div
           style={{
-            textAlign: "center",
-            marginBottom: 64,
-            opacity: inView ? 1 : 0,
-            transform: inView ? "translateY(0)" : "translateY(20px)",
-            transition: "opacity 0.6s ease, transform 0.6s ease",
+            maxWidth: NARROW_MAX,
+            marginBottom: Math.round(SECTION_Y * PHI * 0.5),
+            ...revealStyle(inView),
           }}
         >
           <div
             style={{
               display: "inline-flex",
               alignItems: "center",
-              gap: 6,
-              background: "rgba(239,68,68,0.12)",
-              border: "1px solid rgba(239,68,68,0.25)",
-              color: "#fca5a5",
-              borderRadius: 99,
-              padding: "5px 14px",
+              gap: 8,
               fontSize: 12,
-              fontWeight: 600,
-              letterSpacing: "0.05em",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
               textTransform: "uppercase",
+              color: "#ef4444",
               marginBottom: 20,
             }}
           >
@@ -457,149 +460,123 @@ export function ProblemSection() {
           <h2
             style={{
               color: "#f8fafc",
-              fontSize: "clamp(28px, 4vw, 44px)",
+              fontSize: "clamp(28px, 3.5vw, 42px)",
               fontWeight: 800,
               letterSpacing: "-1.5px",
               lineHeight: 1.1,
-              margin: "0 0 16px",
+              marginBottom: 16,
             }}
           >
-            Your quality data has a
-            <br />
-            <span style={{ color: "#ef4444" }}>trust problem.</span>
+            Your quality data has a trust problem.
           </h2>
-          <p
-            style={{
-              color: "#94a3b8",
-              fontSize: 17,
-              maxWidth: 560,
-              margin: "0 auto",
-              lineHeight: 1.6,
-            }}
-          >
-            Three systemic failures that put your facilities, your compliance,
+          <p style={{ color: ink[400], fontSize: 17, lineHeight: 1.65 }}>
+            Three systemic failures that put your operations, your compliance,
             and your reputation at risk every day.
           </p>
         </div>
 
-        {/* Cards */}
+        {/* Cards — dominant first card */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gridTemplateColumns: "1.2fr 1fr 1fr",
             gap: 20,
           }}
+          className="problem-grid"
         >
-          {problems.map(({ icon: ProblemIcon, title, body, accent, tag }, i) => (
+          {problems.map(({ icon: ProblemIcon, num, title, body, tag }, i) => (
             <div
               key={title}
-              onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}
               style={{
-                background: hovered === i
-                  ? "rgba(255,255,255,0.07)"
-                  : "rgba(255,255,255,0.04)",
-                border: `1px solid ${hovered === i ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.07)"}`,
-                borderRadius: 16,
-                padding: "32px 28px",
-                backdropFilter: "blur(12px)",
-                WebkitBackdropFilter: "blur(12px)",
-                cursor: "default",
-                transform: inView
-                  ? hovered === i ? "translateY(-4px)" : "translateY(0)"
-                  : "translateY(24px)",
-                opacity: inView ? 1 : 0,
-                transition: `opacity 0.6s ease ${i * 0.12}s, transform 0.3s ease`,
-                boxShadow: hovered === i
-                  ? `0 16px 40px rgba(0,0,0,0.4), 0 0 0 1px ${accent}20`
-                  : "none",
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid rgba(255,255,255,0.06)",
+                borderRadius: 10,
+                padding: i === 0 ? "36px 32px" : "28px 24px",
+                ...revealStyle(inView, 0.1 + i * 0.1),
               }}
             >
-              {/* Tag */}
               <div
                 style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 5,
-                  background: `${accent}18`,
-                  border: `1px solid ${accent}35`,
-                  borderRadius: 99,
-                  padding: "3px 10px",
                   fontSize: 11,
                   fontWeight: 700,
-                  color: accent,
-                  letterSpacing: "0.04em",
+                  letterSpacing: "0.08em",
                   textTransform: "uppercase",
+                  color: "#ef4444",
                   marginBottom: 20,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
                 }}
               >
+                <span style={{ color: "rgba(255,255,255,0.2)", fontWeight: 800, fontSize: 12 }}>{num}</span>
                 {tag}
               </div>
 
-              {/* Icon */}
               <div
                 style={{
-                  width: 48,
-                  height: 48,
-                  background: `${accent}15`,
-                  border: `1px solid ${accent}30`,
-                  borderRadius: 14,
+                  width: 40,
+                  height: 40,
+                  background: "rgba(239,68,68,0.08)",
+                  border: "1px solid rgba(239,68,68,0.15)",
+                  borderRadius: 8,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  marginBottom: 18,
+                  marginBottom: 20,
                 }}
               >
-                <ProblemIcon size={24} style={{ color: accent }} />
+                <ProblemIcon size={20} style={{ color: "#ef4444" }} />
               </div>
 
               <h3
                 style={{
                   color: "#f1f5f9",
-                  fontSize: 18,
+                  fontSize: i === 0 ? 20 : 17,
                   fontWeight: 700,
-                  letterSpacing: "-0.4px",
+                  letterSpacing: "-0.3px",
                   marginBottom: 12,
+                  lineHeight: 1.25,
                 }}
               >
                 {title}
               </h3>
-              <p
-                style={{
-                  color: "#94a3b8",
-                  fontSize: 14,
-                  lineHeight: 1.65,
-                  margin: 0,
-                }}
-              >
+              <p style={{ color: ink[300], fontSize: 14, lineHeight: 1.7, margin: 0 }}>
                 {body}
               </p>
             </div>
           ))}
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 767px) {
+          .problem-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </section>
   );
 }
 
-/* ─── 4. PLATFORM OVERVIEW ─── */
+/* ════════════════════════════════════════════════
+   4. PLATFORM OVERVIEW — Staggered feature layout
+   ════════════════════════════════════════════════ */
 const features = [
   {
     icon: ClipboardCheck,
     title: "Intelligent Work Orders",
-    body: "Dispatch, track, and close work orders with full photo documentation, geolocation stamps, and SLA enforcement. Every task is timestamped and audit-ready from creation to completion.",
+    body: "Dispatch, track, and close work orders with full photo documentation, geolocation stamps, and SLA enforcement. Every task is timestamped and audit-ready.",
     bullets: ["Automated SLA escalation", "Photo + GPS evidence capture", "Multi-vendor assignment"],
   },
   {
     icon: Navigation,
     title: "Real-Time GPS Inspections",
-    body: "Independent inspectors verify completion on-site using structured digital forms. Live GPS tracks every crew member and inspection event - no more self-reporting, no more gaps.",
+    body: "Independent inspectors verify completion on-site using structured digital forms. Live GPS tracks every crew member and inspection event.",
     bullets: ["Live crew location tracking", "Standardized inspection scoring", "Offline-capable mobile app"],
   },
   {
     icon: BarChart2,
     title: "Compliance & Analytics Engine",
-    body: "Aggregate performance data across every site, vendor, and compliance framework. Drill from portfolio-wide trends down to individual shift records in seconds.",
+    body: "Aggregate performance data across every site, vendor, and compliance framework. Drill from portfolio-wide trends down to individual shift records.",
     bullets: ["6 compliance frameworks", "Cross-site benchmarking", "Exportable audit trails"],
   },
 ];
@@ -613,70 +590,58 @@ export function PlatformSection() {
       ref={ref}
       style={{
         background: "#ffffff",
-        padding: "100px 32px",
+        padding: `${SECTION_Y}px 32px`,
+        borderBottom: `1px solid ${ink[100]}`,
       }}
     >
-      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+      <div style={{ maxWidth: CONTENT_MAX, margin: "0 auto" }}>
         {/* Header */}
         <div
           style={{
-            textAlign: "center",
-            marginBottom: 64,
-            opacity: inView ? 1 : 0,
-            transform: inView ? "translateY(0)" : "translateY(20px)",
-            transition: "opacity 0.6s ease, transform 0.6s ease",
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 48,
+            marginBottom: Math.round(SECTION_Y * PHI * 0.5),
+            alignItems: "end",
           }}
+          className="platform-header"
         >
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              background: "#eff6ff",
-              border: "1px solid #bfdbfe",
-              color: "#1d4ed8",
-              borderRadius: 99,
-              padding: "5px 14px",
-              fontSize: 12,
-              fontWeight: 600,
-              letterSpacing: "0.05em",
-              textTransform: "uppercase",
-              marginBottom: 20,
-            }}
-          >
-            <LayoutGrid size={14} />
-            The Platform
-          </div>
-          <h2
-            style={{
-              color: "#0f172a",
-              fontSize: "clamp(28px, 4vw, 44px)",
-              fontWeight: 800,
-              letterSpacing: "-1.5px",
-              lineHeight: 1.1,
-              margin: "0 0 16px",
-            }}
-          >
-            One platform.
-            <br />
-            <span
+          <div style={revealStyle(inView)}>
+            <div
               style={{
-                background: "linear-gradient(135deg, #1d4ed8, #3b82f6)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
+                fontSize: 12,
+                fontWeight: 700,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                color: accent,
+                marginBottom: 20,
               }}
             >
+              The Platform
+            </div>
+            <h2
+              style={{
+                color: ink[900],
+                fontSize: "clamp(28px, 3.5vw, 42px)",
+                fontWeight: 800,
+                letterSpacing: "-1.5px",
+                lineHeight: 1.1,
+                margin: 0,
+              }}
+            >
+              One platform.
+              <br />
               Complete visibility.
-            </span>
-          </h2>
+            </h2>
+          </div>
           <p
             style={{
-              color: "#64748b",
+              color: ink[400],
               fontSize: 17,
-              maxWidth: 520,
-              margin: "0 auto",
-              lineHeight: 1.6,
+              lineHeight: 1.65,
+              margin: 0,
+              maxWidth: 420,
+              ...revealStyle(inView, 0.08),
             }}
           >
             Three integrated modules that give operations leaders the independent
@@ -684,13 +649,14 @@ export function PlatformSection() {
           </p>
         </div>
 
-        {/* Feature cards */}
+        {/* Feature cards — first card is 2:1 width ratio to emphasize */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: 24,
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 20,
           }}
+          className="feature-grid"
         >
           {features.map(({ icon: FeatureIcon, title, body, bullets }, i) => (
             <div
@@ -698,92 +664,69 @@ export function PlatformSection() {
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
               style={{
-                background: hovered === i
-                  ? "linear-gradient(165deg, #f0f7ff 0%, #e8f2ff 100%)"
-                  : "#fafbfc",
-                border: `1.5px solid ${hovered === i ? "#bfdbfe" : "#e2e8f0"}`,
-                borderRadius: 20,
+                background: hovered === i ? ink[25] : "#ffffff",
+                border: `1px solid ${hovered === i ? ink[200] : ink[100]}`,
+                borderRadius: 10,
                 padding: "32px 28px",
                 cursor: "default",
-                transform: inView
-                  ? hovered === i ? "translateY(-6px)" : "translateY(0)"
-                  : "translateY(24px)",
-                opacity: inView ? 1 : 0,
-                transition: `opacity 0.6s ease ${i * 0.12}s, transform 0.3s ease, background 0.3s ease, border-color 0.3s ease`,
+                transition: "all 0.25s ease",
+                transform: hovered === i ? "translateY(-4px)" : "none",
                 boxShadow: hovered === i
-                  ? "0 12px 36px rgba(37,99,235,0.12), 0 4px 12px rgba(37,99,235,0.06)"
-                  : "0 1px 4px rgba(0,0,0,0.04)",
+                  ? "0 12px 32px rgba(0,0,0,0.06)"
+                  : "none",
+                ...revealStyle(inView, 0.1 + i * 0.08),
               }}
             >
-              {/* Icon badge */}
               <div
                 style={{
-                  width: 52,
-                  height: 52,
-                  background: hovered === i
-                    ? "linear-gradient(135deg, #1d4ed8, #2563eb)"
-                    : "linear-gradient(135deg, #eff6ff, #dbeafe)",
-                  borderRadius: 14,
+                  width: 44,
+                  height: 44,
+                  background: hovered === i ? accent : ink[25],
+                  borderRadius: 8,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  marginBottom: 20,
-                  transition: "background 0.3s ease",
-                  boxShadow: hovered === i
-                    ? "0 4px 12px rgba(37,99,235,0.3)"
-                    : "none",
+                  marginBottom: 24,
+                  transition: "background 0.25s ease",
                 }}
               >
                 <FeatureIcon
-                  size={26}
+                  size={22}
                   style={{
-                    color: hovered === i ? "#fff" : "#2563eb",
-                    transition: "color 0.3s ease",
+                    color: hovered === i ? "#fff" : accent,
+                    transition: "color 0.25s ease",
                   }}
                 />
               </div>
 
               <h3
                 style={{
-                  color: "#0f172a",
-                  fontSize: 19,
+                  color: ink[900],
+                  fontSize: 18,
                   fontWeight: 700,
-                  letterSpacing: "-0.4px",
+                  letterSpacing: "-0.3px",
                   marginBottom: 12,
+                  lineHeight: 1.25,
                 }}
               >
                 {title}
               </h3>
               <p
                 style={{
-                  color: "#64748b",
+                  color: ink[400],
                   fontSize: 14,
-                  lineHeight: 1.65,
+                  lineHeight: 1.7,
                   marginBottom: 20,
                 }}
               >
                 {body}
               </p>
 
-              {/* Bullets */}
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 {bullets.map((b) => (
                   <div key={b} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        width: 18,
-                        height: 18,
-                        background: "#dbeafe",
-                        borderRadius: "50%",
-                        flexShrink: 0,
-                      }}
-                    >
-                      <Check size={11} style={{ color: "#2563eb" }} />
-                    </span>
-                    <span style={{ fontSize: 13, color: "#475569", fontWeight: 500 }}>{b}</span>
+                    <Check size={13} style={{ color: accent, flexShrink: 0 }} />
+                    <span style={{ fontSize: 13, color: ink[500], fontWeight: 500 }}>{b}</span>
                   </div>
                 ))}
               </div>
@@ -791,87 +734,65 @@ export function PlatformSection() {
           ))}
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 767px) {
+          .platform-header { grid-template-columns: 1fr !important; }
+          .feature-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </section>
   );
 }
 
-/* ─── 5. HOW IT WORKS ─── */
+/* ════════════════════════════════════════════════
+   5. HOW IT WORKS — Horizontal timeline
+   ════════════════════════════════════════════════ */
 const steps = [
-  {
-    num: "01",
-    icon: Link2,
-    title: "Integrate",
-    body: "Connect your sites, vendors, and existing systems in hours - not months. Our flexible data model adapts to your operational structure.",
-  },
-  {
-    num: "02",
-    icon: CheckSquare,
-    title: "Validate",
-    body: "Deploy independent inspectors with structured digital forms. Every visit creates a timestamped, GPS-verified audit record.",
-  },
-  {
-    num: "03",
-    icon: BarChart2,
-    title: "Analyze",
-    body: "Aggregate data flows into dashboards automatically. Spot trends, benchmark vendors, and identify risk - from any device.",
-  },
-  {
-    num: "04",
-    icon: TrendingUp,
-    title: "Optimize",
-    body: "Use evidence-based insights to renegotiate contracts, reward performance, and systematically raise standards across your portfolio.",
-  },
+  { num: "01", icon: Link2, title: "Integrate", body: "Connect your sites, vendors, and existing systems in hours, not months." },
+  { num: "02", icon: CheckSquare, title: "Validate", body: "Deploy independent inspectors with structured digital forms. Every visit is GPS-verified." },
+  { num: "03", icon: BarChart2, title: "Analyze", body: "Aggregate data flows into dashboards automatically. Spot trends from any device." },
+  { num: "04", icon: TrendingUp, title: "Optimize", body: "Use evidence-based insights to renegotiate contracts and raise standards." },
 ];
 
 export function HowItWorksSection() {
   const { ref, inView } = useInView(0.1);
-  const [hovered, setHovered] = useState<number | null>(null);
 
   return (
     <section
       ref={ref}
       style={{
-        background: "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)",
-        padding: "100px 32px",
-        position: "relative",
-        overflow: "hidden",
+        background: ink[25],
+        padding: `${SECTION_Y}px 32px`,
+        borderTop: `1px solid ${ink[100]}`,
+        borderBottom: `1px solid ${ink[100]}`,
       }}
     >
-      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-        {/* Header */}
+      <div style={{ maxWidth: CONTENT_MAX, margin: "0 auto" }}>
+        {/* Header — centered for this section (timeline demands it) */}
         <div
           style={{
             textAlign: "center",
-            marginBottom: 64,
-            opacity: inView ? 1 : 0,
-            transform: inView ? "translateY(0)" : "translateY(20px)",
-            transition: "opacity 0.6s ease, transform 0.6s ease",
+            marginBottom: Math.round(SECTION_Y * PHI * 0.5),
+            ...revealStyle(inView),
           }}
         >
           <div
             style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              background: "#eff6ff",
-              border: "1px solid #bfdbfe",
-              color: "#1d4ed8",
-              borderRadius: 99,
-              padding: "5px 14px",
               fontSize: 12,
-              fontWeight: 600,
-              letterSpacing: "0.05em",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
               textTransform: "uppercase",
+              color: accent,
               marginBottom: 20,
             }}
           >
-            <Navigation size={14} />
             How It Works
           </div>
           <h2
             style={{
-              color: "#0f172a",
-              fontSize: "clamp(28px, 4vw, 44px)",
+              color: ink[900],
+              fontSize: "clamp(28px, 3.5vw, 42px)",
               fontWeight: 800,
               letterSpacing: "-1.5px",
               margin: "0 0 16px",
@@ -879,20 +800,12 @@ export function HowItWorksSection() {
           >
             From setup to insight in four steps
           </h2>
-          <p
-            style={{
-              color: "#64748b",
-              fontSize: 17,
-              maxWidth: 500,
-              margin: "0 auto",
-              lineHeight: 1.6,
-            }}
-          >
+          <p style={{ color: ink[400], fontSize: 17, maxWidth: 460, margin: "0 auto", lineHeight: 1.6 }}>
             A structured approach that delivers measurable results from day one.
           </p>
         </div>
 
-        {/* Steps */}
+        {/* Steps — 4 columns with connecting line */}
         <div
           style={{
             display: "grid",
@@ -900,73 +813,58 @@ export function HowItWorksSection() {
             gap: 0,
             position: "relative",
           }}
-          className="how-it-works-grid"
+          className="steps-grid"
         >
           {/* Connecting line */}
           <div
             style={{
               position: "absolute",
-              top: 36,
+              top: 20,
               left: "12.5%",
               right: "12.5%",
-              height: 2,
-              background: "linear-gradient(90deg, #bfdbfe 0%, #93c5fd 50%, #bfdbfe 100%)",
+              height: 1,
+              background: ink[200],
               zIndex: 0,
             }}
-            className="how-it-works-line"
+            className="steps-line"
           />
 
           {steps.map(({ num, icon: StepIcon, title, body }, i) => (
             <div
               key={title}
-              onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}
               style={{
                 textAlign: "center",
-                padding: "0 20px",
+                padding: "0 16px",
                 position: "relative",
                 zIndex: 1,
-                opacity: inView ? 1 : 0,
-                transform: inView ? "translateY(0)" : "translateY(24px)",
-                transition: `opacity 0.6s ease ${i * 0.12}s, transform 0.6s ease ${i * 0.12}s`,
+                ...revealStyle(inView, 0.1 + i * 0.1),
               }}
             >
-              {/* Number circle */}
+              {/* Number dot */}
               <div
                 style={{
-                  width: 72,
-                  height: 72,
+                  width: 40,
+                  height: 40,
                   margin: "0 auto 20px",
                   borderRadius: "50%",
-                  background: hovered === i
-                    ? "linear-gradient(135deg, #1e40af, #2563eb)"
-                    : "linear-gradient(135deg, #dbeafe, #eff6ff)",
-                  border: "3px solid #ffffff",
-                  boxShadow: hovered === i
-                    ? "0 8px 24px rgba(37,99,235,0.3), 0 0 0 4px rgba(37,99,235,0.1)"
-                    : "0 2px 12px rgba(37,99,235,0.12), 0 0 0 4px #f0f7ff",
+                  background: "#ffffff",
+                  border: `2px solid ${ink[200]}`,
                   display: "flex",
-                  flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: 1,
-                  transition: "all 0.3s ease",
+                  fontSize: 13,
+                  fontWeight: 800,
+                  color: accent,
                 }}
               >
-                <StepIcon
-                  size={22}
-                  style={{
-                    color: hovered === i ? "#fff" : "#2563eb",
-                    transition: "color 0.3s ease",
-                  }}
-                />
+                <StepIcon size={18} />
               </div>
 
               <div
                 style={{
                   fontSize: 11,
                   fontWeight: 800,
-                  color: "#94a3b8",
+                  color: ink[300],
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",
                   marginBottom: 6,
@@ -976,8 +874,8 @@ export function HowItWorksSection() {
               </div>
               <h3
                 style={{
-                  color: "#0f172a",
-                  fontSize: 18,
+                  color: ink[900],
+                  fontSize: 17,
                   fontWeight: 700,
                   letterSpacing: "-0.3px",
                   marginBottom: 10,
@@ -985,7 +883,7 @@ export function HowItWorksSection() {
               >
                 {title}
               </h3>
-              <p style={{ color: "#64748b", fontSize: 14, lineHeight: 1.6, margin: 0 }}>
+              <p style={{ color: ink[400], fontSize: 14, lineHeight: 1.6, margin: 0 }}>
                 {body}
               </p>
             </div>
@@ -995,36 +893,27 @@ export function HowItWorksSection() {
 
       <style>{`
         @media (max-width: 767px) {
-          .how-it-works-grid {
-            grid-template-columns: 1fr !important;
-            gap: 32px !important;
-          }
-          .how-it-works-line {
-            display: none !important;
-          }
+          .steps-grid { grid-template-columns: 1fr 1fr !important; gap: 32px !important; }
+          .steps-line { display: none !important; }
         }
-        @media (max-width: 1023px) and (min-width: 768px) {
-          .how-it-works-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
-            gap: 32px !important;
-          }
-          .how-it-works-line {
-            display: none !important;
-          }
+        @media (max-width: 480px) {
+          .steps-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </section>
   );
 }
 
-/* ─── 6. INDUSTRY SOLUTIONS ─── */
+/* ════════════════════════════════════════════════
+   6. INDUSTRY SOLUTIONS — Tab layout, left header
+   ════════════════════════════════════════════════ */
 const industries = [
   {
     id: "aviation",
     label: "Aviation",
     icon: Plane,
     stat: "400+",
-    statLabel: "Gates Tracked Daily",
+    statLabel: "Gates tracked daily",
     title: "Aircraft turnaround quality, verified independently.",
     painPoints: [
       "Vendor-reported cleaning completion with no independent verification",
@@ -1038,14 +927,14 @@ const industries = [
       "Regulatory compliance scoring by framework",
     ],
     quote: "We went from monthly PDF reports to live dashboards. Our team can now hold vendors accountable the same day an issue occurs.",
-    role: "VP Facilities, Major US Airline",
+    role: "VP Operations, Major US Airline",
   },
   {
     id: "healthcare",
     label: "Healthcare",
     icon: Hospital,
     stat: "99.2%",
-    statLabel: "Audit Pass Rate",
+    statLabel: "Audit pass rate",
     title: "Compliance-grade cleanliness, proven and traceable.",
     painPoints: [
       "Regulatory inspections require complete, timestamped documentation",
@@ -1066,10 +955,10 @@ const industries = [
     label: "Corporate",
     icon: Building2,
     stat: "30%",
-    statLabel: "Average Cost Reduction",
+    statLabel: "Average cost reduction",
     title: "Portfolio-wide quality standards across every location.",
     painPoints: [
-      "Hundreds of facilities with different contractors, standards, and reporting",
+      "Hundreds of locations with different contractors, standards, and reporting",
       "No way to benchmark performance or justify contract renegotiations",
       "Quality issues discovered through employee complaints, not proactive monitoring",
     ],
@@ -1087,6 +976,7 @@ const industries = [
 export function IndustrySolutionsSection() {
   const { ref, inView } = useInView(0.1);
   const [activeTab, setActiveTab] = useState(0);
+  const [tabHovered, setTabHovered] = useState<number | null>(null);
   const active = industries[activeTab];
 
   return (
@@ -1094,61 +984,43 @@ export function IndustrySolutionsSection() {
       ref={ref}
       style={{
         background: "#ffffff",
-        padding: "100px 32px",
-        borderTop: "1px solid #e2e8f0",
+        padding: `${SECTION_Y}px 32px`,
       }}
     >
-      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+      <div style={{ maxWidth: CONTENT_MAX, margin: "0 auto" }}>
         {/* Header */}
         <div
           style={{
-            textAlign: "center",
+            maxWidth: NARROW_MAX,
             marginBottom: 48,
-            opacity: inView ? 1 : 0,
-            transform: inView ? "translateY(0)" : "translateY(20px)",
-            transition: "opacity 0.6s ease, transform 0.6s ease",
+            ...revealStyle(inView),
           }}
         >
           <div
             style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              background: "#eff6ff",
-              border: "1px solid #bfdbfe",
-              color: "#1d4ed8",
-              borderRadius: 99,
-              padding: "5px 14px",
               fontSize: 12,
-              fontWeight: 600,
-              letterSpacing: "0.05em",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
               textTransform: "uppercase",
+              color: accent,
               marginBottom: 20,
             }}
           >
-            <Layers size={14} />
             Industry Solutions
           </div>
           <h2
             style={{
-              color: "#0f172a",
-              fontSize: "clamp(28px, 4vw, 44px)",
+              color: ink[900],
+              fontSize: "clamp(28px, 3.5vw, 42px)",
               fontWeight: 800,
               letterSpacing: "-1.5px",
-              margin: "0 0 16px",
+              lineHeight: 1.1,
+              marginBottom: 16,
             }}
           >
             Built for your industry
           </h2>
-          <p
-            style={{
-              color: "#64748b",
-              fontSize: 17,
-              maxWidth: 500,
-              margin: "0 auto",
-              lineHeight: 1.6,
-            }}
-          >
+          <p style={{ color: ink[400], fontSize: 17, lineHeight: 1.65 }}>
             IQS Flow adapts to the compliance requirements and operational
             realities of your sector.
           </p>
@@ -1158,93 +1030,69 @@ export function IndustrySolutionsSection() {
         <div
           style={{
             display: "flex",
-            justifyContent: "center",
-            gap: 8,
-            marginBottom: 48,
-            opacity: inView ? 1 : 0,
-            transition: "opacity 0.6s ease 0.2s",
+            gap: 4,
+            marginBottom: 40,
+            borderBottom: `1px solid ${ink[100]}`,
+            ...revealStyle(inView, 0.1),
           }}
         >
           {industries.map(({ label, icon: IndustryIcon }, i) => (
             <button
               key={label}
               onClick={() => setActiveTab(i)}
+              onMouseEnter={() => setTabHovered(i)}
+              onMouseLeave={() => setTabHovered(null)}
               style={{
                 display: "flex",
                 alignItems: "center",
                 gap: 8,
-                padding: "10px 20px",
-                borderRadius: 10,
-                border: activeTab === i ? "1.5px solid #2563eb" : "1.5px solid #e2e8f0",
-                background: activeTab === i
-                  ? "linear-gradient(135deg, #eff6ff, #dbeafe)"
-                  : "#ffffff",
-                color: activeTab === i ? "#1d4ed8" : "#64748b",
+                padding: "12px 20px",
+                background: "transparent",
+                border: "none",
+                borderBottom: activeTab === i ? `2px solid ${accent}` : "2px solid transparent",
+                color: activeTab === i ? ink[900] : tabHovered === i ? ink[600] : ink[400],
                 fontWeight: activeTab === i ? 700 : 500,
                 fontSize: 14,
                 cursor: "pointer",
                 transition: "all 0.2s ease",
-                boxShadow: activeTab === i ? "0 2px 8px rgba(37,99,235,0.15)" : "none",
+                marginBottom: -1,
               }}
             >
-              <IndustryIcon size={18} />
+              <IndustryIcon size={16} />
               {label}
             </button>
           ))}
         </div>
 
-        {/* Tab content */}
+        {/* Tab content — 3:2 split */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 40,
+            gridTemplateColumns: "3fr 2fr",
+            gap: 32,
             alignItems: "start",
-            opacity: inView ? 1 : 0,
-            transition: "opacity 0.5s ease 0.3s",
           }}
           className="industry-grid"
           key={activeTab}
         >
-          {/* Left: stat + pain points */}
+          {/* Left */}
           <div>
-            {/* Stat */}
+            {/* Stat block */}
             <div
               style={{
-                background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
-                borderRadius: 20,
+                background: ink[800],
+                borderRadius: 10,
                 padding: "32px 28px",
-                marginBottom: 24,
+                marginBottom: 20,
               }}
             >
-              <div
-                style={{
-                  fontSize: "clamp(40px, 5vw, 56px)",
-                  fontWeight: 900,
-                  letterSpacing: "-2px",
-                  background: "linear-gradient(135deg, #60a5fa, #93c5fd)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  lineHeight: 1,
-                  marginBottom: 4,
-                }}
-              >
+              <div style={{ fontSize: 48, fontWeight: 800, letterSpacing: "-2px", color: "#ffffff", lineHeight: 1, marginBottom: 4 }}>
                 {active.stat}
               </div>
-              <div style={{ color: "#94a3b8", fontSize: 14, fontWeight: 600, marginBottom: 16 }}>
+              <div style={{ fontSize: 14, color: ink[400], fontWeight: 500, marginBottom: 20 }}>
                 {active.statLabel}
               </div>
-              <h3
-                style={{
-                  color: "#f1f5f9",
-                  fontSize: 18,
-                  fontWeight: 700,
-                  letterSpacing: "-0.3px",
-                  lineHeight: 1.35,
-                  margin: 0,
-                }}
-              >
+              <h3 style={{ color: "#f1f5f9", fontSize: 17, fontWeight: 600, lineHeight: 1.4, margin: 0 }}>
                 {active.title}
               </h3>
             </div>
@@ -1253,83 +1101,74 @@ export function IndustrySolutionsSection() {
             <div
               style={{
                 background: "#fef2f2",
-                border: "1px solid #fecaca",
-                borderRadius: 16,
-                padding: "24px 24px",
+                border: `1px solid #fecaca`,
+                borderRadius: 10,
+                padding: "24px",
               }}
             >
               <div
                 style={{
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: 700,
                   color: "#ef4444",
                   letterSpacing: "0.06em",
                   textTransform: "uppercase",
-                  marginBottom: 14,
+                  marginBottom: 16,
                   display: "flex",
                   alignItems: "center",
                   gap: 6,
                 }}
               >
-                <XCircle size={14} />
+                <XCircle size={13} />
                 Common Pain Points
               </div>
               {active.painPoints.map((p) => (
                 <div
                   key={p}
-                  style={{
-                    display: "flex",
-                    gap: 10,
-                    alignItems: "flex-start",
-                    marginBottom: 10,
-                  }}
+                  style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 10 }}
                 >
-                  <X size={16} style={{ color: "#ef4444", flexShrink: 0, marginTop: 1 }} />
-                  <span style={{ color: "#7f1d1d", fontSize: 14, lineHeight: 1.5 }}>{p}</span>
+                  <span style={{ color: "#ef4444", flexShrink: 0, marginTop: 2, fontSize: 14 }}>x</span>
+                  <span style={{ color: "#7f1d1d", fontSize: 14, lineHeight: 1.55 }}>{p}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Right: features + testimonial */}
+          {/* Right */}
           <div>
+            {/* Capabilities */}
             <div
               style={{
                 background: "#f0fdf4",
                 border: "1px solid #bbf7d0",
-                borderRadius: 16,
-                padding: "24px 24px",
-                marginBottom: 24,
+                borderRadius: 10,
+                padding: "24px",
+                marginBottom: 20,
               }}
             >
               <div
                 style={{
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: 700,
                   color: "#059669",
                   letterSpacing: "0.06em",
                   textTransform: "uppercase",
-                  marginBottom: 14,
+                  marginBottom: 16,
                   display: "flex",
                   alignItems: "center",
                   gap: 6,
                 }}
               >
-                <BadgeCheck size={14} />
+                <BadgeCheck size={13} />
                 IQS Flow Capabilities
               </div>
               {active.features.map((f) => (
                 <div
                   key={f}
-                  style={{
-                    display: "flex",
-                    gap: 10,
-                    alignItems: "flex-start",
-                    marginBottom: 10,
-                  }}
+                  style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 10 }}
                 >
-                  <CheckCircle2 size={16} style={{ color: "#059669", flexShrink: 0, marginTop: 1 }} />
-                  <span style={{ color: "#14532d", fontSize: 14, lineHeight: 1.5 }}>{f}</span>
+                  <CheckCircle2 size={14} style={{ color: "#059669", flexShrink: 0, marginTop: 2 }} />
+                  <span style={{ color: "#14532d", fontSize: 14, lineHeight: 1.55 }}>{f}</span>
                 </div>
               ))}
             </div>
@@ -1337,27 +1176,23 @@ export function IndustrySolutionsSection() {
             {/* Quote */}
             <div
               style={{
-                background: "linear-gradient(165deg, #f8fafc, #f1f5f9)",
-                border: "1px solid #e2e8f0",
-                borderRadius: 16,
-                padding: "24px 28px",
+                borderLeft: `3px solid ${ink[200]}`,
+                padding: "20px 24px",
               }}
             >
-              <span style={{ fontSize: 28, color: "#93c5fd", marginBottom: 12, display: "block", lineHeight: 1 }}>&ldquo;</span>
               <p
                 style={{
-                  color: "#0f172a",
+                  color: ink[600],
                   fontSize: 15,
-                  lineHeight: 1.6,
+                  lineHeight: 1.65,
                   fontStyle: "italic",
-                  margin: "0 0 14px",
-                  fontWeight: 500,
+                  margin: "0 0 12px",
                 }}
               >
                 &ldquo;{active.quote}&rdquo;
               </p>
-              <div style={{ color: "#64748b", fontSize: 13, fontWeight: 600 }}>
-                - {active.role}
+              <div style={{ color: ink[400], fontSize: 13, fontWeight: 600 }}>
+                {active.role}
               </div>
             </div>
           </div>
@@ -1366,17 +1201,16 @@ export function IndustrySolutionsSection() {
 
       <style>{`
         @media (max-width: 767px) {
-          .industry-grid {
-            grid-template-columns: 1fr !important;
-            gap: 24px !important;
-          }
+          .industry-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </section>
   );
 }
 
-/* ─── 7. STATS + CTA (dark) ─── */
+/* ════════════════════════════════════════════════
+   7. STATS + CTA — dark, confident
+   ════════════════════════════════════════════════ */
 function AnimatedStat({
   target,
   suffix,
@@ -1390,41 +1224,23 @@ function AnimatedStat({
   inView: boolean;
   delay: number;
 }) {
-  const value = useCountUp(target, 1800, inView);
+  const value = useCountUp(target, 2000, inView);
 
   return (
-    <div
-      style={{
-        textAlign: "center",
-        opacity: inView ? 1 : 0,
-        transform: inView ? "translateY(0)" : "translateY(20px)",
-        transition: `opacity 0.6s ease ${delay}s, transform 0.6s ease ${delay}s`,
-      }}
-    >
+    <div style={{ textAlign: "center", ...revealStyle(inView, delay) }}>
       <div
         style={{
-          fontSize: "clamp(44px, 6vw, 72px)",
-          fontWeight: 900,
-          letterSpacing: "-3px",
+          fontSize: "clamp(40px, 5vw, 64px)",
+          fontWeight: 800,
+          letterSpacing: "-2.5px",
           lineHeight: 1,
-          background: "linear-gradient(135deg, #60a5fa 0%, #93c5fd 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundClip: "text",
+          color: "#ffffff",
         }}
       >
         {value}
         {suffix}
       </div>
-      <div
-        style={{
-          color: "#94a3b8",
-          fontSize: 15,
-          fontWeight: 600,
-          marginTop: 8,
-          letterSpacing: "0.01em",
-        }}
-      >
+      <div style={{ color: ink[400], fontSize: 14, fontWeight: 500, marginTop: 8 }}>
         {label}
       </div>
     </div>
@@ -1440,34 +1256,11 @@ export function StatsCTASection() {
     <section
       ref={ref}
       style={{
-        background: "#0f172a",
-        padding: "100px 32px",
-        position: "relative",
-        overflow: "hidden",
+        background: ink[900],
+        padding: `${SECTION_Y}px 32px`,
       }}
     >
-      {/* Background glow */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage:
-            "radial-gradient(ellipse 70% 50% at 50% 100%, rgba(37,99,235,0.12) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-          pointerEvents: "none",
-        }}
-      />
-
-      <div style={{ position: "relative", maxWidth: 1000, margin: "0 auto" }}>
+      <div style={{ maxWidth: 960, margin: "0 auto" }}>
         {/* Stats row */}
         <div
           style={{
@@ -1475,37 +1268,27 @@ export function StatsCTASection() {
             gridTemplateColumns: "repeat(3, 1fr)",
             gap: 40,
             marginBottom: 80,
+            paddingBottom: 80,
+            borderBottom: "1px solid rgba(255,255,255,0.06)",
           }}
           className="stats-grid"
         >
-          <AnimatedStat target={500} suffix="+" label="Facilities Managed" inView={inView} delay={0} />
-          <AnimatedStat target={98} suffix="%" label="Compliance Pass Rate" inView={inView} delay={0.1} />
-          <AnimatedStat target={30} suffix="%" label="Average Cost Reduction" inView={inView} delay={0.2} />
+          <AnimatedStat target={500} suffix="+" label="Facilities managed" inView={inView} delay={0} />
+          <AnimatedStat target={98} suffix="%" label="Compliance pass rate" inView={inView} delay={0.1} />
+          <AnimatedStat target={30} suffix="%" label="Average cost reduction" inView={inView} delay={0.2} />
         </div>
-
-        {/* Divider */}
-        <div
-          style={{
-            height: 1,
-            background:
-              "linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)",
-            marginBottom: 64,
-          }}
-        />
 
         {/* CTA */}
         <div
           style={{
             textAlign: "center",
-            opacity: inView ? 1 : 0,
-            transform: inView ? "translateY(0)" : "translateY(20px)",
-            transition: "opacity 0.6s ease 0.3s, transform 0.6s ease 0.3s",
+            ...revealStyle(inView, 0.3),
           }}
         >
           <h2
             style={{
               color: "#f8fafc",
-              fontSize: "clamp(28px, 4vw, 44px)",
+              fontSize: "clamp(28px, 3.5vw, 42px)",
               fontWeight: 800,
               letterSpacing: "-1.5px",
               lineHeight: 1.1,
@@ -1516,25 +1299,18 @@ export function StatsCTASection() {
           </h2>
           <p
             style={{
-              color: "#94a3b8",
+              color: ink[400],
               fontSize: 17,
-              maxWidth: 480,
+              maxWidth: 440,
               margin: "0 auto 40px",
               lineHeight: 1.6,
             }}
           >
             Join operations leaders across aviation, healthcare, and corporate
-            facilities who trust IQS Flow.
+            operations who trust IQS Flow.
           </p>
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: 14,
-              flexWrap: "wrap",
-            }}
-          >
+          <div style={{ display: "flex", justifyContent: "center", gap: 16, flexWrap: "wrap" }}>
             <Link
               href="/contact"
               onMouseEnter={() => setDemoHovered(true)}
@@ -1542,25 +1318,20 @@ export function StatsCTASection() {
               style={{
                 display: "inline-flex",
                 alignItems: "center",
-                gap: 8,
-                background: demoHovered
-                  ? "linear-gradient(135deg, #f0f7ff, #ffffff)"
-                  : "#ffffff",
-                color: "#1d4ed8",
-                padding: "15px 30px",
-                borderRadius: 12,
+                gap: 10,
+                background: "#ffffff",
+                color: ink[900],
+                padding: "16px 32px",
+                borderRadius: 8,
                 fontWeight: 700,
                 fontSize: 15,
                 textDecoration: "none",
-                boxShadow: demoHovered
-                  ? "0 8px 24px rgba(0,0,0,0.25)"
-                  : "0 4px 16px rgba(0,0,0,0.2)",
-                transform: demoHovered ? "translateY(-2px)" : "translateY(0)",
-                transition: "all 0.2s ease",
+                transition: "transform 0.2s ease",
+                transform: demoHovered ? "translateY(-1px)" : "none",
               }}
             >
-              <PlayCircle size={18} />
               Request a Demo
+              <ArrowRight size={16} />
             </Link>
             <Link
               href="/industries"
@@ -1571,18 +1342,16 @@ export function StatsCTASection() {
                 alignItems: "center",
                 gap: 8,
                 background: "transparent",
-                color: industryHovered ? "#93c5fd" : "#94a3b8",
-                padding: "15px 30px",
-                borderRadius: 12,
+                color: industryHovered ? ink[200] : ink[400],
+                padding: "16px 32px",
+                borderRadius: 8,
                 fontWeight: 600,
                 fontSize: 15,
                 textDecoration: "none",
-                border: `1.5px solid ${industryHovered ? "rgba(147,197,253,0.4)" : "rgba(255,255,255,0.12)"}`,
-                transform: industryHovered ? "translateY(-1px)" : "translateY(0)",
+                border: `1.5px solid ${industryHovered ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.08)"}`,
                 transition: "all 0.2s ease",
               }}
             >
-              <Compass size={18} />
               Browse Industries
             </Link>
           </div>
@@ -1591,10 +1360,7 @@ export function StatsCTASection() {
 
       <style>{`
         @media (max-width: 640px) {
-          .stats-grid {
-            grid-template-columns: 1fr !important;
-            gap: 32px !important;
-          }
+          .stats-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
         }
       `}</style>
     </section>
