@@ -117,6 +117,13 @@ export default function MarketingFooter() {
               <FooterLink href="/privacy">Privacy</FooterLink>
               <FooterLink href="/terms">Terms</FooterLink>
             </div>
+
+            {/* Social */}
+            <div style={COLUMN_STYLE}>
+              <span style={COLUMN_HEADING_STYLE}>Connect</span>
+              <FooterLink href="#">LinkedIn</FooterLink>
+              <FooterLink href="#">X (Twitter)</FooterLink>
+            </div>
           </div>
         </div>
 

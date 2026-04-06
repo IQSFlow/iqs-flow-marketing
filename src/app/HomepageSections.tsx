@@ -24,6 +24,7 @@ import {
   Users,
   Shield,
   Radio,
+  Sparkles,
 } from "lucide-react";
 import { marketing } from "@/lib/design-tokens";
 
@@ -64,6 +65,38 @@ function revealStyle(inView: boolean, delay = 0): React.CSSProperties {
     transform: inView ? "translateY(0)" : "translateY(24px)",
     transition: `opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}s, transform 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}s`,
   };
+}
+
+/* ════════════════════════════════════════════════
+   0. SCROLL PROGRESS INDICATOR
+   ════════════════════════════════════════════════ */
+export function ScrollProgressBar() {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    function handleScroll() {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(docHeight > 0 ? (scrollTop / docHeight) * 100 : 0);
+    }
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: `${progress}%`,
+        height: 3,
+        background: `linear-gradient(90deg, ${accent}, #7c3aed)`,
+        zIndex: 9999,
+        transition: "width 0.1s linear",
+      }}
+    />
+  );
 }
 
 /* ════════════════════════════════════════════════
@@ -209,7 +242,7 @@ export function HeroSection() {
               ...revealStyle(inView, 0.2),
             }}
           >
-            {["Multi-site visibility", "Compliance-ready", "Real-time tracking"].map((item) => (
+            {["Multi-site visibility", "Compliance-ready", "Real-time tracking", "AI-powered verification"].map((item) => (
               <div
                 key={item}
                 style={{
@@ -299,7 +332,7 @@ export function SocialProofBar() {
     { stat: "4 Portals", label: "Admin, manager, worker, client" },
     { stat: "6 Frameworks", label: "Compliance standards built in" },
     { stat: "Real-Time", label: "GPS tracking & live dashboards" },
-    { stat: "Vendor-Agnostic", label: "Works with any service provider" },
+    { stat: "AI-Verified", label: "Photo analysis & smart scoring" },
   ];
 
   return (
@@ -542,6 +575,12 @@ const features = [
     body: "Aggregate performance data across every site, vendor, and compliance framework. Drill from portfolio-wide trends down to individual shift records.",
     bullets: ["6 compliance frameworks", "Cross-site benchmarking", "Exportable audit trails"],
   },
+  {
+    icon: Sparkles,
+    title: "AI Intelligence",
+    body: "Vision AI scores every cleaning photo automatically. NLP analyzes ticket sentiment and auto-escalates priority. Smart translation lets every worker use forms in their language.",
+    bullets: ["Photo verification with Vision AI", "Sentiment-based ticket escalation", "Automatic form translation"],
+  },
 ];
 
 export function PlatformSection() {
@@ -607,7 +646,7 @@ export function PlatformSection() {
               ...revealStyle(inView, 0.08),
             }}
           >
-            Three integrated modules that give operations leaders the independent
+            Four integrated modules that give operations leaders the independent
             data they need to manage quality at scale.
           </p>
         </div>
@@ -616,7 +655,7 @@ export function PlatformSection() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
+            gridTemplateColumns: "repeat(2, 1fr)",
             gap: 20,
           }}
           className="feature-grid"
@@ -825,15 +864,15 @@ export function HowItWorksSection() {
 
               <div
                 style={{
-                  fontSize: 11,
+                  fontSize: 32,
                   fontWeight: 800,
-                  color: ink[300],
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  marginBottom: 6,
+                  color: ink[200],
+                  letterSpacing: "-1px",
+                  lineHeight: 1,
+                  marginBottom: 8,
                 }}
               >
-                Step {num}
+                {num}
               </div>
               <h3
                 style={{
@@ -1088,6 +1127,7 @@ export function IndustrySolutionsSection() {
             gridTemplateColumns: "3fr 2fr",
             gap: 32,
             alignItems: "start",
+            animation: "industryFadeIn 0.35s ease",
           }}
           className="industry-grid"
           key={activeTab}
@@ -1218,6 +1258,10 @@ export function IndustrySolutionsSection() {
       </div>
 
       <style>{`
+        @keyframes industryFadeIn {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
         @media (max-width: 767px) {
           .industry-grid { grid-template-columns: 1fr !important; }
         }
