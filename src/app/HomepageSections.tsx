@@ -21,7 +21,11 @@ import {
   XCircle,
   CheckCircle2,
   BadgeCheck,
+  Users,
+  Shield,
+  Radio,
 } from "lucide-react";
+import { marketing } from "@/lib/design-tokens";
 
 /* ─── Golden ratio & proportional constants ─── */
 const PHI = 1.618;
@@ -29,24 +33,10 @@ const SECTION_Y = 120; // base vertical rhythm
 const CONTENT_MAX = 1120;
 const NARROW_MAX = 720;
 
-/* ─── Color palette: ink + single accent ─── */
-const ink = {
-  900: "#0a0f1a",
-  800: "#0f172a",
-  700: "#1e293b",
-  600: "#334155",
-  500: "#475569",
-  400: "#64748b",
-  300: "#94a3b8",
-  200: "#cbd5e1",
-  100: "#e2e8f0",
-  50: "#f1f5f9",
-  25: "#f8fafc",
-};
-
-const accent = "#2563eb";
-const accentDark = "#1e40af";
-/* palette: accentLight = "#dbeafe" */
+/* ─── Color palette from design tokens ─── */
+const ink = marketing.ink;
+const accent = marketing.accent;
+const accentDark = marketing.accentDark;
 
 /* ─── Animated counter hook ─── */
 function useCountUp(target: number, duration = 2000, start = false) {
@@ -57,7 +47,7 @@ function useCountUp(target: number, duration = 2000, start = false) {
     const tick = (now: number) => {
       const p = Math.min((now - t0) / duration, 1);
       const eased = 1 - Math.pow(1 - p, 3);
-      setValue(p >= 1 ? target : Math.floor(eased * target));
+      setValue(Math.floor(eased * target));
       if (p < 1) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
@@ -99,43 +89,14 @@ export function HeroSection() {
   const [signInHovered, setSignInHovered] = useState(false);
   const { ref, inView } = useInView(0.1);
 
-  const heroDots = Array.from({ length: 24 }, (_, i) => ({
-    id: i,
-    left: `${(i * 17 + 7) % 100}%`,
-    top: `${(i * 23 + 11) % 100}%`,
-    size: 2 + (i % 3),
-    duration: 18 + (i % 12) * 3,
-    delay: (i % 8) * 2.5,
-  }));
-
   return (
     <section
       ref={ref}
       style={{
         background: "#ffffff",
         borderBottom: `1px solid ${ink[100]}`,
-        position: "relative",
-        overflow: "hidden",
       }}
     >
-      {/* Floating dots */}
-      {heroDots.map((dot) => (
-        <div
-          key={dot.id}
-          style={{
-            position: "absolute",
-            left: dot.left,
-            top: dot.top,
-            width: dot.size,
-            height: dot.size,
-            borderRadius: "50%",
-            background: accent,
-            opacity: 0.07,
-            animation: `heroFloat ${dot.duration}s ${dot.delay}s infinite ease-in-out`,
-            pointerEvents: "none",
-          }}
-        />
-      ))}
       <div
         style={{
           maxWidth: CONTENT_MAX,
@@ -143,8 +104,6 @@ export function HeroSection() {
           padding: `${SECTION_Y}px 32px ${Math.round(SECTION_Y * 0.75)}px`,
           display: "grid",
           gridTemplateColumns: "3fr 2fr",
-          position: "relative",
-          zIndex: 1,
           gap: 64,
           alignItems: "center",
         }}
@@ -284,8 +243,53 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* Right: proof metrics panel */}
-        <HeroMetricsPanel inView={inView} />
+        {/* Right: capability badges */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
+            ...revealStyle(inView, 0.15),
+          }}
+        >
+          {([
+            { icon: Users, title: "Multi-vendor visibility", desc: "Compare every contractor on a unified rubric across all your sites." },
+            { icon: Shield, title: "Real-time inspections", desc: "GPS-verified, photo-documented audits with live compliance scoring." },
+            { icon: Radio, title: "Compliance automation", desc: "6 built-in frameworks score every site against industry standards." },
+          ] as const).map(({ icon: Icon, title, desc }, i) => (
+            <div
+              key={title}
+              style={{
+                background: ink[25],
+                border: `1px solid ${ink[100]}`,
+                borderRadius: 10,
+                padding: "24px 20px",
+                display: "flex",
+                gap: 16,
+                alignItems: "flex-start",
+              }}
+            >
+              <div
+                style={{
+                  width: 40,
+                  height: 40,
+                  background: i === 0 ? accent : ink[800],
+                  borderRadius: 8,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                }}
+              >
+                <Icon size={20} style={{ color: "#ffffff" }} />
+              </div>
+              <div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: ink[900], marginBottom: 4 }}>{title}</div>
+                <div style={{ fontSize: 13, color: ink[400], lineHeight: 1.55 }}>{desc}</div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       <style>{`
@@ -295,116 +299,8 @@ export function HeroSection() {
             gap: 40px !important;
           }
         }
-        @keyframes heroFloat {
-          0% { transform: translateY(0px) translateX(0px); }
-          33% { transform: translateY(-20px) translateX(10px); }
-          66% { transform: translateY(10px) translateX(-8px); }
-          100% { transform: translateY(0px) translateX(0px); }
-        }
-        @keyframes gridShift {
-          0% { transform: translateX(0px) translateY(0px); }
-          25% { transform: translateX(12px) translateY(8px); }
-          50% { transform: translateX(24px) translateY(0px); }
-          75% { transform: translateX(12px) translateY(-8px); }
-          100% { transform: translateX(0px) translateY(0px); }
-        }
       `}</style>
     </section>
-  );
-}
-
-/* Animated metric row using useCountUp */
-function MetricRow({ target, suffix, label, delay, index, inView }: {
-  target: number;
-  suffix: string;
-  label: string;
-  delay: number;
-  index: number;
-  inView: boolean;
-}) {
-  const [started, setStarted] = useState(false);
-  useEffect(() => {
-    if (!inView) return;
-    const t = setTimeout(() => setStarted(true), delay * 1000);
-    return () => clearTimeout(t);
-  }, [inView, delay]);
-  const count = useCountUp(target, 1800, started);
-
-  return (
-    <div
-      style={{
-        borderTop: index > 0 ? "1px solid rgba(255,255,255,0.06)" : "none",
-        paddingTop: index > 0 ? 24 : 0,
-        marginTop: index > 0 ? 24 : 0,
-      }}
-    >
-      <div
-        style={{
-          fontSize: 40,
-          fontWeight: 800,
-          letterSpacing: "-1.5px",
-          lineHeight: 1,
-          color: "#ffffff",
-          marginBottom: 4,
-          fontVariantNumeric: "tabular-nums",
-        }}
-      >
-        {count}{suffix}
-      </div>
-      <div style={{ fontSize: 14, color: ink[400], fontWeight: 500 }}>{label}</div>
-    </div>
-  );
-}
-
-function HeroMetricsPanel({ inView }: { inView: boolean }) {
-  const metrics = [
-    { target: 500, suffix: "+", label: "Facilities managed", delay: 0.1 },
-    { target: 98, suffix: "%", label: "Compliance pass rate", delay: 0.3 },
-    { target: 30, suffix: "%", label: "Average cost reduction", delay: 0.5 },
-  ];
-
-  return (
-    <div style={{ ...revealStyle(inView, 0.15) }}>
-      <div
-        style={{
-          background: ink[800],
-          borderRadius: 12,
-          padding: "40px 36px",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        {/* Animated grid texture */}
-        <div
-          className="hero-grid-texture"
-          style={{
-            position: "absolute",
-            inset: "-24px",
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
-            pointerEvents: "none",
-            animation: "gridShift 30s ease-in-out infinite",
-          }}
-        />
-        <div style={{ position: "relative" }}>
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: ink[400], marginBottom: 32 }}>
-            Platform metrics
-          </div>
-          {metrics.map(({ target, suffix, label, delay }, i) => (
-            <MetricRow
-              key={label}
-              target={target}
-              suffix={suffix}
-              label={label}
-              delay={delay}
-              index={i}
-              inView={inView}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
   );
 }
 
@@ -415,7 +311,7 @@ export function SocialProofBar() {
   const { ref, inView } = useInView(0.3);
 
   const items = [
-    { stat: "Multi-Site", label: "Visibility across every location" },
+    { stat: "4 Portals", label: "Admin, manager, worker, client" },
     { stat: "6 Frameworks", label: "Compliance standards built in" },
     { stat: "Real-Time", label: "GPS tracking & live dashboards" },
     { stat: "Vendor-Agnostic", label: "Works with any service provider" },
@@ -486,7 +382,6 @@ const problems = [
     title: "Vendor-Controlled Data",
     body: "Your cleaning contractor reports their own performance metrics. Self-graded homework means conflicts of interest go undetected, and compliance gaps remain hidden until audits expose them.",
     tag: "Accountability Gap",
-    solution: "IQS Flow provides independent, third-party quality verification. Your data comes from our inspectors, not your vendors.",
   },
   {
     icon: FileEdit,
@@ -494,7 +389,6 @@ const problems = [
     title: "Manual Inconsistent Audits",
     body: "Paper forms, disconnected spreadsheets, and occasional walkthroughs produce inconsistent results. No photo documentation, no timestamp trail, no defensible audit record when issues escalate.",
     tag: "Process Failure",
-    solution: "Digital inspections with GPS stamps, photo evidence, and standardized scoring. Every audit is timestamped and defensible.",
   },
   {
     icon: EyeOff,
@@ -502,137 +396,8 @@ const problems = [
     title: "No Portfolio-Wide Visibility",
     body: "Each site operates as an island. You cannot benchmark standards, identify systemic patterns, or compare contractor performance across locations without weeks of manual data aggregation.",
     tag: "Strategic Blind Spot",
-    solution: "One dashboard across every site, every vendor. Benchmark performance, spot patterns, and compare contractors in real time.",
   },
 ];
-
-/* Floating dots data for ProblemSection background */
-const PROBLEM_DOTS = [
-  { left: "5%", top: "80%", size: 2, duration: 18, delay: 0 },
-  { left: "12%", top: "65%", size: 3, duration: 22, delay: 3 },
-  { left: "20%", top: "90%", size: 2, duration: 16, delay: 7 },
-  { left: "28%", top: "70%", size: 2, duration: 25, delay: 1 },
-  { left: "35%", top: "85%", size: 3, duration: 20, delay: 5 },
-  { left: "42%", top: "75%", size: 2, duration: 19, delay: 9 },
-  { left: "50%", top: "88%", size: 2, duration: 23, delay: 2 },
-  { left: "57%", top: "60%", size: 3, duration: 17, delay: 6 },
-  { left: "63%", top: "78%", size: 2, duration: 21, delay: 4 },
-  { left: "70%", top: "92%", size: 2, duration: 24, delay: 8 },
-  { left: "76%", top: "68%", size: 3, duration: 15, delay: 11 },
-  { left: "82%", top: "83%", size: 2, duration: 26, delay: 0 },
-  { left: "88%", top: "72%", size: 2, duration: 18, delay: 3 },
-  { left: "93%", top: "87%", size: 3, duration: 20, delay: 7 },
-  { left: "8%", top: "40%", size: 2, duration: 28, delay: 13 },
-  { left: "17%", top: "25%", size: 2, duration: 22, delay: 5 },
-  { left: "47%", top: "35%", size: 3, duration: 19, delay: 10 },
-  { left: "73%", top: "45%", size: 2, duration: 24, delay: 2 },
-  { left: "91%", top: "30%", size: 2, duration: 17, delay: 8 },
-];
-
-function FlipCard({ icon: Icon, num, title, body, tag, solution, index, inView }: {
-  icon: React.ElementType;
-  num: string;
-  title: string;
-  body: string;
-  tag: string;
-  solution: string;
-  index: number;
-  inView: boolean;
-}) {
-  const [flipped, setFlipped] = useState(false);
-
-  return (
-    <div
-      onClick={() => setFlipped(!flipped)}
-      style={{
-        perspective: 800,
-        cursor: "pointer",
-        minHeight: index === 0 ? 320 : 300,
-        ...revealStyle(inView, 0.1 + index * 0.1),
-      }}
-    >
-      <div
-        style={{
-          position: "relative",
-          width: "100%",
-          height: "100%",
-          minHeight: "inherit",
-          transition: "transform 0.6s cubic-bezier(0.16,1,0.3,1)",
-          transformStyle: "preserve-3d",
-          transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
-        }}
-      >
-        {/* Front - Problem */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backfaceVisibility: "hidden",
-            background: "rgba(255,255,255,0.03)",
-            border: flipped ? "1px solid rgba(34,197,94,0.15)" : "1px solid rgba(239,68,68,0.12)",
-            borderRadius: 10,
-            padding: index === 0 ? "32px" : "24px",
-            display: "flex",
-            flexDirection: "column",
-            transition: "border-color 0.3s ease",
-          }}
-        >
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#ef4444", marginBottom: 20, display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ color: "rgba(255,255,255,0.2)", fontWeight: 800, fontSize: 12 }}>{num}</span>
-            {tag}
-          </div>
-          <div style={{ width: 40, height: 40, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.15)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
-            <Icon size={20} style={{ color: "#ef4444" }} />
-          </div>
-          <h3 style={{ color: "#f1f5f9", fontSize: index === 0 ? 20 : 17, fontWeight: 700, letterSpacing: "-0.3px", marginBottom: 10, lineHeight: 1.25 }}>
-            {title}
-          </h3>
-          <p style={{ color: ink[300], fontSize: 13, lineHeight: 1.65, margin: 0, flex: 1 }}>
-            {body}
-          </p>
-          <div style={{ marginTop: 16, fontSize: 12, color: "#22c55e", fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
-            Click for solution
-            <ArrowRight size={12} />
-          </div>
-        </div>
-
-        {/* Back - Solution */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backfaceVisibility: "hidden",
-            transform: "rotateY(180deg)",
-            background: "rgba(34,197,94,0.04)",
-            border: "1px solid rgba(34,197,94,0.15)",
-            borderRadius: 10,
-            padding: index === 0 ? "32px" : "24px",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#22c55e", marginBottom: 20, display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ color: "rgba(255,255,255,0.2)", fontWeight: 800, fontSize: 12 }}>{num}</span>
-            IQS Flow Solution
-          </div>
-          <div style={{ width: 40, height: 40, background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.15)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
-            <CheckCircle2 size={20} style={{ color: "#22c55e" }} />
-          </div>
-          <h3 style={{ color: "#f1f5f9", fontSize: index === 0 ? 20 : 17, fontWeight: 700, letterSpacing: "-0.3px", marginBottom: 10, lineHeight: 1.25 }}>
-            {title}
-          </h3>
-          <p style={{ color: ink[200], fontSize: 14, lineHeight: 1.7, margin: 0, flex: 1 }}>
-            {solution}
-          </p>
-          <div style={{ marginTop: 16, fontSize: 12, color: ink[400], fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
-            Back to problem
-            <ArrowRight size={12} style={{ transform: "rotate(180deg)" }} />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export function ProblemSection() {
   const { ref, inView } = useInView(0.1);
@@ -643,30 +408,10 @@ export function ProblemSection() {
       style={{
         background: ink[900],
         padding: `${SECTION_Y}px 32px`,
-        position: "relative",
-        overflow: "hidden",
       }}
     >
-      {/* Animated floating dots */}
-      {PROBLEM_DOTS.map((dot, i) => (
-        <div
-          key={i}
-          style={{
-            position: "absolute",
-            left: dot.left,
-            top: dot.top,
-            width: dot.size,
-            height: dot.size,
-            borderRadius: "50%",
-            background: "rgba(255,255,255,0.08)",
-            animation: `floatDot ${dot.duration}s ${dot.delay}s infinite linear`,
-            pointerEvents: "none",
-          }}
-        />
-      ))}
-
-      <div style={{ maxWidth: CONTENT_MAX, margin: "0 auto", position: "relative" }}>
-        {/* Header */}
+      <div style={{ maxWidth: CONTENT_MAX, margin: "0 auto" }}>
+        {/* Header — left-aligned */}
         <div
           style={{
             maxWidth: NARROW_MAX,
@@ -674,26 +419,109 @@ export function ProblemSection() {
             ...revealStyle(inView),
           }}
         >
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#ef4444", marginBottom: 20 }}>
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: "#ef4444",
+              marginBottom: 20,
+            }}
+          >
             <AlertTriangle size={14} />
             The Problem
           </div>
-          <h2 style={{ color: "#f8fafc", fontSize: "clamp(28px, 3.5vw, 42px)", fontWeight: 800, letterSpacing: "-1.5px", lineHeight: 1.1, marginBottom: 16 }}>
+          <h2
+            style={{
+              color: "#f8fafc",
+              fontSize: "clamp(28px, 3.5vw, 42px)",
+              fontWeight: 800,
+              letterSpacing: "-1.5px",
+              lineHeight: 1.1,
+              marginBottom: 16,
+            }}
+          >
             Your quality data has a trust problem.
           </h2>
           <p style={{ color: ink[400], fontSize: 17, lineHeight: 1.65 }}>
             Three systemic failures that put your operations, your compliance,
-            and your reputation at risk every day. Click each card to see the solution.
+            and your reputation at risk every day.
           </p>
         </div>
 
-        {/* Flip cards */}
+        {/* Cards — dominant first card */}
         <div
-          style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr 1fr", gap: 20 }}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1.2fr 1fr 1fr",
+            gap: 20,
+          }}
           className="problem-grid"
         >
-          {problems.map((problem, i) => (
-            <FlipCard key={problem.title} {...problem} index={i} inView={inView} />
+          {problems.map(({ icon: ProblemIcon, num, title, body, tag }, i) => (
+            <div
+              key={title}
+              style={{
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid rgba(255,255,255,0.06)",
+                borderRadius: 10,
+                padding: i === 0 ? "36px 32px" : "28px 24px",
+                ...revealStyle(inView, 0.1 + i * 0.1),
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: "#ef4444",
+                  marginBottom: 20,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                }}
+              >
+                <span style={{ color: "rgba(255,255,255,0.2)", fontWeight: 800, fontSize: 12 }}>{num}</span>
+                {tag}
+              </div>
+
+              <div
+                style={{
+                  width: 40,
+                  height: 40,
+                  background: "rgba(239,68,68,0.08)",
+                  border: "1px solid rgba(239,68,68,0.15)",
+                  borderRadius: 8,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginBottom: 20,
+                }}
+              >
+                <ProblemIcon size={20} style={{ color: "#ef4444" }} />
+              </div>
+
+              <h3
+                style={{
+                  color: "#f1f5f9",
+                  fontSize: i === 0 ? 20 : 17,
+                  fontWeight: 700,
+                  letterSpacing: "-0.3px",
+                  marginBottom: 12,
+                  lineHeight: 1.25,
+                }}
+              >
+                {title}
+              </h3>
+              <p style={{ color: ink[300], fontSize: 14, lineHeight: 1.7, margin: 0 }}>
+                {body}
+              </p>
+            </div>
           ))}
         </div>
       </div>
@@ -701,12 +529,6 @@ export function ProblemSection() {
       <style>{`
         @media (max-width: 767px) {
           .problem-grid { grid-template-columns: 1fr !important; }
-        }
-        @keyframes floatDot {
-          0% { transform: translateY(0px) translateX(0px); opacity: 0; }
-          10% { opacity: 1; }
-          90% { opacity: 0.7; }
-          100% { transform: translateY(-120px) translateX(18px); opacity: 0; }
         }
       `}</style>
     </section>
@@ -1068,8 +890,8 @@ const industries = [
     id: "airlines",
     label: "Airlines",
     icon: Plane,
-    stat: "400+",
-    statLabel: "Gates tracked daily",
+    stat: "Gate-level",
+    statLabel: "Tracking & verification",
     title: "Every gate, every turn, every airport.",
     painPoints: [
       "Vendor-reported cleaning completion with no independent verification",
@@ -1082,15 +904,15 @@ const industries = [
       "Gate-level compliance scoring",
       "Multi-vendor performance comparison",
     ],
-    quote: "We went from monthly PDF reports to live dashboards. Our team can now hold vendors accountable the same day an issue occurs.",
-    role: "VP Operations, Major US Airline",
+    quote: "We built IQS Flow so operations teams can hold vendors accountable with data, not promises. Every task is tracked, every inspection is verified.",
+    role: "Venice Collier, CEO & Founder",
   },
   {
     id: "airports",
     label: "Airports",
     icon: Plane,
-    stat: "99%",
-    statLabel: "Inspection coverage",
+    stat: "Zone-by-zone",
+    statLabel: "Inspections & scoring",
     title: "Terminal-wide visibility, terminal by terminal.",
     painPoints: [
       "Terminal cleaning contractors report their own pass/fail metrics",
@@ -1103,15 +925,15 @@ const industries = [
       "Digital inspections with photo capture",
       "Automated compliance scoring",
     ],
-    quote: "IQS Flow gave our operations team a live view of every terminal without adding headcount. We finally have an independent record to stand behind.",
-    role: "Director of Operations, Major US Airport",
+    quote: "Airport operations teams need one view across every terminal and vendor. IQS Flow delivers that with GPS-verified inspections and automated compliance scoring.",
+    role: "Venice Collier, CEO & Founder",
   },
   {
     id: "corporate",
     label: "Banks & Corporate",
     icon: Building2,
-    stat: "30%",
-    statLabel: "Average cost reduction",
+    stat: "Scorecard",
+    statLabel: "Vendor analytics",
     title: "Hundreds of branches, one quality standard.",
     painPoints: [
       "Hundreds of locations with different contractors, standards, and reporting",
@@ -1124,15 +946,15 @@ const industries = [
       "Multi-vendor performance dashboards",
       "Branch-level compliance reporting",
     ],
-    quote: "We renegotiated three vendor contracts using IQS Flow data. The ROI paid for the platform in the first quarter.",
-    role: "COO, Fortune 500 Real Estate Portfolio",
+    quote: "After 15 years managing vendor operations, I built IQS Flow because clients deserve the same quality data their vendors keep internally.",
+    role: "Venice Collier, CEO & Founder",
   },
   {
     id: "healthcare",
     label: "Healthcare",
     icon: Hospital,
-    stat: "99.2%",
-    statLabel: "Audit pass rate",
+    stat: "JCAHO-ready",
+    statLabel: "Compliance tracking",
     title: "Compliance-grade cleanliness, verified.",
     painPoints: [
       "Regulatory inspections require complete, timestamped documentation",
@@ -1145,8 +967,8 @@ const industries = [
       "Complete audit trails",
       "Independent verification of cleaning quality",
     ],
-    quote: "IQS Flow gave us the documentation infrastructure we needed to pass our next JCAHO review with confidence.",
-    role: "Director of Environmental Services, Regional Health System",
+    quote: "Healthcare compliance requires complete, timestamped documentation. IQS Flow generates audit-ready records automatically so your team can focus on patient care.",
+    role: "Venice Collier, CEO & Founder",
   },
 ];
 
@@ -1602,9 +1424,9 @@ export function StatsCTASection() {
           }}
           className="stats-grid"
         >
-          <AnimatedStat target={500} suffix="+" label="Facilities managed" inView={inView} delay={0} />
-          <AnimatedStat target={98} suffix="%" label="Compliance pass rate" inView={inView} delay={0.1} />
-          <AnimatedStat target={30} suffix="%" label="Average cost reduction" inView={inView} delay={0.2} />
+          <AnimatedStat target={4} suffix="" label="Role-based portals" inView={inView} delay={0} />
+          <AnimatedStat target={6} suffix="" label="Compliance frameworks" inView={inView} delay={0.1} />
+          <AnimatedStat target={3} suffix="" label="Industry verticals" inView={inView} delay={0.2} />
         </div>
 
         {/* CTA */}
