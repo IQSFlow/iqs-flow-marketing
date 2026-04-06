@@ -254,66 +254,7 @@ export function HeroSection() {
         </div>
 
         {/* Right: proof metrics panel */}
-        <div
-          style={{
-            ...revealStyle(inView, 0.15),
-          }}
-        >
-          <div
-            style={{
-              background: ink[800],
-              borderRadius: 12,
-              padding: "40px 36px",
-              position: "relative",
-              overflow: "hidden",
-            }}
-          >
-            {/* Subtle grid texture */}
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                backgroundImage:
-                  "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
-                backgroundSize: "48px 48px",
-                pointerEvents: "none",
-              }}
-            />
-            <div style={{ position: "relative" }}>
-              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: ink[400], marginBottom: 32 }}>
-                Platform metrics
-              </div>
-              {[
-                { value: "500+", label: "Facilities managed" },
-                { value: "98%", label: "Compliance pass rate" },
-                { value: "30%", label: "Average cost reduction" },
-              ].map(({ value, label }, i) => (
-                <div
-                  key={label}
-                  style={{
-                    borderTop: i > 0 ? `1px solid rgba(255,255,255,0.06)` : "none",
-                    paddingTop: i > 0 ? 24 : 0,
-                    marginTop: i > 0 ? 24 : 0,
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: 40,
-                      fontWeight: 800,
-                      letterSpacing: "-1.5px",
-                      lineHeight: 1,
-                      color: "#ffffff",
-                      marginBottom: 4,
-                    }}
-                  >
-                    {value}
-                  </div>
-                  <div style={{ fontSize: 14, color: ink[400], fontWeight: 500 }}>{label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <HeroMetricsPanel inView={inView} />
       </div>
 
       <style>{`
@@ -323,8 +264,110 @@ export function HeroSection() {
             gap: 40px !important;
           }
         }
+        @keyframes gridShift {
+          0% { transform: translateX(0px) translateY(0px); }
+          25% { transform: translateX(12px) translateY(8px); }
+          50% { transform: translateX(24px) translateY(0px); }
+          75% { transform: translateX(12px) translateY(-8px); }
+          100% { transform: translateX(0px) translateY(0px); }
+        }
       `}</style>
     </section>
+  );
+}
+
+/* Animated metric row using useCountUp */
+function MetricRow({ target, suffix, label, delay, index, inView }: {
+  target: number;
+  suffix: string;
+  label: string;
+  delay: number;
+  index: number;
+  inView: boolean;
+}) {
+  const [started, setStarted] = useState(false);
+  useEffect(() => {
+    if (!inView) return;
+    const t = setTimeout(() => setStarted(true), delay * 1000);
+    return () => clearTimeout(t);
+  }, [inView, delay]);
+  const count = useCountUp(target, 1800, started);
+
+  return (
+    <div
+      style={{
+        borderTop: index > 0 ? "1px solid rgba(255,255,255,0.06)" : "none",
+        paddingTop: index > 0 ? 24 : 0,
+        marginTop: index > 0 ? 24 : 0,
+      }}
+    >
+      <div
+        style={{
+          fontSize: 40,
+          fontWeight: 800,
+          letterSpacing: "-1.5px",
+          lineHeight: 1,
+          color: "#ffffff",
+          marginBottom: 4,
+          fontVariantNumeric: "tabular-nums",
+        }}
+      >
+        {count}{suffix}
+      </div>
+      <div style={{ fontSize: 14, color: ink[400], fontWeight: 500 }}>{label}</div>
+    </div>
+  );
+}
+
+function HeroMetricsPanel({ inView }: { inView: boolean }) {
+  const metrics = [
+    { target: 500, suffix: "+", label: "Facilities managed", delay: 0.1 },
+    { target: 98, suffix: "%", label: "Compliance pass rate", delay: 0.3 },
+    { target: 30, suffix: "%", label: "Average cost reduction", delay: 0.5 },
+  ];
+
+  return (
+    <div style={{ ...revealStyle(inView, 0.15) }}>
+      <div
+        style={{
+          background: ink[800],
+          borderRadius: 12,
+          padding: "40px 36px",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        {/* Animated grid texture */}
+        <div
+          className="hero-grid-texture"
+          style={{
+            position: "absolute",
+            inset: "-24px",
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
+            backgroundSize: "48px 48px",
+            pointerEvents: "none",
+            animation: "gridShift 30s ease-in-out infinite",
+          }}
+        />
+        <div style={{ position: "relative" }}>
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: ink[400], marginBottom: 32 }}>
+            Platform metrics
+          </div>
+          {metrics.map(({ target, suffix, label, delay }, i) => (
+            <MetricRow
+              key={label}
+              target={target}
+              suffix={suffix}
+              label={label}
+              delay={delay}
+              index={i}
+              inView={inView}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -406,6 +449,7 @@ const problems = [
     title: "Vendor-Controlled Data",
     body: "Your cleaning contractor reports their own performance metrics. Self-graded homework means conflicts of interest go undetected, and compliance gaps remain hidden until audits expose them.",
     tag: "Accountability Gap",
+    solution: "IQS Flow provides independent, third-party quality verification. Your data comes from our inspectors, not your vendors.",
   },
   {
     icon: FileEdit,
@@ -413,6 +457,7 @@ const problems = [
     title: "Manual Inconsistent Audits",
     body: "Paper forms, disconnected spreadsheets, and occasional walkthroughs produce inconsistent results. No photo documentation, no timestamp trail, no defensible audit record when issues escalate.",
     tag: "Process Failure",
+    solution: "Digital inspections with GPS stamps, photo evidence, and standardized scoring. Every audit is timestamped and defensible.",
   },
   {
     icon: EyeOff,
@@ -420,7 +465,31 @@ const problems = [
     title: "No Portfolio-Wide Visibility",
     body: "Each site operates as an island. You cannot benchmark standards, identify systemic patterns, or compare contractor performance across locations without weeks of manual data aggregation.",
     tag: "Strategic Blind Spot",
+    solution: "One dashboard across every site, every vendor. Benchmark performance, spot patterns, and compare contractors in real time.",
   },
+];
+
+/* Floating dots data for ProblemSection background */
+const PROBLEM_DOTS = [
+  { left: "5%", top: "80%", size: 2, duration: 18, delay: 0 },
+  { left: "12%", top: "65%", size: 3, duration: 22, delay: 3 },
+  { left: "20%", top: "90%", size: 2, duration: 16, delay: 7 },
+  { left: "28%", top: "70%", size: 2, duration: 25, delay: 1 },
+  { left: "35%", top: "85%", size: 3, duration: 20, delay: 5 },
+  { left: "42%", top: "75%", size: 2, duration: 19, delay: 9 },
+  { left: "50%", top: "88%", size: 2, duration: 23, delay: 2 },
+  { left: "57%", top: "60%", size: 3, duration: 17, delay: 6 },
+  { left: "63%", top: "78%", size: 2, duration: 21, delay: 4 },
+  { left: "70%", top: "92%", size: 2, duration: 24, delay: 8 },
+  { left: "76%", top: "68%", size: 3, duration: 15, delay: 11 },
+  { left: "82%", top: "83%", size: 2, duration: 26, delay: 0 },
+  { left: "88%", top: "72%", size: 2, duration: 18, delay: 3 },
+  { left: "93%", top: "87%", size: 3, duration: 20, delay: 7 },
+  { left: "8%", top: "40%", size: 2, duration: 28, delay: 13 },
+  { left: "17%", top: "25%", size: 2, duration: 22, delay: 5 },
+  { left: "47%", top: "35%", size: 3, duration: 19, delay: 10 },
+  { left: "73%", top: "45%", size: 2, duration: 24, delay: 2 },
+  { left: "91%", top: "30%", size: 2, duration: 17, delay: 8 },
 ];
 
 export function ProblemSection() {
@@ -432,9 +501,29 @@ export function ProblemSection() {
       style={{
         background: ink[900],
         padding: `${SECTION_Y}px 32px`,
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-      <div style={{ maxWidth: CONTENT_MAX, margin: "0 auto" }}>
+      {/* Animated floating dots */}
+      {PROBLEM_DOTS.map((dot, i) => (
+        <div
+          key={i}
+          style={{
+            position: "absolute",
+            left: dot.left,
+            top: dot.top,
+            width: dot.size,
+            height: dot.size,
+            borderRadius: "50%",
+            background: "rgba(255,255,255,0.08)",
+            animation: `floatDot ${dot.duration}s ${dot.delay}s infinite linear`,
+            pointerEvents: "none",
+          }}
+        />
+      ))}
+
+      <div style={{ maxWidth: CONTENT_MAX, margin: "0 auto", position: "relative" }}>
         {/* Header — left-aligned */}
         <div
           style={{
@@ -486,65 +575,166 @@ export function ProblemSection() {
           }}
           className="problem-grid"
         >
-          {problems.map(({ icon: ProblemIcon, num, title, body, tag }, i) => (
+          {problems.map(({ icon: ProblemIcon, num, title, body, tag, solution }, i) => (
             <div
               key={title}
               style={{
                 background: "rgba(255,255,255,0.03)",
                 border: "1px solid rgba(255,255,255,0.06)",
                 borderRadius: 10,
-                padding: i === 0 ? "36px 32px" : "28px 24px",
+                overflow: "hidden",
                 ...revealStyle(inView, 0.1 + i * 0.1),
               }}
             >
+              {/* Problem half */}
               <div
                 style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  color: "#ef4444",
-                  marginBottom: 20,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
+                  padding: i === 0 ? "32px 32px 24px" : "24px 24px 20px",
+                  background: "rgba(239,68,68,0.03)",
                 }}
               >
-                <span style={{ color: "rgba(255,255,255,0.2)", fontWeight: 800, fontSize: 12 }}>{num}</span>
-                {tag}
+                <div
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 700,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    color: "#ef4444",
+                    marginBottom: 20,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                  }}
+                >
+                  <span style={{ color: "rgba(255,255,255,0.2)", fontWeight: 800, fontSize: 12 }}>{num}</span>
+                  {tag}
+                </div>
+
+                <div
+                  style={{
+                    width: 40,
+                    height: 40,
+                    background: "rgba(239,68,68,0.08)",
+                    border: "1px solid rgba(239,68,68,0.15)",
+                    borderRadius: 8,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: 16,
+                  }}
+                >
+                  <ProblemIcon size={20} style={{ color: "#ef4444" }} />
+                </div>
+
+                <h3
+                  style={{
+                    color: "#f1f5f9",
+                    fontSize: i === 0 ? 20 : 17,
+                    fontWeight: 700,
+                    letterSpacing: "-0.3px",
+                    marginBottom: 10,
+                    lineHeight: 1.25,
+                  }}
+                >
+                  {title}
+                </h3>
+                <p style={{ color: ink[300], fontSize: 13, lineHeight: 1.65, margin: 0 }}>
+                  {body}
+                </p>
               </div>
 
+              {/* Animated divider with chevron */}
               <div
                 style={{
-                  width: 40,
-                  height: 40,
-                  background: "rgba(239,68,68,0.08)",
-                  border: "1px solid rgba(239,68,68,0.15)",
-                  borderRadius: 8,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  marginBottom: 20,
+                  padding: "10px 0",
+                  background: "rgba(255,255,255,0.02)",
+                  borderTop: "1px solid rgba(255,255,255,0.05)",
+                  borderBottom: "1px solid rgba(255,255,255,0.05)",
+                  position: "relative",
+                  overflow: "hidden",
                 }}
               >
-                <ProblemIcon size={20} style={{ color: "#ef4444" }} />
+                {/* Horizontal gradient line */}
+                <div style={{
+                  position: "absolute",
+                  left: 0,
+                  right: 0,
+                  top: "50%",
+                  height: 1,
+                  background: "linear-gradient(90deg, transparent, rgba(34,197,94,0.15), transparent)",
+                  transform: "translateY(-50%)",
+                }} />
+                <div
+                  style={{
+                    animation: "chevronPulse 2.2s ease-in-out infinite",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 2,
+                    position: "relative",
+                  }}
+                >
+                  <div style={{
+                    width: 0,
+                    height: 0,
+                    borderLeft: "5px solid transparent",
+                    borderRight: "5px solid transparent",
+                    borderTop: "5px solid rgba(34,197,94,0.45)",
+                  }} />
+                  <div style={{
+                    width: 0,
+                    height: 0,
+                    borderLeft: "5px solid transparent",
+                    borderRight: "5px solid transparent",
+                    borderTop: "5px solid rgba(34,197,94,0.22)",
+                  }} />
+                </div>
               </div>
 
-              <h3
+              {/* Solution half */}
+              <div
                 style={{
-                  color: "#f1f5f9",
-                  fontSize: i === 0 ? 20 : 17,
-                  fontWeight: 700,
-                  letterSpacing: "-0.3px",
-                  marginBottom: 12,
-                  lineHeight: 1.25,
+                  padding: i === 0 ? "20px 32px 28px" : "16px 24px 22px",
+                  background: "rgba(34,197,94,0.03)",
                 }}
               >
-                {title}
-              </h3>
-              <p style={{ color: ink[300], fontSize: 14, lineHeight: 1.7, margin: 0 }}>
-                {body}
-              </p>
+                <div
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 700,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    color: "#22c55e",
+                    marginBottom: 10,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 16,
+                      height: 16,
+                      borderRadius: "50%",
+                      background: "rgba(34,197,94,0.15)",
+                      border: "1px solid rgba(34,197,94,0.3)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Check size={9} style={{ color: "#22c55e" }} />
+                  </div>
+                  IQS Flow Solution
+                </div>
+                <p style={{ color: ink[200], fontSize: 13, lineHeight: 1.65, margin: 0 }}>
+                  {solution}
+                </p>
+              </div>
             </div>
           ))}
         </div>
@@ -553,6 +743,16 @@ export function ProblemSection() {
       <style>{`
         @media (max-width: 767px) {
           .problem-grid { grid-template-columns: 1fr !important; }
+        }
+        @keyframes floatDot {
+          0% { transform: translateY(0px) translateX(0px); opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 0.7; }
+          100% { transform: translateY(-120px) translateX(18px); opacity: 0; }
+        }
+        @keyframes chevronPulse {
+          0%, 100% { transform: translateY(0); opacity: 0.6; }
+          50% { transform: translateY(3px); opacity: 1; }
         }
       `}</style>
     </section>
