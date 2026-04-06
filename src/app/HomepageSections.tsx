@@ -99,14 +99,43 @@ export function HeroSection() {
   const [signInHovered, setSignInHovered] = useState(false);
   const { ref, inView } = useInView(0.1);
 
+  const heroDots = Array.from({ length: 24 }, (_, i) => ({
+    id: i,
+    left: `${(i * 17 + 7) % 100}%`,
+    top: `${(i * 23 + 11) % 100}%`,
+    size: 2 + (i % 3),
+    duration: 18 + (i % 12) * 3,
+    delay: (i % 8) * 2.5,
+  }));
+
   return (
     <section
       ref={ref}
       style={{
         background: "#ffffff",
         borderBottom: `1px solid ${ink[100]}`,
+        position: "relative",
+        overflow: "hidden",
       }}
     >
+      {/* Floating dots */}
+      {heroDots.map((dot) => (
+        <div
+          key={dot.id}
+          style={{
+            position: "absolute",
+            left: dot.left,
+            top: dot.top,
+            width: dot.size,
+            height: dot.size,
+            borderRadius: "50%",
+            background: accent,
+            opacity: 0.07,
+            animation: `heroFloat ${dot.duration}s ${dot.delay}s infinite ease-in-out`,
+            pointerEvents: "none",
+          }}
+        />
+      ))}
       <div
         style={{
           maxWidth: CONTENT_MAX,
@@ -114,6 +143,8 @@ export function HeroSection() {
           padding: `${SECTION_Y}px 32px ${Math.round(SECTION_Y * 0.75)}px`,
           display: "grid",
           gridTemplateColumns: "3fr 2fr",
+          position: "relative",
+          zIndex: 1,
           gap: 64,
           alignItems: "center",
         }}
@@ -263,6 +294,12 @@ export function HeroSection() {
             grid-template-columns: 1fr !important;
             gap: 40px !important;
           }
+        }
+        @keyframes heroFloat {
+          0% { transform: translateY(0px) translateX(0px); }
+          33% { transform: translateY(-20px) translateX(10px); }
+          66% { transform: translateY(10px) translateX(-8px); }
+          100% { transform: translateY(0px) translateX(0px); }
         }
         @keyframes gridShift {
           0% { transform: translateX(0px) translateY(0px); }
@@ -594,6 +631,7 @@ export function ProblemSection() {
                 }}
               >
                 <div
+                  className={`problem-tag-${i}`}
                   style={{
                     fontSize: 11,
                     fontWeight: 700,
@@ -604,6 +642,7 @@ export function ProblemSection() {
                     display: "flex",
                     alignItems: "center",
                     gap: 8,
+                    animation: inView ? `tagToGreen 0.6s ${1.5 + i * 0.3}s forwards` : "none",
                   }}
                 >
                   <span style={{ color: "rgba(255,255,255,0.2)", fontWeight: 800, fontSize: 12 }}>{num}</span>
@@ -611,6 +650,7 @@ export function ProblemSection() {
                 </div>
 
                 <div
+                  className={`problem-icon-${i}`}
                   style={{
                     width: 40,
                     height: 40,
@@ -621,9 +661,10 @@ export function ProblemSection() {
                     alignItems: "center",
                     justifyContent: "center",
                     marginBottom: 16,
+                    animation: inView ? `iconToGreen 0.6s ${1.5 + i * 0.3}s forwards` : "none",
                   }}
                 >
-                  <ProblemIcon size={20} style={{ color: "#ef4444" }} />
+                  <ProblemIcon size={20} style={{ color: "#ef4444", animation: inView ? `iconColorToGreen 0.6s ${1.5 + i * 0.3}s forwards` : "none" }} />
                 </div>
 
                 <h3
@@ -753,6 +794,15 @@ export function ProblemSection() {
         @keyframes chevronPulse {
           0%, 100% { transform: translateY(0); opacity: 0.6; }
           50% { transform: translateY(3px); opacity: 1; }
+        }
+        @keyframes tagToGreen {
+          to { color: #22c55e; }
+        }
+        @keyframes iconToGreen {
+          to { background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.15); }
+        }
+        @keyframes iconColorToGreen {
+          to { color: #22c55e; }
         }
       `}</style>
     </section>
