@@ -7,6 +7,8 @@ import {
   PlatformSection,
   HowItWorksSection,
   IndustrySolutionsSection,
+  FounderQuoteSection,
+  AssessmentCTASection,
   StatsCTASection,
 } from "./HomepageSections";
 
@@ -20,6 +22,8 @@ export default function HomePage() {
       <PlatformSection />
       <HowItWorksSection />
       <IndustrySolutionsSection />
+      <FounderQuoteSection />
+      <AssessmentCTASection />
       <StatsCTASection />
       <MarketingFooter />
     </>

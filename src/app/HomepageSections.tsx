@@ -147,9 +147,11 @@ export function HeroSection() {
               ...revealStyle(inView, 0.05),
             }}
           >
-            Stop grading
+            One Platform.
             <br />
-            your own homework.
+            Every Vendor.
+            <br />
+            Every Operation.
           </h1>
 
           <p
@@ -162,9 +164,8 @@ export function HeroSection() {
               ...revealStyle(inView, 0.1),
             }}
           >
-            Your service vendors report their own performance. IQS Flow gives you
-            independent, real-time quality data across every site, every partner,
-            every shift.
+            IQS Flow gives operations leaders independent, real-time quality
+            intelligence across every vendor, every site, every shift.
           </p>
 
           {/* CTAs */}
@@ -333,10 +334,10 @@ export function SocialProofBar() {
   const { ref, inView } = useInView(0.3);
 
   const items = [
-    { stat: "4", label: "Industry verticals" },
-    { stat: "6", label: "Compliance frameworks" },
-    { stat: "24/7", label: "Real-time monitoring" },
-    { stat: "100%", label: "GPS-verified inspections" },
+    { stat: "Multi-Site", label: "Portfolio-wide visibility across every location and vendor" },
+    { stat: "6 Frameworks", label: "Built-in compliance scoring for major industry standards" },
+    { stat: "Real-Time", label: "Live GPS tracking and instant inspection results" },
+    { stat: "Vendor-Agnostic", label: "Independent data your vendors cannot edit or suppress" },
   ];
 
   return (
@@ -363,23 +364,23 @@ export function SocialProofBar() {
             key={label}
             style={{
               display: "flex",
-              alignItems: "baseline",
-              gap: 12,
+              flexDirection: "column",
+              gap: 6,
               ...revealStyle(inView, i * 0.06),
             }}
           >
             <span
               style={{
-                fontSize: 28,
+                fontSize: 15,
                 fontWeight: 800,
-                letterSpacing: "-1px",
+                letterSpacing: "-0.2px",
                 color: ink[800],
                 lineHeight: 1,
               }}
             >
               {stat}
             </span>
-            <span style={{ fontSize: 13, color: ink[400], fontWeight: 500, lineHeight: 1.3 }}>
+            <span style={{ fontSize: 13, color: ink[400], fontWeight: 500, lineHeight: 1.4 }}>
               {label}
             </span>
           </div>
@@ -909,12 +910,12 @@ export function HowItWorksSection() {
    ════════════════════════════════════════════════ */
 const industries = [
   {
-    id: "aviation",
-    label: "Aviation",
+    id: "airlines",
+    label: "Airlines",
     icon: Plane,
     stat: "400+",
     statLabel: "Gates tracked daily",
-    title: "Aircraft turnaround quality, verified independently.",
+    title: "Every gate, every turn, every aircraft.",
     painPoints: [
       "Vendor-reported cleaning completion with no independent verification",
       "Gate-level compliance gaps invisible until a passenger complaint",
@@ -928,6 +929,48 @@ const industries = [
     ],
     quote: "We went from monthly PDF reports to live dashboards. Our team can now hold vendors accountable the same day an issue occurs.",
     role: "VP Operations, Major US Airline",
+  },
+  {
+    id: "airports",
+    label: "Airports",
+    icon: Plane,
+    stat: "99%",
+    statLabel: "Inspection coverage",
+    title: "Every gate, every turn, every airport.",
+    painPoints: [
+      "Terminal cleaning contractors report their own pass/fail metrics",
+      "Compliance gaps surface only during formal regulatory reviews",
+      "No unified view across terminals, concourses, and vendors",
+    ],
+    features: [
+      "Terminal and concourse-level inspection scoring",
+      "Real-time vendor performance by zone",
+      "Regulatory framework compliance dashboards",
+      "Exportable audit trails for FAA and TSA reviews",
+    ],
+    quote: "IQS Flow gave our operations team a live view of every terminal without adding headcount. We finally have an independent record to stand behind.",
+    role: "Director of Operations, Major US Airport",
+  },
+  {
+    id: "corporate",
+    label: "Banks & Corporate",
+    icon: Building2,
+    stat: "30%",
+    statLabel: "Average cost reduction",
+    title: "Portfolio-wide standards, site by site.",
+    painPoints: [
+      "Hundreds of locations with different contractors, standards, and reporting",
+      "No way to benchmark performance or justify contract renegotiations",
+      "Quality issues discovered through employee complaints, not proactive monitoring",
+    ],
+    features: [
+      "Multi-site portfolio dashboard",
+      "Automated SLA monitoring and escalation",
+      "Vendor performance scorecards",
+      "Cost-per-square-foot quality analytics",
+    ],
+    quote: "We renegotiated three vendor contracts using IQS Flow data. The ROI paid for the platform in the first quarter.",
+    role: "COO, Fortune 500 Real Estate Portfolio",
   },
   {
     id: "healthcare",
@@ -949,27 +992,6 @@ const industries = [
     ],
     quote: "IQS Flow gave us the documentation infrastructure we needed to pass our next JCAHO review with confidence.",
     role: "Director of Environmental Services, Regional Health System",
-  },
-  {
-    id: "corporate",
-    label: "Corporate",
-    icon: Building2,
-    stat: "30%",
-    statLabel: "Average cost reduction",
-    title: "Portfolio-wide quality standards across every location.",
-    painPoints: [
-      "Hundreds of locations with different contractors, standards, and reporting",
-      "No way to benchmark performance or justify contract renegotiations",
-      "Quality issues discovered through employee complaints, not proactive monitoring",
-    ],
-    features: [
-      "Multi-site portfolio dashboard",
-      "Automated SLA monitoring and escalation",
-      "Vendor performance scorecards",
-      "Cost-per-square-foot quality analytics",
-    ],
-    quote: "We renegotiated three vendor contracts using IQS Flow data. The ROI paid for the platform in the first quarter.",
-    role: "COO, Fortune 500 Real Estate Portfolio",
   },
 ];
 
@@ -1209,7 +1231,160 @@ export function IndustrySolutionsSection() {
 }
 
 /* ════════════════════════════════════════════════
-   7. STATS + CTA — dark, confident
+   7. FOUNDER QUOTE — editorial testimonial
+   ════════════════════════════════════════════════ */
+export function FounderQuoteSection() {
+  const { ref, inView } = useInView(0.15);
+
+  return (
+    <section
+      ref={ref}
+      style={{
+        background: ink[25],
+        borderTop: `1px solid ${ink[100]}`,
+        borderBottom: `1px solid ${ink[100]}`,
+        padding: `${SECTION_Y}px 32px`,
+      }}
+    >
+      <div
+        style={{
+          maxWidth: NARROW_MAX,
+          margin: "0 auto",
+          textAlign: "center",
+          ...revealStyle(inView),
+        }}
+      >
+        <div
+          style={{
+            fontSize: 48,
+            lineHeight: 1,
+            color: ink[200],
+            marginBottom: 24,
+            fontFamily: "Georgia, serif",
+          }}
+        >
+          &ldquo;
+        </div>
+        <blockquote
+          style={{
+            fontSize: "clamp(17px, 2vw, 21px)",
+            lineHeight: 1.7,
+            color: ink[700],
+            fontStyle: "italic",
+            margin: "0 0 32px",
+            fontWeight: 400,
+          }}
+        >
+          We built IQS Flow because we ran the programs ourselves. After 15+ years
+          managing vendor operations, we knew the industry needed independent quality
+          intelligence, not more vendor self-reporting.
+        </blockquote>
+        <div style={{ fontSize: 14, fontWeight: 700, color: ink[500], letterSpacing: "0.04em" }}>
+          Venice Collier &amp; Joshua Hinton, Co-founders
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ════════════════════════════════════════════════
+   8. ASSESSMENT CTA — vendor oversight hook
+   ════════════════════════════════════════════════ */
+export function AssessmentCTASection() {
+  const { ref, inView } = useInView(0.15);
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <section
+      ref={ref}
+      style={{
+        background: "#ffffff",
+        padding: `${SECTION_Y}px 32px`,
+        borderBottom: `1px solid ${ink[100]}`,
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 800,
+          margin: "0 auto",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: 64,
+          alignItems: "center",
+          ...revealStyle(inView),
+        }}
+        className="assessment-grid"
+      >
+        <div>
+          <div
+            style={{
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: accent,
+              marginBottom: 20,
+            }}
+          >
+            Free Assessment
+          </div>
+          <h2
+            style={{
+              fontSize: "clamp(24px, 3vw, 34px)",
+              fontWeight: 800,
+              letterSpacing: "-1px",
+              lineHeight: 1.15,
+              color: ink[900],
+              marginBottom: 16,
+            }}
+          >
+            How exposed is your vendor oversight?
+          </h2>
+          <p style={{ fontSize: 16, color: ink[500], lineHeight: 1.7, margin: 0 }}>
+            Most operations leaders discover their oversight gaps only after a
+            compliance audit or a client complaint. This assessment shows you
+            exactly where you stand before that happens.
+          </p>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "flex-start" }}>
+          <Link
+            href="/resources/vendor-accountability-assessment"
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 10,
+              background: hovered ? accentDark : accent,
+              color: "#ffffff",
+              padding: "16px 32px",
+              borderRadius: 8,
+              fontWeight: 700,
+              fontSize: 15,
+              textDecoration: "none",
+              transition: "background 0.2s ease, transform 0.2s ease",
+              transform: hovered ? "translateY(-1px)" : "none",
+            }}
+          >
+            Take the free Vendor Accountability Assessment
+            <ArrowRight size={16} />
+          </Link>
+          <div style={{ fontSize: 13, color: ink[400] }}>
+            Takes 3 minutes. No email required to see your score.
+          </div>
+        </div>
+      </div>
+      <style>{`
+        @media (max-width: 640px) {
+          .assessment-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
+/* ════════════════════════════════════════════════
+   9. STATS + CTA — dark, confident
    ════════════════════════════════════════════════ */
 function AnimatedStat({
   target,
