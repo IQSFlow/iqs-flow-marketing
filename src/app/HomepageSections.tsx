@@ -57,7 +57,7 @@ function useCountUp(target: number, duration = 2000, start = false) {
     const tick = (now: number) => {
       const p = Math.min((now - t0) / duration, 1);
       const eased = 1 - Math.pow(1 - p, 3);
-      setValue(Math.floor(eased * target));
+      setValue(p >= 1 ? target : Math.floor(eased * target));
       if (p < 1) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
@@ -529,6 +529,111 @@ const PROBLEM_DOTS = [
   { left: "91%", top: "30%", size: 2, duration: 17, delay: 8 },
 ];
 
+function FlipCard({ icon: Icon, num, title, body, tag, solution, index, inView }: {
+  icon: React.ElementType;
+  num: string;
+  title: string;
+  body: string;
+  tag: string;
+  solution: string;
+  index: number;
+  inView: boolean;
+}) {
+  const [flipped, setFlipped] = useState(false);
+
+  return (
+    <div
+      onClick={() => setFlipped(!flipped)}
+      style={{
+        perspective: 800,
+        cursor: "pointer",
+        minHeight: index === 0 ? 320 : 300,
+        ...revealStyle(inView, 0.1 + index * 0.1),
+      }}
+    >
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          height: "100%",
+          minHeight: "inherit",
+          transition: "transform 0.6s cubic-bezier(0.16,1,0.3,1)",
+          transformStyle: "preserve-3d",
+          transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
+        }}
+      >
+        {/* Front - Problem */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            backfaceVisibility: "hidden",
+            background: "rgba(255,255,255,0.03)",
+            border: flipped ? "1px solid rgba(34,197,94,0.15)" : "1px solid rgba(239,68,68,0.12)",
+            borderRadius: 10,
+            padding: index === 0 ? "32px" : "24px",
+            display: "flex",
+            flexDirection: "column",
+            transition: "border-color 0.3s ease",
+          }}
+        >
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#ef4444", marginBottom: 20, display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ color: "rgba(255,255,255,0.2)", fontWeight: 800, fontSize: 12 }}>{num}</span>
+            {tag}
+          </div>
+          <div style={{ width: 40, height: 40, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.15)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
+            <Icon size={20} style={{ color: "#ef4444" }} />
+          </div>
+          <h3 style={{ color: "#f1f5f9", fontSize: index === 0 ? 20 : 17, fontWeight: 700, letterSpacing: "-0.3px", marginBottom: 10, lineHeight: 1.25 }}>
+            {title}
+          </h3>
+          <p style={{ color: ink[300], fontSize: 13, lineHeight: 1.65, margin: 0, flex: 1 }}>
+            {body}
+          </p>
+          <div style={{ marginTop: 16, fontSize: 12, color: "#22c55e", fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
+            Click for solution
+            <ArrowRight size={12} />
+          </div>
+        </div>
+
+        {/* Back - Solution */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            backfaceVisibility: "hidden",
+            transform: "rotateY(180deg)",
+            background: "rgba(34,197,94,0.04)",
+            border: "1px solid rgba(34,197,94,0.15)",
+            borderRadius: 10,
+            padding: index === 0 ? "32px" : "24px",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#22c55e", marginBottom: 20, display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ color: "rgba(255,255,255,0.2)", fontWeight: 800, fontSize: 12 }}>{num}</span>
+            IQS Flow Solution
+          </div>
+          <div style={{ width: 40, height: 40, background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.15)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
+            <CheckCircle2 size={20} style={{ color: "#22c55e" }} />
+          </div>
+          <h3 style={{ color: "#f1f5f9", fontSize: index === 0 ? 20 : 17, fontWeight: 700, letterSpacing: "-0.3px", marginBottom: 10, lineHeight: 1.25 }}>
+            {title}
+          </h3>
+          <p style={{ color: ink[200], fontSize: 14, lineHeight: 1.7, margin: 0, flex: 1 }}>
+            {solution}
+          </p>
+          <div style={{ marginTop: 16, fontSize: 12, color: ink[400], fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
+            Back to problem
+            <ArrowRight size={12} style={{ transform: "rotate(180deg)" }} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function ProblemSection() {
   const { ref, inView } = useInView(0.1);
 
@@ -561,7 +666,7 @@ export function ProblemSection() {
       ))}
 
       <div style={{ maxWidth: CONTENT_MAX, margin: "0 auto", position: "relative" }}>
-        {/* Header — left-aligned */}
+        {/* Header */}
         <div
           style={{
             maxWidth: NARROW_MAX,
@@ -569,214 +674,26 @@ export function ProblemSection() {
             ...revealStyle(inView),
           }}
         >
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              fontSize: 12,
-              fontWeight: 700,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              color: "#ef4444",
-              marginBottom: 20,
-            }}
-          >
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#ef4444", marginBottom: 20 }}>
             <AlertTriangle size={14} />
             The Problem
           </div>
-          <h2
-            style={{
-              color: "#f8fafc",
-              fontSize: "clamp(28px, 3.5vw, 42px)",
-              fontWeight: 800,
-              letterSpacing: "-1.5px",
-              lineHeight: 1.1,
-              marginBottom: 16,
-            }}
-          >
+          <h2 style={{ color: "#f8fafc", fontSize: "clamp(28px, 3.5vw, 42px)", fontWeight: 800, letterSpacing: "-1.5px", lineHeight: 1.1, marginBottom: 16 }}>
             Your quality data has a trust problem.
           </h2>
           <p style={{ color: ink[400], fontSize: 17, lineHeight: 1.65 }}>
             Three systemic failures that put your operations, your compliance,
-            and your reputation at risk every day.
+            and your reputation at risk every day. Click each card to see the solution.
           </p>
         </div>
 
-        {/* Cards — dominant first card */}
+        {/* Flip cards */}
         <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1.2fr 1fr 1fr",
-            gap: 20,
-          }}
+          style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr 1fr", gap: 20 }}
           className="problem-grid"
         >
-          {problems.map(({ icon: ProblemIcon, num, title, body, tag, solution }, i) => (
-            <div
-              key={title}
-              style={{
-                background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(255,255,255,0.06)",
-                borderRadius: 10,
-                overflow: "hidden",
-                ...revealStyle(inView, 0.1 + i * 0.1),
-              }}
-            >
-              {/* Problem half */}
-              <div
-                style={{
-                  padding: i === 0 ? "32px 32px 24px" : "24px 24px 20px",
-                  background: "rgba(239,68,68,0.03)",
-                }}
-              >
-                <div
-                  className={`problem-tag-${i}`}
-                  style={{
-                    fontSize: 11,
-                    fontWeight: 700,
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    color: "#ef4444",
-                    marginBottom: 20,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    animation: inView ? `tagToGreen 0.6s ${1.5 + i * 0.3}s forwards` : "none",
-                  }}
-                >
-                  <span style={{ color: "rgba(255,255,255,0.2)", fontWeight: 800, fontSize: 12 }}>{num}</span>
-                  {tag}
-                </div>
-
-                <div
-                  className={`problem-icon-${i}`}
-                  style={{
-                    width: 40,
-                    height: 40,
-                    background: "rgba(239,68,68,0.08)",
-                    border: "1px solid rgba(239,68,68,0.15)",
-                    borderRadius: 8,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginBottom: 16,
-                    animation: inView ? `iconToGreen 0.6s ${1.5 + i * 0.3}s forwards` : "none",
-                  }}
-                >
-                  <ProblemIcon size={20} style={{ color: "#ef4444", animation: inView ? `iconColorToGreen 0.6s ${1.5 + i * 0.3}s forwards` : "none" }} />
-                </div>
-
-                <h3
-                  style={{
-                    color: "#f1f5f9",
-                    fontSize: i === 0 ? 20 : 17,
-                    fontWeight: 700,
-                    letterSpacing: "-0.3px",
-                    marginBottom: 10,
-                    lineHeight: 1.25,
-                  }}
-                >
-                  {title}
-                </h3>
-                <p style={{ color: ink[300], fontSize: 13, lineHeight: 1.65, margin: 0 }}>
-                  {body}
-                </p>
-              </div>
-
-              {/* Animated divider with chevron */}
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: "10px 0",
-                  background: "rgba(255,255,255,0.02)",
-                  borderTop: "1px solid rgba(255,255,255,0.05)",
-                  borderBottom: "1px solid rgba(255,255,255,0.05)",
-                  position: "relative",
-                  overflow: "hidden",
-                }}
-              >
-                {/* Horizontal gradient line */}
-                <div style={{
-                  position: "absolute",
-                  left: 0,
-                  right: 0,
-                  top: "50%",
-                  height: 1,
-                  background: "linear-gradient(90deg, transparent, rgba(34,197,94,0.15), transparent)",
-                  transform: "translateY(-50%)",
-                }} />
-                <div
-                  style={{
-                    animation: "chevronPulse 2.2s ease-in-out infinite",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: 2,
-                    position: "relative",
-                  }}
-                >
-                  <div style={{
-                    width: 0,
-                    height: 0,
-                    borderLeft: "5px solid transparent",
-                    borderRight: "5px solid transparent",
-                    borderTop: "5px solid rgba(34,197,94,0.45)",
-                  }} />
-                  <div style={{
-                    width: 0,
-                    height: 0,
-                    borderLeft: "5px solid transparent",
-                    borderRight: "5px solid transparent",
-                    borderTop: "5px solid rgba(34,197,94,0.22)",
-                  }} />
-                </div>
-              </div>
-
-              {/* Solution half */}
-              <div
-                style={{
-                  padding: i === 0 ? "20px 32px 28px" : "16px 24px 22px",
-                  background: "rgba(34,197,94,0.03)",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: 11,
-                    fontWeight: 700,
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    color: "#22c55e",
-                    marginBottom: 10,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                  }}
-                >
-                  <div
-                    style={{
-                      width: 16,
-                      height: 16,
-                      borderRadius: "50%",
-                      background: "rgba(34,197,94,0.15)",
-                      border: "1px solid rgba(34,197,94,0.3)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      flexShrink: 0,
-                    }}
-                  >
-                    <Check size={9} style={{ color: "#22c55e" }} />
-                  </div>
-                  IQS Flow Solution
-                </div>
-                <p style={{ color: ink[200], fontSize: 13, lineHeight: 1.65, margin: 0 }}>
-                  {solution}
-                </p>
-              </div>
-            </div>
+          {problems.map((problem, i) => (
+            <FlipCard key={problem.title} {...problem} index={i} inView={inView} />
           ))}
         </div>
       </div>
@@ -790,19 +707,6 @@ export function ProblemSection() {
           10% { opacity: 1; }
           90% { opacity: 0.7; }
           100% { transform: translateY(-120px) translateX(18px); opacity: 0; }
-        }
-        @keyframes chevronPulse {
-          0%, 100% { transform: translateY(0); opacity: 0.6; }
-          50% { transform: translateY(3px); opacity: 1; }
-        }
-        @keyframes tagToGreen {
-          to { color: #22c55e; }
-        }
-        @keyframes iconToGreen {
-          to { background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.15); }
-        }
-        @keyframes iconColorToGreen {
-          to { color: #22c55e; }
         }
       `}</style>
     </section>
