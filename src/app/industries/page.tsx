@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { MapPin, CheckSquare, BarChart3, Navigation, ShieldCheck, Activity, Building, Monitor, ArrowRight } from "lucide-react";
 import MarketingNav from "@/components/MarketingNav";
 import MarketingFooter from "@/components/MarketingFooter";
+
+const ink = {
+  900: "#0a0f1a", 800: "#0f172a", 700: "#1e293b", 600: "#334155",
+  500: "#475569", 400: "#64748b", 300: "#94a3b8", 200: "#cbd5e1",
+  100: "#e2e8f0", 50: "#f1f5f9", 25: "#f8fafc",
+};
+const accent = "#2563eb";
 
 export const metadata: Metadata = {
   title: "Industries - IQS Flow | Aviation, Healthcare & Corporate Solutions",
@@ -36,13 +44,13 @@ const INDUSTRIES = [
     ],
     features: [
       {
-        icon: "📍",
+        icon: "pin",
         iconColor: "#2563eb",
         title: "Live Gate Map",
         desc: "Real-time cleaning status overlaid on your terminal map. Know exactly which gates are ready before boarding begins.",
       },
       {
-        icon: "✅",
+        icon: "check",
         iconColor: "#2563eb",
         title: "Digital Task Checklists",
         desc: "Timestamped, photo-verified task completion. Irrefutable audit trail for every turnaround event.",
@@ -77,13 +85,13 @@ const INDUSTRIES = [
     ],
     features: [
       {
-        icon: "📊",
+        icon: "chart",
         iconColor: "#4f46e5",
         title: "Cross-Vendor Performance Dashboard",
         desc: "All contractors scored on the same rubric, side by side. Spot underperformers before passengers do.",
       },
       {
-        icon: "📍",
+        icon: "pin",
         iconColor: "#4f46e5",
         title: "GPS Crew Tracking",
         desc: "Real-time location of every cleaning crew, overlaid on your terminal map. Know who is where and whether they are on schedule.",
@@ -118,13 +126,13 @@ const INDUSTRIES = [
     ],
     features: [
       {
-        icon: "🛡",
+        icon: "shield",
         iconColor: "#059669",
         title: "Infection Prevention Trails",
         desc: "Full documentation chains for every high-risk area. Contact precaution rooms, ORs, and ICUs tracked with compliance scoring.",
       },
       {
-        icon: "📡",
+        icon: "activity",
         iconColor: "#059669",
         title: "Real-Time Environmental Monitoring",
         desc: "Automated alerts when cleaning frequency deviates from protocol. Escalation workflows built into the platform.",
@@ -159,13 +167,13 @@ const INDUSTRIES = [
     ],
     features: [
       {
-        icon: "📊",
+        icon: "chart",
         iconColor: "#b45309",
         title: "Branch-Level Compliance",
         desc: "Score every location on a unified rubric. Identify underperforming sites and vendors before tenants escalate.",
       },
       {
-        icon: "🖥",
+        icon: "monitor",
         iconColor: "#b45309",
         title: "Tenant Portal",
         desc: "Give tenants a read-only view of their space's cleaning activity and quality scores. Build trust through transparency.",
@@ -231,6 +239,11 @@ function PainPoint({ text }: { text: string }) {
   );
 }
 
+const ICON_MAP: Record<string, React.ComponentType<{size?: number; style?: React.CSSProperties}>> = {
+  pin: MapPin, check: CheckSquare, chart: BarChart3, nav: Navigation,
+  shield: ShieldCheck, activity: Activity, building: Building, monitor: Monitor,
+};
+
 function FeatureCard({
   icon,
   iconColor,
@@ -242,6 +255,7 @@ function FeatureCard({
   title: string;
   desc: string;
 }) {
+  const IconComp = ICON_MAP[icon] || CheckSquare;
   return (
     <div
       style={{
@@ -249,9 +263,9 @@ function FeatureCard({
         gap: 14,
         alignItems: "flex-start",
         padding: "16px 18px",
-        background: "#f8fafc",
-        borderRadius: 12,
-        border: "1px solid #e2e8f0",
+        background: ink[25],
+        borderRadius: 10,
+        border: `1px solid ${ink[100]}`,
       }}
     >
       <div
@@ -261,15 +275,13 @@ function FeatureCard({
           height: 36,
           borderRadius: 8,
           background: "#fff",
-          border: "1px solid #e2e8f0",
+          border: `1px solid ${ink[100]}`,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontSize: 18,
-          boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
         }}
       >
-        {icon}
+        <IconComp size={18} style={{ color: iconColor }} />
       </div>
       <div>
         <p
@@ -424,7 +436,7 @@ function IndustryPhoto({
   return (
     <div
       style={{
-        borderRadius: 20,
+        borderRadius: 10,
         overflow: "hidden",
         minHeight: 320,
         position: "relative",
@@ -481,110 +493,24 @@ export default function IndustriesPage() {
     <div
       style={{
         minHeight: "100vh",
-        fontFamily: '"Segoe UI", system-ui, -apple-system, sans-serif',
-        color: "#0f172a",
+        color: ink[900],
         background: "#ffffff",
       }}
     >
       <MarketingNav />
 
       {/* ─── Hero ─── */}
-      <section
-        style={{
-          background: "linear-gradient(160deg, #0f172a 0%, #1e3a5f 50%, #1e40af 100%)",
-          padding: "100px 32px 80px",
-          textAlign: "center",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        {/* Background grid texture */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
-            backgroundSize: "40px 40px",
-            pointerEvents: "none",
-          }}
-        />
-        <div
-          style={{
-            position: "relative",
-            zIndex: 1,
-            maxWidth: 760,
-            margin: "0 auto",
-          }}
-        >
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              padding: "6px 18px",
-              background: "rgba(59,130,246,0.2)",
-              border: "1px solid rgba(59,130,246,0.35)",
-              borderRadius: 99,
-              fontSize: 13,
-              fontWeight: 600,
-              color: "#93c5fd",
-              marginBottom: 28,
-            }}
-          >
+      <section style={{ padding: "100px 32px 64px", borderBottom: `1px solid ${ink[100]}` }}>
+        <div style={{ maxWidth: 1120, margin: "0 auto" }}>
+          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: accent, marginBottom: 24 }}>
             Industry Solutions
           </div>
-          <h1
-            style={{
-              fontSize: "clamp(32px, 5vw, 54px)",
-              fontWeight: 800,
-              letterSpacing: "-1.5px",
-              lineHeight: 1.1,
-              marginBottom: 20,
-              color: "#ffffff",
-            }}
-          >
-            Industry-Specific{" "}
-            <span
-              style={{
-                background: "linear-gradient(135deg, #60a5fa, #93c5fd)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
-              Oversight Solutions
-            </span>
+          <h1 style={{ fontSize: "clamp(36px, 4.5vw, 56px)", fontWeight: 800, letterSpacing: "-2px", lineHeight: 1.1, marginBottom: 24, maxWidth: 700 }}>
+            Industry-specific oversight solutions.
           </h1>
-          <p
-            style={{
-              fontSize: 18,
-              color: "rgba(219,234,254,0.8)",
-              lineHeight: 1.7,
-              maxWidth: 580,
-              margin: "0 auto 36px",
-            }}
-          >
-            Tailored for C-suite Leaders in Aviation, Healthcare, and Corporate
-            Sectors.
+          <p style={{ fontSize: 18, color: ink[500], lineHeight: 1.7, maxWidth: 560 }}>
+            Tailored for operations leaders in aviation, healthcare, and corporate sectors.
           </p>
-          <Link
-            href="#aviation"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              padding: "14px 32px",
-              background: "#2563eb",
-              color: "#fff",
-              borderRadius: 10,
-              fontSize: 15,
-              fontWeight: 700,
-              textDecoration: "none",
-              boxShadow: "0 4px 20px rgba(37,99,235,0.5)",
-            }}
-          >
-            Explore Solutions &darr;
-          </Link>
         </div>
       </section>
 
@@ -741,94 +667,19 @@ export default function IndustriesPage() {
       })}
 
       {/* ─── CTA ─── */}
-      <section
-        style={{
-          position: "relative",
-          padding: "88px 32px",
-          background:
-            "linear-gradient(135deg, #1e40af 0%, #2563eb 60%, #3b82f6 100%)",
-          color: "#fff",
-          textAlign: "center",
-          overflow: "hidden",
-        }}
-      >
-        {/* Background dots */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage:
-              "radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px)",
-            backgroundSize: "24px 24px",
-            pointerEvents: "none",
-          }}
-        />
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <h2
-            style={{
-              fontSize: "clamp(26px, 4vw, 40px)",
-              fontWeight: 800,
-              marginBottom: 16,
-              letterSpacing: "-1px",
-            }}
-          >
-            See IQS Flow in Action
+      <section style={{ padding: "80px 32px", background: ink[900] }}>
+        <div style={{ maxWidth: 640, margin: "0 auto", textAlign: "center" }}>
+          <h2 style={{ fontSize: "clamp(24px, 3.5vw, 36px)", fontWeight: 800, color: "#f8fafc", letterSpacing: "-1px", marginBottom: 16 }}>
+            See IQS Flow in action
           </h2>
-          <p
-            style={{
-              color: "rgba(219,234,254,0.85)",
-              marginBottom: 36,
-              fontSize: 17,
-              maxWidth: 500,
-              margin: "0 auto 36px",
-              lineHeight: 1.65,
-            }}
-          >
-            See how IQS Flow delivers measurable results across your industry
-            from day one.
+          <p style={{ color: ink[400], fontSize: 17, lineHeight: 1.65, marginBottom: 36 }}>
+            See how IQS Flow delivers measurable results across your industry from day one.
           </p>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: 14,
-              flexWrap: "wrap",
-            }}
-          >
-            <Link
-              href="/contact"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "16px 36px",
-                background: "#fff",
-                color: "#1e40af",
-                borderRadius: 12,
-                fontSize: 16,
-                fontWeight: 700,
-                textDecoration: "none",
-                boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
-              }}
-            >
-              Request a Demo &rarr;
+          <div style={{ display: "flex", justifyContent: "center", gap: 16, flexWrap: "wrap" }}>
+            <Link href="/contact" style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "16px 32px", background: "#ffffff", color: ink[900], borderRadius: 8, fontSize: 15, fontWeight: 700, textDecoration: "none" }}>
+              Request a Demo <ArrowRight size={16} />
             </Link>
-            <Link
-              href="/why-iqs"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "16px 28px",
-                background: "rgba(255,255,255,0.12)",
-                color: "#fff",
-                borderRadius: 12,
-                fontSize: 16,
-                fontWeight: 600,
-                textDecoration: "none",
-                border: "1px solid rgba(255,255,255,0.25)",
-              }}
-            >
+            <Link href="/why-iqs" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "16px 32px", background: "transparent", color: ink[300], borderRadius: 8, fontSize: 15, fontWeight: 600, textDecoration: "none", border: "1.5px solid rgba(255,255,255,0.1)" }}>
               See Features
             </Link>
           </div>
