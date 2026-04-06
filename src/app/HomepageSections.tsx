@@ -165,7 +165,8 @@ export function HeroSection() {
             }}
           >
             IQS Flow gives operations leaders independent, real-time quality
-            intelligence across every vendor, every site, every shift.
+            intelligence across every vendor, every site, every shift. All from
+            one platform.
           </p>
 
           {/* CTAs */}
@@ -334,10 +335,10 @@ export function SocialProofBar() {
   const { ref, inView } = useInView(0.3);
 
   const items = [
-    { stat: "Multi-Site", label: "Portfolio-wide visibility across every location and vendor" },
-    { stat: "6 Frameworks", label: "Built-in compliance scoring for major industry standards" },
-    { stat: "Real-Time", label: "Live GPS tracking and instant inspection results" },
-    { stat: "Vendor-Agnostic", label: "Independent data your vendors cannot edit or suppress" },
+    { stat: "Multi-Site", label: "Visibility across every location" },
+    { stat: "6 Frameworks", label: "Compliance standards built in" },
+    { stat: "Real-Time", label: "GPS tracking & live dashboards" },
+    { stat: "Vendor-Agnostic", label: "Works with any service provider" },
   ];
 
   return (
@@ -915,17 +916,17 @@ const industries = [
     icon: Plane,
     stat: "400+",
     statLabel: "Gates tracked daily",
-    title: "Every gate, every turn, every aircraft.",
+    title: "Every gate, every turn, every airport.",
     painPoints: [
       "Vendor-reported cleaning completion with no independent verification",
       "Gate-level compliance gaps invisible until a passenger complaint",
       "Multi-carrier, multi-vendor coordination with no unified data",
     ],
     features: [
-      "Gate-level task completion tracking",
-      "Real-time turnaround visibility per aircraft",
-      "Multi-vendor performance benchmarking",
-      "Regulatory compliance scoring by framework",
+      "Track cleaning quality across your network",
+      "Real-time task completion by gate",
+      "Gate-level compliance scoring",
+      "Multi-vendor performance comparison",
     ],
     quote: "We went from monthly PDF reports to live dashboards. Our team can now hold vendors accountable the same day an issue occurs.",
     role: "VP Operations, Major US Airline",
@@ -936,17 +937,17 @@ const industries = [
     icon: Plane,
     stat: "99%",
     statLabel: "Inspection coverage",
-    title: "Every gate, every turn, every airport.",
+    title: "Terminal-wide visibility, terminal by terminal.",
     painPoints: [
       "Terminal cleaning contractors report their own pass/fail metrics",
       "Compliance gaps surface only during formal regulatory reviews",
       "No unified view across terminals, concourses, and vendors",
     ],
     features: [
-      "Terminal and concourse-level inspection scoring",
-      "Real-time vendor performance by zone",
-      "Regulatory framework compliance dashboards",
-      "Exportable audit trails for FAA and TSA reviews",
+      "Monitor contractors across concourses",
+      "GPS tracking of cleaning crews",
+      "Digital inspections with photo capture",
+      "Automated compliance scoring",
     ],
     quote: "IQS Flow gave our operations team a live view of every terminal without adding headcount. We finally have an independent record to stand behind.",
     role: "Director of Operations, Major US Airport",
@@ -957,17 +958,17 @@ const industries = [
     icon: Building2,
     stat: "30%",
     statLabel: "Average cost reduction",
-    title: "Portfolio-wide standards, site by site.",
+    title: "Hundreds of branches, one quality standard.",
     painPoints: [
       "Hundreds of locations with different contractors, standards, and reporting",
       "No way to benchmark performance or justify contract renegotiations",
       "Quality issues discovered through employee complaints, not proactive monitoring",
     ],
     features: [
-      "Multi-site portfolio dashboard",
-      "Automated SLA monitoring and escalation",
-      "Vendor performance scorecards",
-      "Cost-per-square-foot quality analytics",
+      "Consistent quality across every location",
+      "Automated audits with SLA tracking",
+      "Multi-vendor performance dashboards",
+      "Branch-level compliance reporting",
     ],
     quote: "We renegotiated three vendor contracts using IQS Flow data. The ROI paid for the platform in the first quarter.",
     role: "COO, Fortune 500 Real Estate Portfolio",
@@ -978,17 +979,17 @@ const industries = [
     icon: Hospital,
     stat: "99.2%",
     statLabel: "Audit pass rate",
-    title: "Compliance-grade cleanliness, proven and traceable.",
+    title: "Compliance-grade cleanliness, verified.",
     painPoints: [
       "Regulatory inspections require complete, timestamped documentation",
       "HAI risk driven by inconsistent environmental services standards",
       "Contractor performance varies by shift with no real-time oversight",
     ],
     features: [
-      "JCAHO, APIC, and CDC framework scoring",
-      "Room-level inspection with photo evidence",
-      "Shift-by-shift contractor performance data",
-      "Complete audit trails exportable on demand",
+      "Meet regulatory standards across facilities",
+      "Inspection scoring by framework",
+      "Complete audit trails",
+      "Independent verification of cleaning quality",
     ],
     quote: "IQS Flow gave us the documentation infrastructure we needed to pass our next JCAHO review with confidence.",
     role: "Director of Environmental Services, Regional Health System",
@@ -1341,9 +1342,8 @@ export function AssessmentCTASection() {
             How exposed is your vendor oversight?
           </h2>
           <p style={{ fontSize: 16, color: ink[500], lineHeight: 1.7, margin: 0 }}>
-            Most operations leaders discover their oversight gaps only after a
-            compliance audit or a client complaint. This assessment shows you
-            exactly where you stand before that happens.
+            Take the free Vendor Accountability Assessment and get your score in
+            under 2 minutes.
           </p>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "flex-start" }}>
