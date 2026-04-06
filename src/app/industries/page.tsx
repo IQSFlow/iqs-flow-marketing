@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MapPin, CheckSquare, BarChart3, Navigation, ShieldCheck, Activity, Building, Monitor, ArrowRight } from "lucide-react";
+import { MapPin, CheckSquare, BarChart3, Navigation, ShieldCheck, Activity, Building, Monitor, ArrowRight, ClipboardCheck } from "lucide-react";
 import MarketingNav from "@/components/MarketingNav";
 import MarketingFooter from "@/components/MarketingFooter";
+import { marketing } from "@/lib/design-tokens";
 
-const ink = {
-  900: "#0a0f1a", 800: "#0f172a", 700: "#1e293b", 600: "#334155",
-  500: "#475569", 400: "#64748b", 300: "#94a3b8", 200: "#cbd5e1",
-  100: "#e2e8f0", 50: "#f1f5f9", 25: "#f8fafc",
-};
-const accent = "#2563eb";
+const ink = marketing.ink;
+const accent = marketing.accent;
 
 export const metadata: Metadata = {
   title: "Industries - IQS Flow | Aviation, Healthcare & Corporate Solutions",
@@ -188,6 +185,47 @@ const INDUSTRIES = [
     stat: "Vendor scorecard analytics",
     statSub: "Platform capability",
     altLayout: true,
+  },
+  {
+    id: "maintenance",
+    label: "Maintenance",
+    title: "Maintenance: Preventive Asset Management",
+    tagline: "Every asset, every schedule, every vendor.",
+    pullQuote: "Reactive maintenance driven by complaints costs more than preventive programs verified independently.",
+    accentColor: "#6366f1",
+    accentBg: "#eef2ff",
+    accentText: "#3730a3",
+    photo: "/verne-ho-MwW-zrkYSIU-unsplash.jpg",
+    photoAlt: "Facility maintenance in a modern building",
+    photoCaption: "Maintenance",
+    painPoints: [
+      "Reactive maintenance driven by tenant complaints, not preventive schedules",
+      "No visibility into vendor response times or completion quality",
+      "Paper-based work orders with no audit trail or SLA tracking",
+    ],
+    features: [
+      {
+        icon: "check",
+        iconColor: "#4f46e5",
+        title: "Preventive Maintenance Scheduling",
+        desc: "Schedule recurring maintenance tasks with automated reminders and SLA tracking for every vendor.",
+      },
+      {
+        icon: "chart",
+        iconColor: "#4f46e5",
+        title: "Work Order Lifecycle Tracking",
+        desc: "Track every work order from creation to completion with photo-verified evidence and GPS stamps.",
+      },
+    ],
+    testimonial: {
+      quote:
+        "Maintenance teams juggle dozens of vendors and thousands of assets. IQS Flow brings it all into one platform with real accountability and evidence-based oversight.",
+      name: "Venice Collier",
+      org: "CEO & Founder, IQS",
+    },
+    stat: "Work order lifecycle tracking",
+    statSub: "Platform capability",
+    altLayout: false,
   },
 ];
 

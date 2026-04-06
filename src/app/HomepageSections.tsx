@@ -38,22 +38,7 @@ const ink = marketing.ink;
 const accent = marketing.accent;
 const accentDark = marketing.accentDark;
 
-/* ─── Animated counter hook ─── */
-function useCountUp(target: number, duration = 2000, start = false) {
-  const [value, setValue] = useState(0);
-  useEffect(() => {
-    if (!start) return;
-    const t0 = performance.now();
-    const tick = (now: number) => {
-      const p = Math.min((now - t0) / duration, 1);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setValue(Math.floor(eased * target));
-      if (p < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  }, [target, duration, start]);
-  return value;
-}
+/* (counter hook removed — no longer using animated stats) */
 
 /* ─── Intersection observer hook ─── */
 function useInView(threshold = 0.15) {
@@ -262,7 +247,7 @@ export function HeroSection() {
               style={{
                 background: ink[25],
                 border: `1px solid ${ink[100]}`,
-                borderRadius: 10,
+                borderRadius: 12,
                 padding: "24px 20px",
                 display: "flex",
                 gap: 16,
@@ -348,9 +333,9 @@ export function SocialProofBar() {
           >
             <span
               style={{
-                fontSize: 15,
+                fontSize: 18,
                 fontWeight: 800,
-                letterSpacing: "-0.2px",
+                letterSpacing: "-0.3px",
                 color: ink[800],
                 lineHeight: 1,
               }}
@@ -447,7 +432,7 @@ export function ProblemSection() {
           >
             Your quality data has a trust problem.
           </h2>
-          <p style={{ color: ink[400], fontSize: 17, lineHeight: 1.65 }}>
+          <p style={{ color: ink[400], fontSize: 16, lineHeight: 1.7 }}>
             Three systemic failures that put your operations, your compliance,
             and your reputation at risk every day.
           </p>
@@ -468,7 +453,7 @@ export function ProblemSection() {
               style={{
                 background: "rgba(255,255,255,0.03)",
                 border: "1px solid rgba(255,255,255,0.06)",
-                borderRadius: 10,
+                borderRadius: 12,
                 padding: i === 0 ? "36px 32px" : "28px 24px",
                 ...revealStyle(inView, 0.1 + i * 0.1),
               }}
@@ -644,7 +629,7 @@ export function PlatformSection() {
               style={{
                 background: hovered === i ? ink[25] : "#ffffff",
                 border: `1px solid ${hovered === i ? ink[200] : ink[100]}`,
-                borderRadius: 10,
+                borderRadius: 12,
                 padding: "32px 28px",
                 cursor: "default",
                 transition: "all 0.25s ease",
@@ -821,18 +806,18 @@ export function HowItWorksSection() {
               {/* Number dot */}
               <div
                 style={{
-                  width: 40,
-                  height: 40,
+                  width: 44,
+                  height: 44,
                   margin: "0 auto 20px",
                   borderRadius: "50%",
-                  background: "#ffffff",
-                  border: `2px solid ${ink[200]}`,
+                  background: accent,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   fontSize: 13,
                   fontWeight: 800,
-                  color: accent,
+                  color: "#ffffff",
+                  boxShadow: `0 4px 12px ${accent}30`,
                 }}
               >
                 <StepIcon size={18} />
@@ -885,6 +870,15 @@ export function HowItWorksSection() {
 /* ════════════════════════════════════════════════
    6. INDUSTRY SOLUTIONS — Tab layout, left header
    ════════════════════════════════════════════════ */
+/* Industry accent colors — each industry gets its own subtle tint */
+const industryAccents: Record<string, string> = {
+  airlines: "#3b82f6",  // manager blue
+  airports: "#7c3aed",  // admin violet
+  corporate: "#b45309", // client amber
+  healthcare: "#059669", // worker green
+  maintenance: "#6366f1", // indigo
+};
+
 const industries = [
   {
     id: "airlines",
@@ -1056,32 +1050,35 @@ export function IndustrySolutionsSection() {
             ...revealStyle(inView, 0.1),
           }}
         >
-          {industries.map(({ label, icon: IndustryIcon }, i) => (
-            <button
-              key={label}
-              onClick={() => setActiveTab(i)}
-              onMouseEnter={() => setTabHovered(i)}
-              onMouseLeave={() => setTabHovered(null)}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "12px 20px",
-                background: "transparent",
-                border: "none",
-                borderBottom: activeTab === i ? `2px solid ${accent}` : "2px solid transparent",
-                color: activeTab === i ? ink[900] : tabHovered === i ? ink[600] : ink[400],
-                fontWeight: activeTab === i ? 700 : 500,
-                fontSize: 14,
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-                marginBottom: -1,
-              }}
-            >
-              <IndustryIcon size={16} />
-              {label}
-            </button>
-          ))}
+          {industries.map(({ id, label, icon: IndustryIcon }, i) => {
+            const tabAccent = industryAccents[id] || accent;
+            return (
+              <button
+                key={label}
+                onClick={() => setActiveTab(i)}
+                onMouseEnter={() => setTabHovered(i)}
+                onMouseLeave={() => setTabHovered(null)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "12px 20px",
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: activeTab === i ? `2px solid ${tabAccent}` : "2px solid transparent",
+                  color: activeTab === i ? ink[900] : tabHovered === i ? ink[600] : ink[400],
+                  fontWeight: activeTab === i ? 700 : 500,
+                  fontSize: 14,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  marginBottom: -1,
+                }}
+              >
+                <IndustryIcon size={16} style={{ color: activeTab === i ? tabAccent : "currentColor" }} />
+                {label}
+              </button>
+            );
+          })}
         </div>
 
         {/* Tab content — 3:2 split */}
@@ -1101,12 +1098,13 @@ export function IndustrySolutionsSection() {
             <div
               style={{
                 background: ink[800],
-                borderRadius: 10,
+                borderRadius: 12,
                 padding: "32px 28px",
                 marginBottom: 20,
+                borderLeft: `3px solid ${industryAccents[active.id] || accent}`,
               }}
             >
-              <div style={{ fontSize: 48, fontWeight: 800, letterSpacing: "-2px", color: "#ffffff", lineHeight: 1, marginBottom: 4 }}>
+              <div style={{ fontSize: 36, fontWeight: 800, letterSpacing: "-1.5px", color: industryAccents[active.id] || "#ffffff", lineHeight: 1, marginBottom: 4 }}>
                 {active.stat}
               </div>
               <div style={{ fontSize: 14, color: ink[400], fontWeight: 500, marginBottom: 20 }}>
@@ -1122,7 +1120,7 @@ export function IndustrySolutionsSection() {
               style={{
                 background: "#fef2f2",
                 border: `1px solid #fecaca`,
-                borderRadius: 10,
+                borderRadius: 12,
                 padding: "24px",
               }}
             >
@@ -1161,7 +1159,7 @@ export function IndustrySolutionsSection() {
               style={{
                 background: "#f0fdf4",
                 border: "1px solid #bbf7d0",
-                borderRadius: 10,
+                borderRadius: 12,
                 padding: "24px",
                 marginBottom: 20,
               }}
@@ -1381,44 +1379,8 @@ export function AssessmentCTASection() {
 }
 
 /* ════════════════════════════════════════════════
-   9. STATS + CTA — dark, confident
+   9. PORTAL SHOWCASE + CTA — dark, confident
    ════════════════════════════════════════════════ */
-function AnimatedStat({
-  target,
-  suffix,
-  label,
-  inView,
-  delay,
-}: {
-  target: number;
-  suffix: string;
-  label: string;
-  inView: boolean;
-  delay: number;
-}) {
-  const value = useCountUp(target, 2000, inView);
-
-  return (
-    <div style={{ textAlign: "center", ...revealStyle(inView, delay) }}>
-      <div
-        style={{
-          fontSize: "clamp(40px, 5vw, 64px)",
-          fontWeight: 800,
-          letterSpacing: "-2.5px",
-          lineHeight: 1,
-          color: "#ffffff",
-        }}
-      >
-        {value}
-        {suffix}
-      </div>
-      <div style={{ color: ink[400], fontSize: 14, fontWeight: 500, marginTop: 8 }}>
-        {label}
-      </div>
-    </div>
-  );
-}
-
 export function StatsCTASection() {
   const { ref, inView } = useInView(0.15);
   const [demoHovered, setDemoHovered] = useState(false);
@@ -1433,21 +1395,58 @@ export function StatsCTASection() {
       }}
     >
       <div style={{ maxWidth: 960, margin: "0 auto" }}>
-        {/* Stats row */}
+        {/* Portal showcase — shows the 4 role-based portals with their accent colors */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: 40,
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: 16,
             marginBottom: 80,
             paddingBottom: 80,
             borderBottom: "1px solid rgba(255,255,255,0.06)",
           }}
           className="stats-grid"
         >
-          <AnimatedStat target={4} suffix="" label="Role-based portals" inView={inView} delay={0} />
-          <AnimatedStat target={6} suffix="" label="Compliance frameworks" inView={inView} delay={0.1} />
-          <AnimatedStat target={3} suffix="" label="Industry verticals" inView={inView} delay={0.2} />
+          {([
+            { label: "Admin", accent: "#7c3aed", desc: "Full system control" },
+            { label: "Manager", accent: "#3b82f6", desc: "Site oversight" },
+            { label: "Worker", accent: "#059669", desc: "Mobile inspections" },
+            { label: "Client", accent: "#b45309", desc: "Read-only visibility" },
+          ] as const).map(({ label, accent: portalAccent, desc }, i) => (
+            <div
+              key={label}
+              style={{
+                textAlign: "center",
+                ...revealStyle(inView, i * 0.08),
+              }}
+            >
+              <div
+                style={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: 12,
+                  background: `${portalAccent}20`,
+                  border: `1.5px solid ${portalAccent}40`,
+                  margin: "0 auto 12px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 13,
+                  fontWeight: 800,
+                  color: portalAccent,
+                  letterSpacing: "-0.3px",
+                }}
+              >
+                {label[0]}
+              </div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: "#ffffff", marginBottom: 2 }}>
+                {label}
+              </div>
+              <div style={{ fontSize: 12, color: ink[400] }}>
+                {desc}
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* CTA */}
