@@ -6,7 +6,21 @@ import MarketingNav from "@/components/MarketingNav";
 import MarketingFooter from "@/components/MarketingFooter";
 import type { BlogPost } from "@/lib/blog";
 
-// ── Types ──────────────────────────────────────────────────────────────────
+// ── Ink palette ───────────────────────────────────────────────────────────
+const ink = {
+  900: "#0a0f1a",
+  800: "#0f172a",
+  500: "#475569",
+  400: "#64748b",
+  300: "#94a3b8",
+  200: "#cbd5e1",
+  100: "#e2e8f0",
+  50:  "#f1f5f9",
+  25:  "#f8fafc",
+};
+const accent = "#2563eb";
+
+// ── Types ─────────────────────────────────────────────────────────────────
 type FilterTab =
   | "All"
   | "Case Studies"
@@ -15,28 +29,16 @@ type FilterTab =
   | "Aviation"
   | "Corporate";
 
-// ── Badge colors ───────────────────────────────────────────────────────────
-function typeBadgeStyle(category: string): React.CSSProperties {
+// ── Badge styles ──────────────────────────────────────────────────────────
+function categoryBadge(category: string): React.CSSProperties {
   if (category === "Case Study")
-    return {
-      background: "#dcfce7",
-      color: "#166534",
-      border: "1px solid #bbf7d0",
-    };
+    return { background: "rgba(5,150,105,0.1)", color: "#059669", border: "1px solid rgba(5,150,105,0.2)" };
   if (category === "Whitepaper")
-    return {
-      background: "#dbeafe",
-      color: "#1e40af",
-      border: "1px solid #bfdbfe",
-    };
-  return {
-    background: "#f3e8ff",
-    color: "#6b21a8",
-    border: "1px solid #e9d5ff",
-  };
+    return { background: "rgba(37,99,235,0.1)", color: accent, border: "1px solid rgba(37,99,235,0.2)" };
+  return { background: "rgba(71,85,105,0.1)", color: ink[400], border: `1px solid ${ink[200]}` };
 }
 
-// ── Filter logic ───────────────────────────────────────────────────────────
+// ── Filter logic ──────────────────────────────────────────────────────────
 function filterPosts(posts: BlogPost[], tab: FilterTab): BlogPost[] {
   if (tab === "All") return posts;
   if (tab === "Case Studies") return posts.filter((p) => p.category === "Case Study");
@@ -47,37 +49,24 @@ function filterPosts(posts: BlogPost[], tab: FilterTab): BlogPost[] {
   return posts;
 }
 
-// ── Sub-components ─────────────────────────────────────────────────────────
-function FilterPill({
-  label,
-  selected,
-  onClick,
-}: {
-  label: FilterTab;
-  selected: boolean;
-  onClick: () => void;
-}) {
+// ── Filter pill ───────────────────────────────────────────────────────────
+function FilterPill({ label, selected, onClick }: { label: FilterTab; selected: boolean; onClick: () => void }) {
   const [hovered, setHovered] = useState(false);
-
   return (
     <button
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        padding: "8px 18px",
-        borderRadius: 999,
+        padding: "7px 16px",
+        borderRadius: 6,
         fontSize: 13,
         fontWeight: 600,
         cursor: "pointer",
-        transition: "all 0.18s",
-        border: selected ? "none" : "1.5px solid #cbd5e1",
-        background: selected
-          ? "#0f172a"
-          : hovered
-          ? "#f8fafc"
-          : "#ffffff",
-        color: selected ? "#ffffff" : hovered ? "#0f172a" : "#475569",
+        transition: "all 0.15s",
+        border: selected ? "none" : `1.5px solid ${ink[200]}`,
+        background: selected ? ink[900] : hovered ? ink[50] : "#fff",
+        color: selected ? "#fff" : hovered ? ink[800] : ink[500],
         letterSpacing: "0.01em",
         whiteSpace: "nowrap",
       }}
@@ -87,36 +76,26 @@ function FilterPill({
   );
 }
 
+// ── Article card ──────────────────────────────────────────────────────────
 function ArticleCard({ post }: { post: BlogPost }) {
   const [hovered, setHovered] = useState(false);
-
   return (
     <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        background: "#ffffff",
-        borderRadius: 16,
+        background: "#fff",
+        borderRadius: 10,
         overflow: "hidden",
-        boxShadow: hovered
-          ? "0 20px 48px rgba(0,0,0,0.12)"
-          : "0 2px 16px rgba(0,0,0,0.06)",
-        transform: hovered ? "translateY(-4px)" : "translateY(0)",
-        transition: "box-shadow 0.22s, transform 0.22s",
-        border: "1px solid #f1f5f9",
+        boxShadow: hovered ? "0 12px 36px rgba(0,0,0,0.10)" : "0 1px 8px rgba(0,0,0,0.05)",
+        transform: hovered ? "translateY(-3px)" : "translateY(0)",
+        transition: "box-shadow 0.2s, transform 0.2s",
+        border: `1px solid ${ink[100]}`,
         display: "flex",
         flexDirection: "column",
       }}
     >
-      {/* Photo thumbnail */}
-      <div
-        style={{
-          height: 148,
-          overflow: "hidden",
-          position: "relative",
-          flexShrink: 0,
-        }}
-      >
+      <div style={{ height: 148, overflow: "hidden", position: "relative", flexShrink: 0 }}>
         <img
           src={post.image}
           alt={post.imageAlt}
@@ -125,71 +104,51 @@ function ArticleCard({ post }: { post: BlogPost }) {
             height: "100%",
             objectFit: "cover",
             display: "block",
-            transition: "transform 0.3s",
-            transform: hovered ? "scale(1.05)" : "scale(1)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.35) 100%)",
+            transition: "transform 0.35s",
+            transform: hovered ? "scale(1.04)" : "scale(1)",
           }}
         />
       </div>
-      <div style={{ padding: "20px 22px 22px", display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
-        <span
-          style={{
-            display: "inline-block",
-            fontSize: 10,
-            fontWeight: 700,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            padding: "4px 10px",
-            borderRadius: 999,
-            alignSelf: "flex-start",
-            ...typeBadgeStyle(post.category),
-          }}
-        >
+      <div style={{ padding: "18px 20px 20px", display: "flex", flexDirection: "column", gap: 9, flex: 1 }}>
+        <span style={{
+          display: "inline-block",
+          fontSize: 10,
+          fontWeight: 700,
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
+          padding: "3px 9px",
+          borderRadius: 5,
+          alignSelf: "flex-start",
+          ...categoryBadge(post.category),
+        }}>
           {post.category}
         </span>
-        <h3
-          style={{
-            margin: 0,
-            fontSize: 16,
-            fontWeight: 700,
-            color: "#0f172a",
-            lineHeight: 1.4,
-          }}
-        >
+        <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: ink[800], lineHeight: 1.4 }}>
           {post.title}
         </h3>
-        <p
-          style={{
-            margin: 0,
-            fontSize: 13.5,
-            color: "#64748b",
-            lineHeight: 1.6,
-            display: "-webkit-box",
-            WebkitLineClamp: 3,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-          }}
-        >
+        <p style={{
+          margin: 0,
+          fontSize: 13,
+          color: ink[400],
+          lineHeight: 1.65,
+          display: "-webkit-box",
+          WebkitLineClamp: 3,
+          WebkitBoxOrient: "vertical",
+          overflow: "hidden",
+        }}>
           {post.description}
         </p>
         <div style={{ marginTop: "auto", paddingTop: 12, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span style={{ fontSize: 12, color: "#94a3b8" }}>{post.readTime} min read</span>
-          <ReadLink slug={post.slug} />
+          <span style={{ fontSize: 12, color: ink[300] }}>{post.readTime} min read</span>
+          <ReadLink slug={post.slug} label={post.category === "Case Study" ? "Read Case Study" : "Read Article"} />
         </div>
       </div>
     </div>
   );
 }
 
-function ReadLink({ slug }: { slug: string }) {
+function ReadLink({ slug, label }: { slug: string; label: string }) {
   const [hovered, setHovered] = useState(false);
-
   return (
     <Link
       href={`/resources/${slug}`}
@@ -198,341 +157,38 @@ function ReadLink({ slug }: { slug: string }) {
       style={{
         fontSize: 13,
         fontWeight: 600,
-        color: hovered ? "#1d4ed8" : "#2563eb",
+        color: hovered ? "#1d4ed8" : accent,
         textDecoration: "none",
-        display: "flex",
-        alignItems: "center",
-        gap: 4,
-        transition: "color 0.15s",
+        transition: "color 0.14s",
       }}
     >
-      Read Article
+      {label}
     </Link>
   );
 }
 
-// ── Page ───────────────────────────────────────────────────────────────────
-const FILTER_TABS: FilterTab[] = [
-  "All",
-  "Case Studies",
-  "Whitepapers",
-  "Blog Posts",
-  "Aviation",
-  "Corporate",
-];
-
-export default function ResourcesClient({ posts }: { posts: BlogPost[] }) {
-  const [activeFilter, setActiveFilter] = useState<FilterTab>("All");
-
-  const featuredPost = posts.find((p) => p.featured);
-  const nonFeaturedPosts = posts.filter((p) => !p.featured);
-  const filtered = filterPosts(nonFeaturedPosts, activeFilter);
-  const showFeatured =
-    activeFilter === "All" || activeFilter === "Case Studies" || activeFilter === "Aviation";
-
-  return (
-    <div
-      style={{
-        minHeight: "100vh",
-        fontFamily:
-          '"DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif',
-        color: "#0f172a",
-        background: "#f8fafc",
-      }}
-    >
-      <MarketingNav />
-
-      {/* ── Hero ───────────────────────────────────────────────────────── */}
-      <section
-        style={{
-          padding: "80px 32px 72px",
-          position: "relative",
-          overflow: "hidden",
-          backgroundImage:
-            "linear-gradient(rgba(10,15,30,0.88), rgba(15,23,42,0.92)), url('/safwan-mahmud-6xQFm9TFwmk-unsplash.jpg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage:
-              "radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px)",
-            backgroundSize: "32px 32px",
-            pointerEvents: "none",
-          }}
-        />
-
-        <div
-          style={{
-            maxWidth: 760,
-            margin: "0 auto",
-            textAlign: "center",
-            position: "relative",
-            zIndex: 1,
-          }}
-        >
-          <div
-            style={{
-              display: "inline-block",
-              fontSize: 11,
-              fontWeight: 700,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "#60a5fa",
-              background: "rgba(37,99,235,0.12)",
-              border: "1px solid rgba(96,165,250,0.25)",
-              padding: "6px 16px",
-              borderRadius: 999,
-              marginBottom: 24,
-            }}
-          >
-            Knowledge Hub
-          </div>
-
-          <h1
-            style={{
-              fontSize: "clamp(36px, 5vw, 56px)",
-              fontWeight: 800,
-              color: "#ffffff",
-              margin: "0 0 20px",
-              lineHeight: 1.15,
-              letterSpacing: "-0.03em",
-            }}
-          >
-            Resources and{" "}
-            <span
-              style={{
-                background: "linear-gradient(90deg, #60a5fa 0%, #818cf8 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
-              Case Studies
-            </span>
-          </h1>
-
-          <p
-            style={{
-              fontSize: 18,
-              color: "#94a3b8",
-              margin: "0 0 40px",
-              lineHeight: 1.7,
-              maxWidth: 560,
-              marginLeft: "auto",
-              marginRight: "auto",
-            }}
-          >
-            Practical insights, research, and real-world results for operations
-            leaders navigating quality oversight.
-          </p>
-        </div>
-      </section>
-
-      {/* ── Filter tabs ────────────────────────────────────────────────── */}
-      <section
-        style={{
-          background: "#ffffff",
-          borderBottom: "1px solid #e2e8f0",
-          padding: "0 32px",
-          position: "sticky",
-          top: 57,
-          zIndex: 40,
-        }}
-      >
-        <div
-          style={{
-            maxWidth: 1100,
-            margin: "0 auto",
-            overflowX: "auto",
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            padding: "16px 0",
-            scrollbarWidth: "none",
-          }}
-        >
-          {FILTER_TABS.map((tab) => (
-            <FilterPill
-              key={tab}
-              label={tab}
-              selected={activeFilter === tab}
-              onClick={() => setActiveFilter(tab)}
-            />
-          ))}
-        </div>
-      </section>
-
-      {/* ── Main content ──────────────────────────────────────────────── */}
-      <main
-        style={{
-          maxWidth: 1100,
-          margin: "0 auto",
-          padding: "48px 32px 64px",
-        }}
-      >
-        {/* ── Assessment Banner ───────────────────────────────────────── */}
-        <div
-          style={{
-            background: "linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)",
-            borderRadius: 16,
-            padding: "40px 32px",
-            marginBottom: 48,
-            textAlign: "center",
-            color: "#fff",
-          }}
-        >
-          <div
-            style={{
-              fontSize: 13,
-              fontWeight: 600,
-              color: "#60a5fa",
-              marginBottom: 12,
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
-            }}
-          >
-            Free Assessment
-          </div>
-          <h2 style={{ fontSize: 28, fontWeight: 800, marginBottom: 12 }}>
-            Vendor Accountability Score
-          </h2>
-          <p
-            style={{
-              fontSize: 16,
-              color: "#94a3b8",
-              maxWidth: 500,
-              margin: "0 auto 24px",
-              lineHeight: 1.6,
-            }}
-          >
-            Take the 2-minute assessment to benchmark your vendor oversight
-            maturity. Get personalized recommendations.
-          </p>
-          <Link
-            href="/resources/vendor-accountability-assessment"
-            style={{
-              display: "inline-block",
-              background: "#2563eb",
-              color: "#fff",
-              padding: "12px 28px",
-              borderRadius: 8,
-              fontWeight: 600,
-              fontSize: 15,
-              textDecoration: "none",
-            }}
-          >
-            Take the Assessment
-          </Link>
-        </div>
-
-        {/* ── Featured article ──────────────────────────────────────── */}
-        {showFeatured && featuredPost && (
-          <FeaturedCard post={featuredPost} />
-        )}
-
-        {/* ── Grid ─────────────────────────────────────────────────── */}
-        {filtered.length === 0 ? (
-          <div
-            style={{
-              textAlign: "center",
-              padding: "80px 32px",
-              color: "#94a3b8",
-            }}
-          >
-            <p style={{ margin: 0, fontSize: 16 }}>
-              No resources match this filter yet.
-            </p>
-          </div>
-        ) : (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-              gap: 24,
-            }}
-          >
-            {filtered.map((post) => (
-              <ArticleCard key={post.slug} post={post} />
-            ))}
-          </div>
-        )}
-      </main>
-
-      {/* ── CTA Banner ───────────────────────────────────────────────── */}
-      <section
-        style={{
-          background: "linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)",
-          padding: "64px 32px",
-          textAlign: "center",
-        }}
-      >
-        <div style={{ maxWidth: 600, margin: "0 auto" }}>
-          <h2
-            style={{
-              fontSize: 28,
-              fontWeight: 800,
-              color: "#ffffff",
-              margin: "0 0 16px",
-              letterSpacing: "-0.02em",
-            }}
-          >
-            Want a personalized deep-dive?
-          </h2>
-          <p
-            style={{
-              fontSize: 16,
-              color: "#94a3b8",
-              margin: "0 0 32px",
-              lineHeight: 1.7,
-            }}
-          >
-            Our team can walk you through case studies relevant to your industry
-            and build a custom ROI model for your portfolio.
-          </p>
-          <CtaButton />
-        </div>
-      </section>
-
-      <MarketingFooter />
-    </div>
-  );
-}
-
+// ── Featured card ─────────────────────────────────────────────────────────
 function FeaturedCard({ post }: { post: BlogPost }) {
   const [hovered, setHovered] = useState(false);
-
   return (
     <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        background: "#ffffff",
-        borderRadius: 20,
+        background: "#fff",
+        borderRadius: 10,
         overflow: "hidden",
-        boxShadow: hovered
-          ? "0 24px 60px rgba(0,0,0,0.13)"
-          : "0 4px 24px rgba(0,0,0,0.07)",
-        transform: hovered ? "translateY(-3px)" : "translateY(0)",
-        transition: "box-shadow 0.25s, transform 0.25s",
-        border: "1px solid #f1f5f9",
+        boxShadow: hovered ? "0 16px 48px rgba(0,0,0,0.10)" : "0 2px 16px rgba(0,0,0,0.06)",
+        transform: hovered ? "translateY(-2px)" : "translateY(0)",
+        transition: "box-shadow 0.22s, transform 0.22s",
+        border: `1px solid ${ink[100]}`,
         display: "flex",
         flexDirection: "row" as const,
-        marginBottom: 48,
-        minHeight: 280,
+        marginBottom: 40,
+        minHeight: 260,
       }}
     >
-      <div
-        style={{
-          width: "38%",
-          minWidth: 240,
-          position: "relative",
-          overflow: "hidden",
-          flexShrink: 0,
-        }}
-      >
+      <div style={{ width: "36%", minWidth: 220, position: "relative", overflow: "hidden", flexShrink: 0 }}>
         <img
           src={post.image}
           alt={post.imageAlt}
@@ -545,98 +201,49 @@ function FeaturedCard({ post }: { post: BlogPost }) {
             transition: "transform 0.4s",
           }}
         />
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "linear-gradient(to right, rgba(0,0,0,0.4), transparent)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: 20,
-            left: 20,
-          }}
-        >
-          <span
-            style={{
-              fontSize: 11,
-              fontWeight: 700,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              color: "rgba(255,255,255,0.7)",
-            }}
-          >
-            Featured
-          </span>
+        <div style={{
+          position: "absolute",
+          bottom: 16,
+          left: 16,
+          fontSize: 10,
+          fontWeight: 700,
+          letterSpacing: "0.1em",
+          textTransform: "uppercase",
+          color: "rgba(255,255,255,0.8)",
+        }}>
+          Featured
         </div>
       </div>
-
-      <div
-        style={{
-          padding: "36px 40px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          gap: 14,
-          flex: 1,
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span
-            style={{
-              fontSize: 10,
-              fontWeight: 700,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              padding: "4px 12px",
-              borderRadius: 999,
-              ...typeBadgeStyle(post.category),
-            }}
-          >
-            {post.category}
-          </span>
-        </div>
-
-        <h2
-          style={{
-            margin: 0,
-            fontSize: "clamp(20px, 2.5vw, 28px)",
-            fontWeight: 800,
-            color: "#0f172a",
-            lineHeight: 1.3,
-            letterSpacing: "-0.02em",
-          }}
-        >
+      <div style={{ padding: "32px 36px", display: "flex", flexDirection: "column", justifyContent: "center", gap: 12, flex: 1 }}>
+        <span style={{
+          display: "inline-block",
+          fontSize: 10,
+          fontWeight: 700,
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
+          padding: "3px 9px",
+          borderRadius: 5,
+          alignSelf: "flex-start",
+          ...categoryBadge(post.category),
+        }}>
+          {post.category}
+        </span>
+        <h2 style={{
+          margin: 0,
+          fontSize: "clamp(18px, 2.5vw, 26px)",
+          fontWeight: 700,
+          color: ink[800],
+          lineHeight: 1.3,
+          letterSpacing: "-0.5px",
+        }}>
           {post.title}
         </h2>
-
-        <p
-          style={{
-            margin: 0,
-            fontSize: 15,
-            color: "#64748b",
-            lineHeight: 1.7,
-            maxWidth: 560,
-          }}
-        >
+        <p style={{ margin: 0, fontSize: 15, color: ink[400], lineHeight: 1.7, maxWidth: 520 }}>
           {post.description}
         </p>
-
-        <div
-          style={{
-            display: "flex",
-            gap: 16,
-            alignItems: "center",
-            flexWrap: "wrap" as const,
-            marginTop: 4,
-          }}
-        >
+        <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" as const, marginTop: 4 }}>
           <FeaturedReadButton slug={post.slug} />
-          <span style={{ fontSize: 13, color: "#94a3b8" }}>
-            {post.readTime} min read
-          </span>
+          <span style={{ fontSize: 13, color: ink[300] }}>{post.readTime} min read</span>
         </div>
       </div>
     </div>
@@ -651,22 +258,204 @@ function FeaturedReadButton({ slug }: { slug: string }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        display: "flex",
+        display: "inline-flex",
         alignItems: "center",
         gap: 8,
-        padding: "12px 24px",
-        background: hovered ? "#1d4ed8" : "#2563eb",
-        color: "#ffffff",
+        padding: "11px 22px",
+        background: hovered ? "#1d4ed8" : accent,
+        color: "#fff",
         textDecoration: "none",
-        borderRadius: 10,
+        borderRadius: 8,
         fontSize: 14,
         fontWeight: 700,
-        transition: "background 0.18s",
-        letterSpacing: "0.01em",
+        transition: "background 0.15s",
       }}
     >
       Read Case Study
     </Link>
+  );
+}
+
+// ── Page ──────────────────────────────────────────────────────────────────
+const FILTER_TABS: FilterTab[] = ["All", "Case Studies", "Whitepapers", "Blog Posts", "Aviation", "Corporate"];
+
+export default function ResourcesClient({ posts }: { posts: BlogPost[] }) {
+  const [activeFilter, setActiveFilter] = useState<FilterTab>("All");
+
+  const featuredPost = posts.find((p) => p.featured);
+  const nonFeaturedPosts = posts.filter((p) => !p.featured);
+  const filtered = filterPosts(nonFeaturedPosts, activeFilter);
+  const showFeatured = activeFilter === "All" || activeFilter === "Case Studies" || activeFilter === "Aviation";
+
+  return (
+    <div style={{
+      minHeight: "100vh",
+      fontFamily: '"IBM Plex Sans", system-ui, -apple-system, sans-serif',
+      color: ink[800],
+      background: ink[25],
+    }}>
+      <MarketingNav />
+
+      {/* ── Hero ────────────────────────────────────────────────────── */}
+      <section style={{
+        padding: "80px 40px 72px",
+        background: ink[900],
+        borderBottom: `1px solid rgba(255,255,255,0.06)`,
+      }}>
+        <div style={{ maxWidth: 860, margin: "0 auto" }}>
+          <div style={{
+            display: "inline-block",
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            color: ink[300],
+            marginBottom: 20,
+          }}>
+            Knowledge Hub
+          </div>
+          <h1 style={{
+            fontSize: "clamp(32px, 5vw, 50px)",
+            fontWeight: 700,
+            color: ink[25],
+            margin: "0 0 18px",
+            lineHeight: 1.1,
+            letterSpacing: "-1.5px",
+            maxWidth: 620,
+          }}>
+            Resources and Case Studies
+          </h1>
+          <p style={{
+            fontSize: 18,
+            color: ink[400],
+            margin: 0,
+            lineHeight: 1.7,
+            maxWidth: 500,
+          }}>
+            Practical insights, research, and real-world results for operations
+            leaders navigating quality oversight.
+          </p>
+        </div>
+      </section>
+
+      {/* ── Filter bar ──────────────────────────────────────────────── */}
+      <section style={{
+        background: "#fff",
+        borderBottom: `1px solid ${ink[100]}`,
+        padding: "0 40px",
+        position: "sticky",
+        top: 57,
+        zIndex: 40,
+      }}>
+        <div style={{
+          maxWidth: 1100,
+          margin: "0 auto",
+          overflowX: "auto",
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          padding: "14px 0",
+          scrollbarWidth: "none",
+        }}>
+          {FILTER_TABS.map((tab) => (
+            <FilterPill
+              key={tab}
+              label={tab}
+              selected={activeFilter === tab}
+              onClick={() => setActiveFilter(tab)}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* ── Main content ────────────────────────────────────────────── */}
+      <main style={{ maxWidth: 1100, margin: "0 auto", padding: "48px 40px 64px" }}>
+
+        {/* ── Assessment Banner ──────────────────────────────────── */}
+        <div style={{
+          background: ink[900],
+          borderRadius: 10,
+          padding: "36px 32px",
+          marginBottom: 48,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 24,
+          flexWrap: "wrap",
+        }}>
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: ink[300], marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+              Free Assessment
+            </div>
+            <h2 style={{ fontSize: 22, fontWeight: 700, color: "#fff", marginBottom: 8, letterSpacing: "-0.5px" }}>
+              Vendor Accountability Score
+            </h2>
+            <p style={{ fontSize: 15, color: ink[400], maxWidth: 420, lineHeight: 1.6, margin: 0 }}>
+              Take the 2-minute assessment to benchmark your vendor oversight
+              maturity. Get personalized recommendations.
+            </p>
+          </div>
+          <Link
+            href="/resources/vendor-accountability-assessment"
+            style={{
+              display: "inline-block",
+              background: accent,
+              color: "#fff",
+              padding: "12px 24px",
+              borderRadius: 8,
+              fontWeight: 700,
+              fontSize: 14,
+              textDecoration: "none",
+              flexShrink: 0,
+            }}
+          >
+            Take the Assessment
+          </Link>
+        </div>
+
+        {/* ── Featured article ───────────────────────────────────── */}
+        {showFeatured && featuredPost && <FeaturedCard post={featuredPost} />}
+
+        {/* ── Grid ──────────────────────────────────────────────── */}
+        {filtered.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "80px 32px", color: ink[300] }}>
+            <p style={{ margin: 0, fontSize: 16 }}>No resources match this filter yet.</p>
+          </div>
+        ) : (
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+            gap: 22,
+          }}>
+            {filtered.map((post) => (
+              <ArticleCard key={post.slug} post={post} />
+            ))}
+          </div>
+        )}
+      </main>
+
+      {/* ── CTA ─────────────────────────────────────────────────── */}
+      <section style={{ background: ink[900], padding: "72px 40px" }}>
+        <div style={{ maxWidth: 600, margin: "0 auto" }}>
+          <h2 style={{
+            fontSize: "clamp(22px, 3vw, 30px)",
+            fontWeight: 700,
+            color: "#fff",
+            margin: "0 0 14px",
+            letterSpacing: "-0.5px",
+          }}>
+            Want a personalized deep-dive?
+          </h2>
+          <p style={{ fontSize: 16, color: ink[400], margin: "0 0 28px", lineHeight: 1.7, maxWidth: 480 }}>
+            Our team can walk you through case studies relevant to your industry
+            and build a custom ROI model for your portfolio.
+          </p>
+          <CtaButton />
+        </div>
+      </section>
+
+      <MarketingFooter />
+    </div>
   );
 }
 
@@ -681,15 +470,14 @@ function CtaButton() {
         display: "inline-flex",
         alignItems: "center",
         gap: 8,
-        padding: "14px 32px",
-        background: hovered ? "#1d4ed8" : "#2563eb",
-        color: "#ffffff",
+        padding: "13px 28px",
+        background: hovered ? "#1d4ed8" : accent,
+        color: "#fff",
         textDecoration: "none",
-        borderRadius: 12,
-        fontSize: 15,
+        borderRadius: 8,
+        fontSize: 14,
         fontWeight: 700,
-        transition: "background 0.18s",
-        letterSpacing: "0.01em",
+        transition: "background 0.15s",
       }}
     >
       Talk to an expert
