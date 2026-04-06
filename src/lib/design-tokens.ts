@@ -9,12 +9,16 @@ import type React from "react";
 // ─── 1. Colors ──────────────────────────────────────────────────────
 
 export const colors = {
+  // Brand (logo-derived)
+  brand: "#0f2b4a",       // logo navy
+  brandAccent: "#2980b9", // logo blue
+
   // Portal header/accent colors (one per role)
   portal: {
     admin: { bg: "#111", accent: "#7c3aed" },       // violet
-    dashboard: { bg: "#0f1729", accent: "#3b82f6" }, // blue
-    worker: { bg: "#059669", accent: "#059669" },    // green
-    client: { bg: "#1a1a2e", accent: "#b45309" },    // amber
+    dashboard: { bg: "#0f2b4a", accent: "#2980b9" }, // logo navy/blue
+    worker: { bg: "#059669", accent: "#059669" },    // emerald
+    client: { bg: "#0f2b4a", accent: "#0f2b4a" },    // logo navy
   },
 
   // Text hierarchy
@@ -64,9 +68,9 @@ export const colors = {
   // Role badges
   role: {
     admin: { bg: "#ede9fe", color: "#6d28d9" },
-    manager: { bg: "#dbeafe", color: "#1d4ed8" },
+    manager: { bg: "#dbeafe", color: "#2980b9" },
     worker: { bg: "#d1fae5", color: "#065f46" },
-    client: { bg: "#fef3c7", color: "#b45309" },
+    client: { bg: "#e0e7f0", color: "#0f2b4a" },
   },
 
   // Semantic
@@ -81,11 +85,21 @@ export const colors = {
 export const tokens = {
   colors: {
     sidebar: "#0f1729",
+    brand: "#0f2b4a",       // logo navy -- the IQS Flow brand color
+    brandAccent: "#2980b9", // logo blue -- lighter accent from logo swoosh
     accent: {
-      admin: "#7c3aed",   // violet
-      manager: "#3b82f6", // blue
-      client: "#b45309",  // amber
-      worker: "#059669",  // green
+      admin: "#7c3aed",   // violet -- system authority
+      manager: "#2980b9", // logo blue -- leadership, oversight
+      client: "#0f2b4a",  // logo navy -- executive, trust
+      worker: "#059669",  // emerald -- action, field work
+    },
+    chart: {
+      primary: "#0f2b4a",   // quality scores, primary trends
+      secondary: "#0d9488", // compliance, secondary metrics
+      tertiary: "#d97706",  // highlights, attention
+      quaternary: "#64748b",// baselines
+      positive: "#059669",  // improvements
+      negative: "#e11d48",  // declines
     },
     surface: "#ffffff",
     surfaceMuted: "#f8fafc",
@@ -150,9 +164,9 @@ export const marketing = {
     25: "#f8fafc",
   },
 
-  // Primary accent (used sparingly for CTAs and highlights)
-  accent: "#2563eb",
-  accentDark: "#1e40af",
+  // Primary accent (logo-derived)
+  accent: "#2980b9",      // logo blue
+  accentDark: "#0f2b4a",  // logo navy
   accentLight: "#dbeafe",
 
   // Section-specific color pairings
