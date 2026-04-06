@@ -67,6 +67,51 @@ function revealStyle(inView: boolean, delay = 0): React.CSSProperties {
   };
 }
 
+/* ─── FloatingDots component ─── */
+function FloatingDots() {
+  const dots = [
+    { size: 8, top: "10%", left: "5%", color: "#2980b9", opacity: 0.06, duration: 18, delay: 0 },
+    { size: 12, top: "25%", left: "88%", color: "#2980b9", opacity: 0.05, duration: 22, delay: 3 },
+    { size: 5, top: "60%", left: "12%", color: "#3b82f6", opacity: 0.07, duration: 15, delay: 1.5 },
+    { size: 10, top: "80%", left: "75%", color: "#2980b9", opacity: 0.04, duration: 28, delay: 5 },
+    { size: 7, top: "45%", left: "95%", color: "#60a5fa", opacity: 0.06, duration: 20, delay: 2 },
+    { size: 9, top: "15%", left: "55%", color: "#2980b9", opacity: 0.05, duration: 25, delay: 4 },
+    { size: 4, top: "70%", left: "35%", color: "#3b82f6", opacity: 0.08, duration: 17, delay: 0.5 },
+    { size: 11, top: "90%", left: "20%", color: "#2980b9", opacity: 0.04, duration: 30, delay: 6 },
+  ];
+
+  return (
+    <>
+      {dots.map((dot, i) => (
+        <div
+          key={i}
+          style={{
+            position: "absolute",
+            width: dot.size,
+            height: dot.size,
+            borderRadius: "50%",
+            background: dot.color,
+            opacity: dot.opacity,
+            top: dot.top,
+            left: dot.left,
+            animation: `floatDot${i} ${dot.duration}s ease-in-out ${dot.delay}s infinite`,
+            pointerEvents: "none",
+            zIndex: 0,
+          }}
+        />
+      ))}
+      <style>{`
+        ${dots.map((dot, i) => `
+          @keyframes floatDot${i} {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-${12 + (i % 4) * 5}px); }
+          }
+        `).join("")}
+      `}</style>
+    </>
+  );
+}
+
 /* ════════════════════════════════════════════════
    0. SCROLL PROGRESS INDICATOR
    ════════════════════════════════════════════════ */
@@ -105,7 +150,32 @@ export function ScrollProgressBar() {
 export function HeroSection() {
   const [demoHovered, setDemoHovered] = useState(false);
   const [signInHovered, setSignInHovered] = useState(false);
+  const [cardHovered, setCardHovered] = useState<number | null>(null);
   const { ref, inView } = useInView(0.1);
+
+  const capabilityCards = [
+    {
+      icon: Users,
+      title: "Multi-vendor visibility",
+      desc: "Compare every contractor on a unified rubric across all your sites.",
+      borderColor: accent,
+      offsetX: 0,
+    },
+    {
+      icon: Shield,
+      title: "Real-time inspections",
+      desc: "GPS-verified, photo-documented audits with live compliance scoring.",
+      borderColor: "#059669",
+      offsetX: -12,
+    },
+    {
+      icon: Radio,
+      title: "Compliance automation",
+      desc: "6 built-in frameworks score every site against industry standards.",
+      borderColor: "#7c3aed",
+      offsetX: 8,
+    },
+  ] as const;
 
   return (
     <section
@@ -113,6 +183,8 @@ export function HeroSection() {
       style={{
         background: "#ffffff",
         borderBottom: `1px solid ${ink[100]}`,
+        overflow: "hidden",
+        position: "relative",
       }}
     >
       <div
@@ -124,6 +196,8 @@ export function HeroSection() {
           gridTemplateColumns: "3fr 2fr",
           gap: 64,
           alignItems: "center",
+          position: "relative",
+          zIndex: 1,
         }}
         className="hero-grid"
       >
@@ -261,52 +335,114 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* Right: capability badges */}
+        {/* Right: browser-frame mockup + capability badge cards */}
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 16,
             ...revealStyle(inView, 0.15),
           }}
         >
-          {([
-            { icon: Users, title: "Multi-vendor visibility", desc: "Compare every contractor on a unified rubric across all your sites." },
-            { icon: Shield, title: "Real-time inspections", desc: "GPS-verified, photo-documented audits with live compliance scoring." },
-            { icon: Radio, title: "Compliance automation", desc: "6 built-in frameworks score every site against industry standards." },
-          ] as const).map(({ icon: Icon, title, desc }, i) => (
+          {/* Browser frame mockup */}
+          <div
+            style={{
+              background: ink[25],
+              border: `1px solid ${ink[100]}`,
+              borderRadius: "12px 12px 8px 8px",
+              overflow: "hidden",
+            }}
+          >
+            {/* Browser chrome bar */}
             <div
-              key={title}
               style={{
-                background: ink[25],
-                border: `1px solid ${ink[100]}`,
-                borderRadius: 12,
-                padding: "24px 20px",
+                background: ink[50],
+                borderBottom: `1px solid ${ink[100]}`,
+                padding: "10px 16px",
                 display: "flex",
-                gap: 16,
-                alignItems: "flex-start",
+                alignItems: "center",
+                gap: 12,
               }}
             >
+              {/* Traffic light dots */}
+              <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#ef4444" }} />
+                <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#f59e0b" }} />
+                <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e" }} />
+              </div>
+              {/* URL bar */}
               <div
                 style={{
-                  width: 40,
-                  height: 40,
-                  background: i === 0 ? accent : ink[800],
-                  borderRadius: 8,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
+                  flex: 1,
+                  background: "#ffffff",
+                  border: `1px solid ${ink[100]}`,
+                  borderRadius: 6,
+                  padding: "4px 12px",
+                  fontSize: 12,
+                  color: ink[400],
+                  fontWeight: 500,
+                  letterSpacing: "0.01em",
                 }}
               >
-                <Icon size={20} style={{ color: "#ffffff" }} />
-              </div>
-              <div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: ink[900], marginBottom: 4 }}>{title}</div>
-                <div style={{ fontSize: 13, color: ink[400], lineHeight: 1.55 }}>{desc}</div>
+                app.iqsflow.com
               </div>
             </div>
-          ))}
+
+            {/* Cards container */}
+            <div
+              style={{
+                padding: "20px 16px",
+                display: "flex",
+                flexDirection: "column",
+                gap: 0,
+              }}
+            >
+              {capabilityCards.map(({ icon: Icon, title, desc, borderColor, offsetX }, i) => (
+                <div
+                  key={title}
+                  onMouseEnter={() => setCardHovered(i)}
+                  onMouseLeave={() => setCardHovered(null)}
+                  style={{
+                    background: "#ffffff",
+                    border: `1px solid ${ink[100]}`,
+                    borderLeft: `3px solid ${borderColor}`,
+                    borderRadius: 10,
+                    padding: "18px 16px",
+                    display: "flex",
+                    gap: 14,
+                    alignItems: "flex-start",
+                    transform: cardHovered === i
+                      ? `translateX(${offsetX}px) translateY(-3px)`
+                      : `translateX(${offsetX}px)`,
+                    boxShadow: cardHovered === i
+                      ? "0 12px 36px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.06)"
+                      : "0 8px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04)",
+                    transition: "transform 0.25s ease, box-shadow 0.25s ease",
+                    marginBottom: i < capabilityCards.length - 1 ? -6 : 0,
+                    position: "relative",
+                    zIndex: capabilityCards.length - i,
+                    cursor: "default",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 36,
+                      height: 36,
+                      background: i === 0 ? `${accent}15` : i === 1 ? "#05966915" : "#7c3aed15",
+                      borderRadius: 8,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Icon size={18} style={{ color: borderColor }} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: ink[900], marginBottom: 3 }}>{title}</div>
+                    <div style={{ fontSize: 12, color: ink[400], lineHeight: 1.5 }}>{desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -419,6 +555,7 @@ const problems = [
 
 export function ProblemSection() {
   const { ref, inView } = useInView(0.1);
+  const [cardHovered, setCardHovered] = useState<number | null>(null);
 
   return (
     <section
@@ -426,9 +563,14 @@ export function ProblemSection() {
       style={{
         background: ink[900],
         padding: `${SECTION_Y}px 32px`,
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-      <div style={{ maxWidth: CONTENT_MAX, margin: "0 auto" }}>
+      {/* Floating dots background */}
+      <FloatingDots />
+
+      <div style={{ maxWidth: CONTENT_MAX, margin: "0 auto", position: "relative", zIndex: 1 }}>
         {/* Header — left-aligned */}
         <div
           style={{
@@ -451,7 +593,7 @@ export function ProblemSection() {
             }}
           >
             <AlertTriangle size={14} />
-            The Problem
+            The Trust Gap
           </div>
           <h2
             style={{
@@ -483,11 +625,16 @@ export function ProblemSection() {
           {problems.map(({ icon: ProblemIcon, num, title, body, tag }, i) => (
             <div
               key={title}
+              onMouseEnter={() => setCardHovered(i)}
+              onMouseLeave={() => setCardHovered(null)}
               style={{
                 background: "rgba(255,255,255,0.03)",
                 border: "1px solid rgba(255,255,255,0.06)",
                 borderRadius: 12,
                 padding: i === 0 ? "36px 32px" : "28px 24px",
+                cursor: "default",
+                transform: cardHovered === i ? "translateY(-4px)" : "none",
+                transition: "all 0.3s ease",
                 ...revealStyle(inView, 0.1 + i * 0.1),
               }}
             >
@@ -918,6 +1065,15 @@ const industryAccents: Record<string, string> = {
   maintenance: "#6366f1", // indigo
 };
 
+/* Industry stat block background gradients — subtle overlay per industry */
+const industryStatGradients: Record<string, string> = {
+  airlines: "linear-gradient(135deg, rgba(59,130,246,0.04) 0%, rgba(41,128,185,0.03) 100%)",
+  airports: "linear-gradient(135deg, rgba(124,58,237,0.04) 0%, rgba(109,40,217,0.03) 100%)",
+  corporate: "linear-gradient(135deg, rgba(180,83,9,0.04) 0%, rgba(217,119,6,0.03) 100%)",
+  healthcare: "linear-gradient(135deg, rgba(5,150,105,0.05) 0%, rgba(16,185,129,0.03) 100%)",
+  maintenance: "linear-gradient(135deg, rgba(99,102,241,0.04) 0%, rgba(79,70,229,0.03) 100%)",
+};
+
 const industries = [
   {
     id: "airlines",
@@ -1137,7 +1293,8 @@ export function IndustrySolutionsSection() {
             {/* Stat block */}
             <div
               style={{
-                background: ink[800],
+                background: `${ink[800]}`,
+                backgroundImage: industryStatGradients[active.id],
                 borderRadius: 12,
                 padding: "32px 28px",
                 marginBottom: 20,
@@ -1434,7 +1591,7 @@ export function StatsCTASection() {
     <section
       ref={ref}
       style={{
-        background: ink[900],
+        background: "linear-gradient(135deg, #0a0f1a 0%, #0f2b4a 50%, #0a0f1a 100%)",
         padding: `${SECTION_Y}px 32px`,
       }}
     >
