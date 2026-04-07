@@ -43,72 +43,69 @@ export default function WhyIqsPage() {
     >
       <MarketingNav />
 
-      {/* ─── Hero ─── */}
+      {/* ─── Hero (dark navy) ─── */}
       <section
         style={{
-          padding: "96px 32px 72px",
-          width: "90%",
-          maxWidth: 1200,
-          margin: "0 auto",
+          background: "#0a0f1a",
+          padding: "100px 32px 80px",
         }}
       >
-        {/* Eyebrow */}
-        <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 8,
-            padding: "5px 14px",
-            background: ink[50],
-            border: `1px solid ${ink[100]}`,
-            borderRadius: 6,
-            fontSize: 12,
-            fontWeight: 600,
-            color: ink[500],
-            letterSpacing: "0.06em",
-            textTransform: "uppercase" as const,
-            marginBottom: 32,
-          }}
-        >
-          Why IQS Flow
+        <div style={{ width: "90%", maxWidth: 1200, margin: "0 auto" }}>
+          {/* Eyebrow */}
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "5px 14px",
+              background: "rgba(37,99,235,0.12)",
+              border: "1px solid rgba(37,99,235,0.25)",
+              borderRadius: 6,
+              fontSize: 12,
+              fontWeight: 600,
+              color: accent,
+              letterSpacing: "0.06em",
+              textTransform: "uppercase" as const,
+              marginBottom: 32,
+            }}
+          >
+            Why IQS Flow
+          </div>
+
+          <h1
+            style={{
+              fontSize: "clamp(36px, 5vw, 60px)",
+              fontWeight: 800,
+              letterSpacing: "-2px",
+              lineHeight: 1.05,
+              marginBottom: 24,
+              color: "#f8fafc",
+              maxWidth: 760,
+            }}
+          >
+            The oversight layer that was missing.
+          </h1>
+
+          <p
+            style={{
+              fontSize: 20,
+              color: ink[400],
+              lineHeight: 1.65,
+              maxWidth: 560,
+              margin: 0,
+            }}
+          >
+            You hire cleaning companies. They use their own tools. You have no
+            visibility. IQS Flow changes that.
+          </p>
         </div>
-
-        <h1
-          style={{
-            fontSize: "clamp(36px, 5vw, 60px)",
-            fontWeight: 800,
-            letterSpacing: "-2px",
-            lineHeight: 1.05,
-            marginBottom: 24,
-            color: ink[900],
-            maxWidth: 760,
-          }}
-        >
-          The oversight layer that was missing.
-        </h1>
-
-        <p
-          style={{
-            fontSize: 20,
-            color: ink[500],
-            lineHeight: 1.65,
-            maxWidth: 560,
-            margin: 0,
-          }}
-        >
-          You hire cleaning companies. They use their own tools. You have no
-          visibility. IQS Flow changes that.
-        </p>
       </section>
 
-      {/* ─── Thin divider ─── */}
-      <div style={{ borderTop: `1px solid ${ink[100]}` }} />
-
-      {/* ─── Section 1: The Problem ─── */}
+      {/* ─── Section 1: The Problem (dark variant) ─── */}
       <section
         style={{
           padding: "80px 32px",
-          background: "#f0f4f8",
+          background: "#0f172a",
         }}
       >
         <div style={{ width: "90%", maxWidth: 1200, margin: "0 auto" }}>
@@ -119,7 +116,7 @@ export default function WhyIqsPage() {
               fontWeight: 700,
               letterSpacing: "0.1em",
               textTransform: "uppercase" as const,
-              color: ink[400],
+              color: ink[500],
               marginBottom: 16,
             }}
           >
@@ -132,7 +129,7 @@ export default function WhyIqsPage() {
               letterSpacing: "-1px",
               lineHeight: 1.15,
               marginBottom: 16,
-              color: ink[900],
+              color: "#f8fafc",
               maxWidth: 640,
             }}
           >
@@ -141,7 +138,7 @@ export default function WhyIqsPage() {
           <p
             style={{
               fontSize: 17,
-              color: ink[500],
+              color: ink[300],
               lineHeight: 1.7,
               maxWidth: 600,
               marginBottom: 48,
@@ -157,11 +154,7 @@ export default function WhyIqsPage() {
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-              gap: 1,
-              background: ink[100],
-              border: `1px solid ${ink[100]}`,
-              borderRadius: 10,
-              overflow: "hidden",
+              gap: 20,
             }}
           >
             {[
@@ -181,9 +174,10 @@ export default function WhyIqsPage() {
               <div
                 key={title}
                 style={{
-                  background: "#fff",
+                  background: "rgba(239,68,68,0.04)",
+                  border: "1px solid rgba(239,68,68,0.1)",
+                  borderRadius: 10,
                   padding: "32px 28px",
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
                 }}
               >
                 <div
@@ -191,21 +185,21 @@ export default function WhyIqsPage() {
                     width: 32,
                     height: 32,
                     borderRadius: 6,
-                    background: "#fef2f2",
+                    background: "rgba(239,68,68,0.1)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     marginBottom: 16,
                   }}
                 >
-                  <XCircle size={18} color="#dc2626" strokeWidth={2} />
+                  <XCircle size={18} color="#ef4444" strokeWidth={2} />
                 </div>
                 <h3
                   style={{
                     fontSize: 15,
                     fontWeight: 700,
                     marginBottom: 8,
-                    color: ink[900],
+                    color: "#f8fafc",
                     letterSpacing: "-0.3px",
                   }}
                 >
@@ -214,7 +208,7 @@ export default function WhyIqsPage() {
                 <p
                   style={{
                     fontSize: 14,
-                    color: ink[500],
+                    color: ink[300],
                     lineHeight: 1.65,
                     margin: 0,
                   }}
@@ -227,11 +221,8 @@ export default function WhyIqsPage() {
         </div>
       </section>
 
-      {/* ─── Thin divider ─── */}
-      <div style={{ borderTop: `1px solid ${ink[100]}` }} />
-
-      {/* ─── Section 2: Their Data vs Your Data ─── */}
-      <section style={{ padding: "80px 32px", background: "#f8fafc" }}>
+      {/* ─── Section 2: Their Data vs Your Data (white) ─── */}
+      <section style={{ padding: "80px 32px", background: "#ffffff" }}>
         <div style={{ width: "90%", maxWidth: 1200, margin: "0 auto" }}>
           <p
             style={{
@@ -281,14 +272,11 @@ export default function WhyIqsPage() {
         </div>
       </section>
 
-      {/* ─── Thin divider ─── */}
-      <div style={{ borderTop: `1px solid ${ink[100]}` }} />
-
-      {/* ─── Section 3: How We're Different ─── */}
+      {/* ─── Section 3: How We're Different (light slate) ─── */}
       <section
         style={{
           padding: "80px 32px",
-          background: "#ffffff",
+          background: "#f8fafc",
         }}
       >
         <div style={{ width: "90%", maxWidth: 1200, margin: "0 auto" }}>
@@ -330,14 +318,14 @@ export default function WhyIqsPage() {
             IQS Flow is built for the organizations that hire them.
           </p>
 
-          <div style={{ overflowX: "auto", borderRadius: 10, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
+          <div style={{ overflowX: "auto", borderRadius: 12, boxShadow: "0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04)" }}>
             <table
               style={{
                 width: "100%",
                 borderCollapse: "collapse",
                 fontSize: 14,
                 background: "#ffffff",
-                borderRadius: 10,
+                borderRadius: 12,
                 overflow: "hidden",
                 border: `1px solid ${ink[100]}`,
               }}
@@ -466,11 +454,8 @@ export default function WhyIqsPage() {
         </div>
       </section>
 
-      {/* ─── Thin divider ─── */}
-      <div style={{ borderTop: `1px solid ${ink[100]}` }} />
-
-      {/* ─── Section 4: Built for Scale ─── */}
-      <section style={{ padding: "80px 32px", background: "#f8fafc" }}>
+      {/* ─── Section 4: Built for Scale (dark navy) ─── */}
+      <section style={{ padding: "80px 32px", background: "#0a0f1a" }}>
         <div style={{ width: "90%", maxWidth: 1200, margin: "0 auto" }}>
           <p
             style={{
@@ -478,7 +463,7 @@ export default function WhyIqsPage() {
               fontWeight: 700,
               letterSpacing: "0.1em",
               textTransform: "uppercase" as const,
-              color: ink[400],
+              color: ink[500],
               marginBottom: 16,
             }}
           >
@@ -491,7 +476,7 @@ export default function WhyIqsPage() {
               letterSpacing: "-1px",
               lineHeight: 1.15,
               marginBottom: 16,
-              color: ink[900],
+              color: "#f8fafc",
               maxWidth: 560,
             }}
           >
@@ -500,7 +485,7 @@ export default function WhyIqsPage() {
           <p
             style={{
               fontSize: 17,
-              color: ink[500],
+              color: ink[300],
               lineHeight: 1.7,
               maxWidth: 560,
               marginBottom: 56,
@@ -542,11 +527,10 @@ export default function WhyIqsPage() {
               <div
                 key={title}
                 style={{
-                  background: ink[25],
+                  background: "rgba(255,255,255,0.03)",
                   borderRadius: 10,
                   padding: "28px 24px",
-                  border: `1px solid ${ink[100]}`,
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+                  border: "1px solid rgba(255,255,255,0.06)",
                 }}
               >
                 <div
@@ -554,8 +538,8 @@ export default function WhyIqsPage() {
                     width: 36,
                     height: 36,
                     borderRadius: 8,
-                    background: "#eff6ff",
-                    border: `1px solid #bfdbfe`,
+                    background: "rgba(37,99,235,0.15)",
+                    border: "1px solid rgba(37,99,235,0.25)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -569,7 +553,7 @@ export default function WhyIqsPage() {
                     fontSize: 15,
                     fontWeight: 700,
                     marginBottom: 8,
-                    color: ink[900],
+                    color: "#f8fafc",
                     letterSpacing: "-0.3px",
                   }}
                 >
@@ -578,7 +562,7 @@ export default function WhyIqsPage() {
                 <p
                   style={{
                     fontSize: 14,
-                    color: ink[500],
+                    color: ink[300],
                     lineHeight: 1.65,
                     margin: 0,
                   }}
@@ -591,12 +575,13 @@ export default function WhyIqsPage() {
         </div>
       </section>
 
-      {/* ─── CTA ─── */}
+      {/* ─── CTA (dark) ─── */}
       <section
         style={{
           padding: "80px 32px",
           background: ink[900],
           color: "#fff",
+          borderTop: `1px solid rgba(255,255,255,0.06)`,
         }}
       >
         <div style={{ width: "90%", maxWidth: 1200, margin: "0 auto" }}>

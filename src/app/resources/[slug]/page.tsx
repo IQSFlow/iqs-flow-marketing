@@ -94,12 +94,17 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           style={{
             display: "inline-flex",
             alignItems: "center",
-            gap: 6,
+            gap: 8,
             fontSize: 13,
-            color: ink[400],
+            fontWeight: 600,
+            color: accent,
             textDecoration: "none",
             marginBottom: 28,
             letterSpacing: "0.01em",
+            padding: "8px 14px",
+            background: ink[50],
+            border: `1px solid ${ink[100]}`,
+            borderRadius: 6,
           }}
         >
           <ArrowLeft size={13} />

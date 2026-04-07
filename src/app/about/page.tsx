@@ -44,15 +44,15 @@ export default function AboutPage() {
       <MarketingNav />
 
       {/* ─── Hero ─── */}
-      <section style={{ padding: "100px 32px 64px", borderBottom: `1px solid ${ink[100]}` }}>
+      <section style={{ padding: "100px 32px 80px", background: ink[900] }}>
         <div style={{ maxWidth: 1120, margin: "0 auto" }}>
           <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: accent, marginBottom: 24 }}>
             About IQS
           </div>
-          <h1 style={{ fontSize: "clamp(36px, 4.5vw, 56px)", fontWeight: 800, letterSpacing: "-2px", lineHeight: 1.1, marginBottom: 24, maxWidth: 720 }}>
+          <h1 style={{ fontSize: "clamp(36px, 4.5vw, 56px)", fontWeight: 800, letterSpacing: "-2px", lineHeight: 1.1, marginBottom: 24, maxWidth: 720, color: ink[25] }}>
             Built for the client side.
           </h1>
-          <p style={{ fontSize: 18, color: ink[500], lineHeight: 1.7, maxWidth: 600, margin: 0 }}>
+          <p style={{ fontSize: 18, color: ink[400], lineHeight: 1.7, maxWidth: 600, margin: 0 }}>
             Integrity Quality Solutions (IQS) builds software that gives
             organizations managing cleaning services the same level of visibility
             that their vendors have.
@@ -61,42 +61,47 @@ export default function AboutPage() {
       </section>
 
       {/* ─── Mission ─── */}
-      <section style={{ padding: "80px 32px", background: "#f8fafc", borderBottom: `1px solid ${ink[100]}` }}>
+      <section style={{ padding: "80px 32px", background: ink[25], borderBottom: `1px solid ${ink[100]}` }}>
         <div style={{ maxWidth: 1120, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 2fr", gap: 64, alignItems: "start" }} className="about-mission-grid">
           <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.8px", color: ink[900], margin: 0, position: "sticky", top: 80 }}>
             Our Mission
           </h2>
-          <p style={{ fontSize: 17, color: ink[500], lineHeight: 1.75, margin: 0 }}>
-            Organizations that outsource cleaning, including airlines, airports, banks, and
-            hospitals, deserve the same quality data their vendors keep
-            internally. IQS Flow is the independent oversight layer that gives
-            clients real-time visibility into vendor performance across every
-            site, with compliance scoring against industry standards.
-          </p>
+          <div>
+            <div style={{ width: 4, height: "100%", background: accent, borderRadius: 2, position: "absolute", left: 0, top: 0 }} />
+            <div style={{ position: "relative", paddingLeft: 24, borderLeft: `4px solid ${accent}` }}>
+              <p style={{ fontSize: 17, color: ink[500], lineHeight: 1.75, margin: 0 }}>
+                Organizations that outsource cleaning, including airlines, airports, banks, and
+                hospitals, deserve the same quality data their vendors keep
+                internally. IQS Flow is the independent oversight layer that gives
+                clients real-time visibility into vendor performance across every
+                site, with compliance scoring against industry standards.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* ─── Leadership ─── */}
       <section style={{ padding: "80px 32px", background: "#ffffff", borderBottom: `1px solid ${ink[100]}` }}>
         <div style={{ maxWidth: 1120, margin: "0 auto" }}>
-          <div style={{ marginBottom: 48 }}>
-            <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.8px", marginBottom: 4 }}>
+          <div style={{ marginBottom: 56 }}>
+            <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.8px", marginBottom: 4, color: ink[900] }}>
               Leadership
             </h2>
             <p style={{ fontSize: 15, color: ink[400], margin: 0 }}>Atlanta, Georgia</p>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }} className="about-team-grid">
             {/* Venice Collier */}
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "40px 32px", border: "1px solid #e2e8f0", boxShadow: "0 1px 3px rgba(0,0,0,0.04)", borderRadius: 12, background: "#ffffff" }} className="about-team-card">
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "48px 36px", border: "1px solid #e2e8f0", boxShadow: "0 4px 24px rgba(0,0,0,0.06)", borderRadius: 16, background: "#ffffff" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/venice-collier.jpg"
                 alt="Venice Collier"
-                style={{ width: 160, height: 160, borderRadius: "50%", objectFit: "cover", border: "3px solid #e2e8f0", marginBottom: 24, flexShrink: 0 }}
+                style={{ width: 200, height: 200, borderRadius: "50%", objectFit: "cover", border: "4px solid #e2e8f0", boxShadow: "0 0 0 4px #f8fafc", marginBottom: 28, flexShrink: 0 }}
               />
-              <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4, marginTop: 0 }}>Venice Collier</h3>
-              <div style={{ fontSize: 12, fontWeight: 600, color: accent, marginBottom: 20, textTransform: "uppercase" as const, letterSpacing: "0.06em" }}>
-                Chief Executive Officer
+              <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 6, marginTop: 0, color: ink[900] }}>Venice Collier</h3>
+              <div style={{ fontSize: 13, fontWeight: 600, color: ink[400], marginBottom: 20, letterSpacing: "0.01em" }}>
+                CEO &amp; Founder
               </div>
               <p style={{ fontSize: 14, color: ink[500], lineHeight: 1.7, margin: "0 0 12px", textAlign: "left" }}>
                 Venice brings deep expertise in operations management, workforce administration, and operational leadership built through her experience at Ubiquity Resources Group and ABM Industries.
@@ -107,15 +112,15 @@ export default function AboutPage() {
             </div>
 
             {/* Joshua Hinton */}
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "40px 32px", border: "1px solid #e2e8f0", boxShadow: "0 1px 3px rgba(0,0,0,0.04)", borderRadius: 12, background: "#ffffff" }} className="about-team-card">
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "48px 36px", border: "1px solid #e2e8f0", boxShadow: "0 4px 24px rgba(0,0,0,0.06)", borderRadius: 16, background: "#ffffff" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/joshua-hinton.jpg"
                 alt="Joshua Hinton"
-                style={{ width: 160, height: 160, borderRadius: "50%", objectFit: "cover", border: "3px solid #e2e8f0", marginBottom: 24, flexShrink: 0 }}
+                style={{ width: 200, height: 200, borderRadius: "50%", objectFit: "cover", border: "4px solid #e2e8f0", boxShadow: "0 0 0 4px #f8fafc", marginBottom: 28, flexShrink: 0 }}
               />
-              <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4, marginTop: 0 }}>Joshua Hinton</h3>
-              <div style={{ fontSize: 12, fontWeight: 600, color: accent, marginBottom: 20, textTransform: "uppercase" as const, letterSpacing: "0.06em" }}>
+              <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 6, marginTop: 0, color: ink[900] }}>Joshua Hinton</h3>
+              <div style={{ fontSize: 13, fontWeight: 600, color: ink[400], marginBottom: 20, letterSpacing: "0.01em" }}>
                 Chief Operating Officer
               </div>
               <p style={{ fontSize: 14, color: ink[500], lineHeight: 1.7, margin: "0 0 12px", textAlign: "left" }}>
@@ -130,9 +135,9 @@ export default function AboutPage() {
       </section>
 
       {/* ─── Values ─── */}
-      <section style={{ padding: "80px 32px", background: "#f8fafc", borderBottom: `1px solid ${ink[100]}` }}>
+      <section style={{ padding: "80px 32px", background: ink[900] }}>
         <div style={{ maxWidth: 1120, margin: "0 auto" }}>
-          <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.8px", marginBottom: 48 }}>
+          <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.8px", marginBottom: 48, color: "#f8fafc" }}>
             What Drives Us
           </h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }} className="about-values-grid">
@@ -144,10 +149,12 @@ export default function AboutPage() {
               { icon: Globe, title: "Multi-Site Scale", desc: "Whether you manage 5 locations or 500, IQS Flow gives you portfolio-wide visibility with drill-down to every individual site." },
               { icon: Lock, title: "Security First", desc: "Encrypted sessions, role-based access control, and audit logging for every action. Your quality data is secure and yours alone." },
             ] as const).map(({ icon: Icon, title, desc }) => (
-              <div key={title} style={{ padding: "24px", border: "1px solid #e2e8f0", boxShadow: "0 1px 3px rgba(0,0,0,0.04)", borderRadius: 10, background: "#ffffff" }}>
-                <Icon size={20} style={{ color: accent, marginBottom: 16 }} />
-                <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>{title}</h3>
-                <p style={{ fontSize: 14, color: ink[500], lineHeight: 1.65, margin: 0 }}>{desc}</p>
+              <div key={title} style={{ padding: "28px", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, background: "rgba(255,255,255,0.03)" }}>
+                <div style={{ width: 40, height: 40, borderRadius: 10, background: "rgba(37,99,235,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
+                  <Icon size={20} style={{ color: accent }} />
+                </div>
+                <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8, color: "#f8fafc" }}>{title}</h3>
+                <p style={{ fontSize: 14, color: ink[300], lineHeight: 1.65, margin: 0 }}>{desc}</p>
               </div>
             ))}
           </div>
@@ -155,7 +162,7 @@ export default function AboutPage() {
       </section>
 
       {/* ─── CTA ─── */}
-      <section style={{ padding: "80px 32px", background: ink[900] }}>
+      <section style={{ padding: "96px 32px", background: ink[800], borderTop: `1px solid rgba(255,255,255,0.05)` }}>
         <div style={{ maxWidth: 640, margin: "0 auto", textAlign: "center" }}>
           <h2 style={{ fontSize: "clamp(24px, 3.5vw, 36px)", fontWeight: 800, color: "#f8fafc", letterSpacing: "-1px", marginBottom: 16 }}>
             Ready to take control of vendor quality?
@@ -182,7 +189,6 @@ export default function AboutPage() {
           .about-mission-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
           .about-values-grid { grid-template-columns: 1fr !important; }
           .about-team-grid { grid-template-columns: 1fr !important; }
-          .about-team-card { flex-direction: column !important; }
         }
       `}</style>
     </div>

@@ -28,11 +28,11 @@ export default function ComparisonSection({
         style={{
           flex: 1,
           minWidth: 280,
-          background: "#ffffff",
+          background: "rgba(239,68,68,0.04)",
           borderRadius: 16,
           padding: 32,
-          boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
-          borderTop: "3px solid #fecaca",
+          border: "1px solid rgba(239,68,68,0.12)",
+          borderTop: "3px solid rgba(239,68,68,0.4)",
         }}
       >
         <div
@@ -87,11 +87,11 @@ export default function ComparisonSection({
         style={{
           flex: 1,
           minWidth: 280,
-          background: "#ffffff",
+          background: "rgba(5,150,105,0.04)",
           borderRadius: 16,
           padding: 32,
-          boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
-          borderTop: "3px solid #86efac",
+          border: "1px solid rgba(5,150,105,0.12)",
+          borderTop: "3px solid rgba(5,150,105,0.4)",
         }}
       >
         <div

@@ -115,15 +115,15 @@ export default function PricingPage() {
       <MarketingNav />
 
       {/* Hero */}
-      <section style={{ padding: "100px 32px 72px", borderBottom: `1px solid ${ink[100]}` }}>
+      <section style={{ padding: "100px 32px 80px", background: "#0a0f1a" }}>
         <div style={{ maxWidth: 1120, margin: "0 auto" }}>
-          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: accent, marginBottom: 24 }}>
+          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#2563eb", marginBottom: 24 }}>
             Pricing
           </div>
-          <h1 style={{ fontSize: "clamp(36px, 4.5vw, 56px)", fontWeight: 800, letterSpacing: "-2px", lineHeight: 1.1, marginBottom: 20, maxWidth: 600 }}>
+          <h1 style={{ fontSize: "clamp(36px, 4.5vw, 56px)", fontWeight: 800, letterSpacing: "-2px", lineHeight: 1.1, marginBottom: 20, maxWidth: 600, color: "#f8fafc" }}>
             Oversight that scales with you.
           </h1>
-          <p style={{ fontSize: 18, color: ink[500], lineHeight: 1.7, maxWidth: 520 }}>
+          <p style={{ fontSize: 18, color: "#64748b", lineHeight: 1.7, maxWidth: 520 }}>
             From a single location to a global network of sites and vendors.
             Every plan includes the core IQS Flow quality oversight platform.
           </p>
@@ -131,14 +131,14 @@ export default function PricingPage() {
       </section>
 
       {/* Pricing Cards */}
-      <section style={{ padding: "64px 32px 0", background: "#f8fafc" }}>
+      <section style={{ padding: "64px 32px 0", background: "#ffffff" }}>
         <div style={{ maxWidth: 1120, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20, alignItems: "stretch" }} className="pricing-grid">
           {tiers.map((tier) => (
             <div
               key={tier.name}
               className={tier.highlight ? "pricing-card pricing-card--highlight" : "pricing-card"}
               style={tier.highlight ? {
-                background: "#ffffff",
+                background: "linear-gradient(180deg, #f0f4ff 0%, #ffffff 40%)",
                 borderRadius: 10,
                 padding: "32px 28px",
                 border: `2px solid ${accent}`,
@@ -149,12 +149,23 @@ export default function PricingPage() {
                 boxShadow: "0 12px 40px rgba(37,99,235,0.15), 0 4px 12px rgba(0,0,0,0.08)",
                 transform: "scale(1.03)",
                 zIndex: 1,
+              } : tier.name === "Starter" ? {
+                background: "#ffffff",
+                borderRadius: 10,
+                padding: "32px 28px",
+                border: `1px solid ${ink[100]}`,
+                borderTop: `3px solid #64748b`,
+                boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
               } : {
                 background: "#ffffff",
                 borderRadius: 10,
                 padding: "32px 28px",
                 border: `1px solid ${ink[100]}`,
-                boxShadow: "0 1px 4px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.04)",
+                borderTop: `3px solid #7c3aed`,
+                boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
                 position: "relative",
                 display: "flex",
                 flexDirection: "column",
@@ -238,11 +249,11 @@ export default function PricingPage() {
       </section>
 
       {/* Every Plan Includes */}
-      <section style={{ padding: "36px 32px", background: "#ffffff", borderTop: `1px solid ${ink[100]}`, borderBottom: `1px solid ${ink[100]}` }}>
+      <section style={{ padding: "36px 32px", background: "#0a0f1a" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 28 }}>
-          <span style={{ fontSize: 14, fontWeight: 700, color: ink[600] }}>Every plan includes:</span>
+          <span style={{ fontSize: 14, fontWeight: 700, color: "#f8fafc" }}>Every plan includes:</span>
           {everyPlanIncludes.map((item) => (
-            <span key={item} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 14, color: ink[500] }}>
+            <span key={item} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 14, color: "#94a3b8" }}>
               <Check size={13} style={{ color: "#059669" }} />
               {item}
             </span>
@@ -251,7 +262,7 @@ export default function PricingPage() {
       </section>
 
       {/* FAQ */}
-      <section style={{ padding: "72px 32px", background: "#f8fafc", borderTop: `1px solid ${ink[100]}`, borderBottom: `1px solid ${ink[100]}` }}>
+      <section style={{ padding: "72px 32px", background: "#f8fafc", borderTop: `1px solid ${ink[200]}`, borderBottom: `1px solid ${ink[200]}` }}>
         <div style={{ maxWidth: 700, margin: "0 auto" }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-0.5px", marginBottom: 32 }}>
             Frequently Asked Questions
