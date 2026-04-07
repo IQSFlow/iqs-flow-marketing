@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MapPin, CheckSquare, BarChart3, Navigation, ShieldCheck, Activity, Building, Monitor, ArrowRight, ClipboardCheck } from "lucide-react";
+import { MapPin, CheckSquare, BarChart3, Navigation, ShieldCheck, Activity, Building, Monitor, ArrowRight } from "lucide-react";
 import MarketingNav from "@/components/MarketingNav";
 import MarketingFooter from "@/components/MarketingFooter";
 import { marketing } from "@/lib/design-tokens";
@@ -31,6 +31,7 @@ const INDUSTRIES = [
     accentColor: "#3b82f6",
     accentBg: "#dbeafe",
     accentText: "#1d4ed8",
+    sectionNumber: "01",
     photo: "/oskar-kadaksoo-DDBDkz0p918-unsplash.jpg",
     photoAlt: "Airport gate lounge with aircraft visible through terminal window",
     photoCaption: "Aviation",
@@ -57,7 +58,8 @@ const INDUSTRIES = [
       quote:
         "Clients deserve the same quality data their vendors keep internally. IQS Flow makes every task timestamped, geolocated, and photo-verified so there is nothing to argue about.",
       name: "Venice Collier",
-      org: "CEO & Founder, IQS",
+      title: "CEO & Founder",
+      org: "IQS",
     },
     stat: "Gate-level task tracking",
     statSub: "Platform capability",
@@ -72,6 +74,7 @@ const INDUSTRIES = [
     accentColor: "#6366f1",
     accentBg: "#eef2ff",
     accentText: "#3730a3",
+    sectionNumber: "02",
     photo: "/big-dodzy-m5PcPzOIfTw-unsplash.jpg",
     photoAlt: "Modern airport terminal interior with wide open concourse",
     photoCaption: "Airports",
@@ -98,7 +101,8 @@ const INDUSTRIES = [
       quote:
         "IQS Flow was built because we saw operations teams managing dozens of vendors with no unified view. The platform gives you one dashboard for every contractor, every terminal, every shift.",
       name: "Venice Collier",
-      org: "CEO & Founder, IQS",
+      title: "CEO & Founder",
+      org: "IQS",
     },
     stat: "Cross-vendor dashboards",
     statSub: "Platform capability",
@@ -110,9 +114,10 @@ const INDUSTRIES = [
     title: "Healthcare: JCAHO-Ready Compliance",
     tagline: "Infection prevention you can prove, not just claim.",
     pullQuote: "When compliance isn't optional and inspections can't be self-reported, you need an independent verification layer.",
-    accentColor: "#10b981",
+    accentColor: "#059669",
     accentBg: "#d1fae5",
     accentText: "#065f46",
+    sectionNumber: "03",
     photo: "/zhang-shuaizhang-P65ogppIhUg-unsplash.jpg",
     photoAlt: "Hospital corridor with clean floors and wet floor caution sign",
     photoCaption: "Healthcare",
@@ -139,7 +144,8 @@ const INDUSTRIES = [
       quote:
         "We built IQS Flow with healthcare compliance in mind from day one. The platform generates audit-ready documentation automatically so your team spends time on care, not paperwork.",
       name: "Venice Collier",
-      org: "CEO & Founder, IQS",
+      title: "CEO & Founder",
+      org: "IQS",
     },
     stat: "JCAHO-ready compliance",
     statSub: "Platform capability",
@@ -151,9 +157,10 @@ const INDUSTRIES = [
     title: "Banks & Corporate: Multi-Site Quality Control",
     tagline: "One standard. Many vendors. Zero blind spots.",
     pullQuote: "When you have 200 branches and 6 cleaning vendors, you need consistent quality standards verified independently.",
-    accentColor: "#f59e0b",
+    accentColor: "#b45309",
     accentBg: "#fef3c7",
     accentText: "#92400e",
+    sectionNumber: "04",
     photo: "/ledc-GBlrhQ2l1MM-unsplash.jpg",
     photoAlt: "Modern commercial office building with glass facade at dusk",
     photoCaption: "Corporate",
@@ -180,7 +187,8 @@ const INDUSTRIES = [
       quote:
         "When you manage hundreds of branches with multiple vendors, you need one source of truth. IQS Flow scores every location on a unified rubric so contract decisions are backed by data.",
       name: "Venice Collier",
-      org: "CEO & Founder, IQS",
+      title: "CEO & Founder",
+      org: "IQS",
     },
     stat: "Vendor scorecard analytics",
     statSub: "Platform capability",
@@ -195,6 +203,7 @@ const INDUSTRIES = [
     accentColor: "#6366f1",
     accentBg: "#eef2ff",
     accentText: "#3730a3",
+    sectionNumber: "05",
     photo: "/verne-ho-MwW-zrkYSIU-unsplash.jpg",
     photoAlt: "Facility maintenance in a modern building",
     photoCaption: "Maintenance",
@@ -221,7 +230,8 @@ const INDUSTRIES = [
       quote:
         "Maintenance teams juggle dozens of vendors and thousands of assets. IQS Flow brings it all into one platform with real accountability and evidence-based oversight.",
       name: "Venice Collier",
-      org: "CEO & Founder, IQS",
+      title: "CEO & Founder",
+      org: "IQS",
     },
     stat: "Work order lifecycle tracking",
     statSub: "Platform capability",
@@ -350,11 +360,13 @@ function FeatureCard({
 function TestimonialCard({
   quote,
   name,
+  title,
   org,
   accentColor,
 }: {
   quote: string;
   name: string;
+  title: string;
   org: string;
   accentColor: string;
 }) {
@@ -362,49 +374,88 @@ function TestimonialCard({
     <div
       style={{
         background: "#ffffff",
-        border: "1px solid #e2e8f0",
+        border: `1px solid ${accentColor}22`,
         borderLeft: `4px solid ${accentColor}`,
         borderRadius: "0 12px 12px 0",
-        padding: "20px 24px",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-        marginTop: 24,
+        padding: "28px 28px 24px",
+        boxShadow: `0 4px 24px ${accentColor}14`,
+        marginTop: 28,
+        position: "relative",
+        overflow: "hidden",
       }}
     >
+      {/* Large decorative opening quotation mark */}
       <div
         style={{
-          fontSize: 32,
-          color: accentColor,
+          position: "absolute",
+          top: -8,
+          left: 16,
+          fontSize: 120,
           lineHeight: 1,
-          marginBottom: 8,
-          opacity: 0.4,
-          fontFamily: "Georgia, serif",
+          color: accentColor,
+          opacity: 0.07,
+          fontFamily: "Georgia, 'Times New Roman', serif",
+          fontWeight: 900,
+          pointerEvents: "none",
+          userSelect: "none",
         }}
+        aria-hidden="true"
       >
         &ldquo;
       </div>
+
+      {/* Quote text */}
       <p
         style={{
-          fontSize: 15,
-          color: "#334155",
-          lineHeight: 1.7,
+          fontSize: 19,
+          color: "#1e293b",
+          lineHeight: 1.65,
           fontStyle: "italic",
-          margin: "0 0 14px",
+          margin: "0 0 20px",
+          position: "relative",
+          zIndex: 1,
+          fontWeight: 400,
+          letterSpacing: "-0.01em",
         }}
       >
         {quote}
       </p>
-      <div>
-        <p
+
+      {/* Attribution */}
+      <div style={{ display: "flex", alignItems: "center", gap: 12, position: "relative", zIndex: 1 }}>
+        <div
           style={{
-            fontSize: 13,
-            fontWeight: 700,
-            color: "#0f172a",
-            margin: "0 0 2px",
+            width: 36,
+            height: 36,
+            borderRadius: "50%",
+            background: `${accentColor}18`,
+            border: `2px solid ${accentColor}33`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
           }}
         >
-          {name}
-        </p>
-        <p style={{ fontSize: 12, color: "#94a3b8", margin: 0 }}>{org}</p>
+          <span style={{ fontSize: 14, fontWeight: 700, color: accentColor }}>
+            VC
+          </span>
+        </div>
+        <div>
+          <p
+            style={{
+              fontSize: 14,
+              fontWeight: 700,
+              color: "#0f172a",
+              margin: 0,
+              lineHeight: 1.3,
+            }}
+          >
+            {name}
+          </p>
+          <p style={{ fontSize: 13, color: "#64748b", margin: 0, lineHeight: 1.3 }}>
+            {title}, {org}
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -473,12 +524,14 @@ function IndustryPhoto({
 }) {
   return (
     <div
+      className="industry-photo-wrap"
       style={{
         borderRadius: 10,
         overflow: "hidden",
         minHeight: 320,
         position: "relative",
         boxShadow: "0 16px 48px rgba(0,0,0,0.18)",
+        transition: "transform 0.3s ease, box-shadow 0.3s ease",
       }}
     >
       <img
@@ -535,6 +588,17 @@ export default function IndustriesPage() {
         background: "#ffffff",
       }}
     >
+      {/* Hover effects and section styles injected via style tag */}
+      <style>{`
+        .industry-photo-wrap:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 28px 64px rgba(0,0,0,0.26) !important;
+        }
+        .industry-section {
+          transition: background 0.2s ease;
+        }
+      `}</style>
+
       <MarketingNav />
 
       {/* ─── Hero ─── */}
@@ -597,7 +661,7 @@ export default function IndustriesPage() {
               style={{
                 fontStyle: "italic",
                 color: "#475569",
-                borderLeft: "3px solid #2563eb",
+                borderLeft: `3px solid ${industry.accentColor}`,
                 paddingLeft: "16px",
                 margin: "16px 0",
                 fontSize: 15,
@@ -651,6 +715,7 @@ export default function IndustriesPage() {
             <TestimonialCard
               quote={industry.testimonial.quote}
               name={industry.testimonial.name}
+              title={industry.testimonial.title}
               org={industry.testimonial.org}
               accentColor={industry.accentColor}
             />
@@ -680,12 +745,39 @@ export default function IndustriesPage() {
           <section
             key={industry.id}
             id={industry.id}
+            className="industry-section"
             style={{
               padding: "80px 32px",
               background: sectionBg,
               borderTop: "1px solid #e2e8f0",
+              borderLeft: `3px solid ${industry.accentColor}`,
+              position: "relative",
+              overflow: "hidden",
             }}
           >
+            {/* Faded section number as decorative background element */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                top: "50%",
+                right: isAlt ? "auto" : 32,
+                left: isAlt ? 32 : "auto",
+                transform: "translateY(-50%)",
+                fontSize: 180,
+                fontWeight: 900,
+                lineHeight: 1,
+                color: industry.accentColor,
+                opacity: 0.04,
+                pointerEvents: "none",
+                userSelect: "none",
+                fontFamily: "Georgia, 'Times New Roman', serif",
+                letterSpacing: "-8px",
+              }}
+            >
+              {industry.sectionNumber}
+            </div>
+
             <div
               style={{
                 maxWidth: 1100,
@@ -695,6 +787,8 @@ export default function IndustriesPage() {
                 alignItems: "flex-start",
                 flexWrap: "wrap" as const,
                 flexDirection: isAlt ? "row-reverse" : "row",
+                position: "relative",
+                zIndex: 1,
               }}
             >
               {visualBlock}

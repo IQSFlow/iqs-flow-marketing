@@ -132,6 +132,8 @@ export default function FeaturesPage() {
           .features-col { width: 100%; }
           .features-reverse { order: -1; }
         }
+        .ai-card { transition: all 0.3s ease; }
+        .ai-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.2); }
       `}</style>
 
       <MarketingNav />
@@ -211,16 +213,53 @@ export default function FeaturesPage() {
 
         const visualContent = (
           <div className={`features-col${!isEven ? " features-reverse" : ""}`}>
-            <div style={{ borderRadius: 10, overflow: "hidden", minHeight: 300 }}>
+            <div style={{
+              background: "#f8fafc",
+              border: "1px solid #e2e8f0",
+              borderRadius: "12px 12px 8px 8px",
+              overflow: "hidden",
+              boxShadow: feature.dark ? "0 16px 48px rgba(0,0,0,0.4)" : "0 8px 32px rgba(0,0,0,0.08)",
+            }}>
+              {/* Browser chrome bar */}
+              <div style={{
+                background: "#f1f5f9",
+                borderBottom: "1px solid #e2e8f0",
+                padding: "10px 16px",
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#ef4444" }} />
+                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#f59e0b" }} />
+                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e" }} />
+                </div>
+                <div style={{
+                  flex: 1,
+                  fontSize: 11,
+                  color: "#94a3b8",
+                  fontFamily: "monospace",
+                  background: "rgba(0,0,0,0.04)",
+                  borderRadius: 4,
+                  padding: "3px 10px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}>
+                  app.iqsflow.com/{feature.id}
+                </div>
+              </div>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={feature.photo}
                 alt={feature.photoAlt}
-                style={{ width: "100%", height: "100%", minHeight: 300, objectFit: "cover", display: "block" }}
+                style={{ width: "100%", height: 300, objectFit: "cover", display: "block" }}
               />
             </div>
           </div>
         );
+
+        const sectionNum = String(idx + 1).padStart(2, "0");
 
         return (
           <section
@@ -230,9 +269,30 @@ export default function FeaturesPage() {
               padding: "96px 32px",
               background: feature.dark ? ink[900] : "#ffffff",
               borderTop: feature.dark ? "none" : `1px solid ${ink[100]}`,
+              position: "relative",
+              overflow: "hidden",
             }}
           >
-            <div className="features-row">
+            {/* Large faded background number */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                top: -20,
+                ...(isEven ? { right: "-10px" } : { left: "-10px" }),
+                fontSize: 120,
+                fontWeight: 800,
+                lineHeight: 1,
+                opacity: 0.03,
+                color: feature.dark ? "#ffffff" : ink[900],
+                pointerEvents: "none",
+                userSelect: "none",
+                fontFamily: "sans-serif",
+              }}
+            >
+              {sectionNum}
+            </div>
+            <div className="features-row" style={{ position: "relative", zIndex: 1 }}>
               {isEven ? <>{textContent}{visualContent}</> : <>{visualContent}{textContent}</>}
             </div>
           </section>
@@ -262,7 +322,7 @@ export default function FeaturesPage() {
             <Sparkles size={14} />
             AI-Powered Intelligence
           </div>
-          <h2 style={{ fontSize: "clamp(28px, 3.5vw, 42px)", fontWeight: 800, letterSpacing: "-1.5px", lineHeight: 1.1, marginBottom: 16, color: "#f8fafc", maxWidth: 600 }}>
+          <h2 style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, letterSpacing: "-1.5px", lineHeight: 1.1, marginBottom: 16, color: "#f8fafc", maxWidth: 600 }}>
             Built-in AI that works automatically.
           </h2>
           <p style={{ fontSize: 17, color: ink[400], lineHeight: 1.65, marginBottom: 48, maxWidth: 560 }}>
@@ -278,11 +338,12 @@ export default function FeaturesPage() {
             ] as const).map(({ icon: Icon, title, desc, color, comingSoon }) => (
               <div
                 key={title}
+                className="ai-card"
                 style={{
                   background: "rgba(255,255,255,0.03)",
                   border: "1px solid rgba(255,255,255,0.06)",
                   borderRadius: 12,
-                  padding: "28px 24px",
+                  padding: "32px 28px",
                   borderTop: `2px solid ${color}`,
                 }}
               >

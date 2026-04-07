@@ -101,7 +101,7 @@ function FloatingDots() {
         />
       ))}
       <style>{`
-        ${dots.map((dot, i) => `
+        ${dots.map((_, i) => `
           @keyframes floatDot${i} {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-${12 + (i % 4) * 5}px); }

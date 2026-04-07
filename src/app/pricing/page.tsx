@@ -51,8 +51,8 @@ const tiers = [
       "Compliance framework scoring",
       "Multi-vendor oversight dashboard",
       "Client portal access",
-      "SLA tracking & alerts",
-      "Analytics & exports",
+      "SLA tracking and alerts",
+      "Analytics and exports",
       "Priority support",
     ],
     cta: "Contact Sales",
@@ -62,7 +62,7 @@ const tiers = [
     name: "Enterprise",
     desc: "For complex portfolios with vendor networks across many sites.",
     features: [
-      "Unlimited sites & workers",
+      "Unlimited sites and workers",
       "Unlimited vendors",
       "Everything in Professional, plus:",
       "Vendor portal access",
@@ -131,16 +131,29 @@ export default function PricingPage() {
       </section>
 
       {/* Pricing Cards */}
-      <section style={{ padding: "64px 32px 72px" }}>
+      <section style={{ padding: "64px 32px 0" }}>
         <div style={{ maxWidth: 1120, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20, alignItems: "stretch" }} className="pricing-grid">
           {tiers.map((tier) => (
             <div
               key={tier.name}
-              style={{
+              className={tier.highlight ? "pricing-card pricing-card--highlight" : "pricing-card"}
+              style={tier.highlight ? {
                 background: "#ffffff",
                 borderRadius: 10,
                 padding: "32px 28px",
-                border: tier.highlight ? `2px solid ${accent}` : `1px solid ${ink[100]}`,
+                border: `2px solid ${accent}`,
+                borderTop: `3px solid ${accent}`,
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                boxShadow: "0 12px 40px rgba(37,99,235,0.15), 0 4px 12px rgba(0,0,0,0.08)",
+                transform: "scale(1.03)",
+                zIndex: 1,
+              } : {
+                background: "#ffffff",
+                borderRadius: 10,
+                padding: "32px 28px",
+                border: `1px solid ${ink[100]}`,
                 position: "relative",
                 display: "flex",
                 flexDirection: "column",
@@ -173,6 +186,54 @@ export default function PricingPage() {
             </div>
           ))}
         </div>
+
+        {/* Compare all features toggle */}
+        <div style={{ maxWidth: 1120, margin: "0 auto" }}>
+          <details className="compare-details" style={{ marginTop: 40, marginBottom: 0 }}>
+            <summary style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+              cursor: "pointer",
+              listStyle: "none",
+              padding: "16px 0 0",
+              fontSize: 14,
+              fontWeight: 600,
+              color: accent,
+              userSelect: "none",
+            }}>
+              <span className="compare-label">Compare all features</span>
+              <span className="compare-chevron" style={{ display: "inline-block", fontSize: 12, transition: "transform 0.2s ease" }}>&#9660;</span>
+            </summary>
+
+            {/* Feature Comparison Table (inside details) */}
+            <div style={{ paddingTop: 40, paddingBottom: 72 }}>
+              <div style={{ overflowX: "auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+                  <thead>
+                    <tr style={{ borderBottom: `2px solid ${ink[200]}` }}>
+                      <th style={{ textAlign: "left", padding: "12px 16px", fontWeight: 600, color: ink[400], fontSize: 12, textTransform: "uppercase", letterSpacing: "0.04em" }}>Feature</th>
+                      <th style={{ textAlign: "center", padding: "12px 16px", fontWeight: 700, color: ink[500] }}>Starter</th>
+                      <th style={{ textAlign: "center", padding: "12px 16px", fontWeight: 700, color: accent }}>Professional</th>
+                      <th style={{ textAlign: "center", padding: "12px 16px", fontWeight: 700, color: ink[500] }}>Enterprise</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {comparisonFeatures.map(({ feature, starter, pro, enterprise }, i) => (
+                      <tr key={feature} style={{ borderBottom: `1px solid ${ink[100]}`, background: i % 2 === 0 ? "#ffffff" : ink[25] }}>
+                        <td style={{ padding: "12px 16px", fontWeight: 500, color: ink[700] }}>{feature}</td>
+                        <td style={{ textAlign: "center", padding: "12px 16px", color: starter === "-" ? ink[200] : starter === "\u2713" ? "#059669" : ink[500], fontWeight: starter === "\u2713" ? 700 : 400 }}>{starter}</td>
+                        <td style={{ textAlign: "center", padding: "12px 16px", color: pro === "-" ? ink[200] : pro === "\u2713" ? "#059669" : ink[500], fontWeight: pro === "\u2713" ? 700 : 500 }}>{pro}</td>
+                        <td style={{ textAlign: "center", padding: "12px 16px", color: enterprise === "-" ? ink[200] : enterprise === "\u2713" ? "#059669" : ink[500], fontWeight: enterprise === "\u2713" ? 700 : 400 }}>{enterprise}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </details>
+        </div>
       </section>
 
       {/* Every Plan Includes */}
@@ -188,37 +249,6 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* Feature Comparison */}
-      <section style={{ padding: "72px 32px", background: ink[25] }}>
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-0.5px", marginBottom: 32 }}>
-            Compare Plans
-          </h2>
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
-              <thead>
-                <tr style={{ borderBottom: `2px solid ${ink[200]}` }}>
-                  <th style={{ textAlign: "left", padding: "12px 16px", fontWeight: 600, color: ink[400], fontSize: 12, textTransform: "uppercase", letterSpacing: "0.04em" }}>Feature</th>
-                  <th style={{ textAlign: "center", padding: "12px 16px", fontWeight: 700, color: ink[500] }}>Starter</th>
-                  <th style={{ textAlign: "center", padding: "12px 16px", fontWeight: 700, color: accent }}>Professional</th>
-                  <th style={{ textAlign: "center", padding: "12px 16px", fontWeight: 700, color: ink[500] }}>Enterprise</th>
-                </tr>
-              </thead>
-              <tbody>
-                {comparisonFeatures.map(({ feature, starter, pro, enterprise }, i) => (
-                  <tr key={feature} style={{ borderBottom: `1px solid ${ink[100]}`, background: i % 2 === 0 ? "#ffffff" : ink[25] }}>
-                    <td style={{ padding: "12px 16px", fontWeight: 500, color: ink[700] }}>{feature}</td>
-                    <td style={{ textAlign: "center", padding: "12px 16px", color: starter === "-" ? ink[200] : starter === "\u2713" ? "#059669" : ink[500], fontWeight: starter === "\u2713" ? 700 : 400 }}>{starter}</td>
-                    <td style={{ textAlign: "center", padding: "12px 16px", color: pro === "-" ? ink[200] : pro === "\u2713" ? "#059669" : ink[500], fontWeight: pro === "\u2713" ? 700 : 500 }}>{pro}</td>
-                    <td style={{ textAlign: "center", padding: "12px 16px", color: enterprise === "-" ? ink[200] : enterprise === "\u2713" ? "#059669" : ink[500], fontWeight: enterprise === "\u2713" ? 700 : 400 }}>{enterprise}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
       {/* FAQ */}
       <section style={{ padding: "72px 32px", background: "#ffffff", borderTop: `1px solid ${ink[100]}` }}>
         <div style={{ maxWidth: 700, margin: "0 auto" }}>
@@ -229,19 +259,75 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section style={{ padding: "80px 32px", background: ink[900] }}>
-        <div style={{ maxWidth: 640, margin: "0 auto", textAlign: "center" }}>
+      {/* Pilot CTA - exclusive / limited availability */}
+      <section style={{ padding: "80px 32px", background: ink[900], position: "relative", overflow: "hidden" }}>
+        {/* Decorative gradient orbs for depth */}
+        <div style={{
+          position: "absolute", top: -80, right: -80, width: 320, height: 320,
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(37,99,235,0.18) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }} />
+        <div style={{
+          position: "absolute", bottom: -60, left: -60, width: 240, height: 240,
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(37,99,235,0.10) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }} />
+
+        <div style={{ maxWidth: 640, margin: "0 auto", textAlign: "center", position: "relative" }}>
+          {/* Limited availability eyebrow */}
+          <div style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            marginBottom: 20,
+            padding: "6px 16px",
+            borderRadius: 100,
+            border: `1px solid rgba(37,99,235,0.5)`,
+            background: "rgba(37,99,235,0.12)",
+          }}>
+            <span style={{
+              width: 6, height: 6, borderRadius: "50%", background: accent,
+              boxShadow: `0 0 0 3px rgba(37,99,235,0.3)`,
+              display: "inline-block",
+              flexShrink: 0,
+            }} />
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#93c5fd" }}>
+              Limited Availability
+            </span>
+          </div>
+
           <h2 style={{ fontSize: "clamp(24px, 3.5vw, 36px)", fontWeight: 800, color: "#f8fafc", letterSpacing: "-1px", marginBottom: 16 }}>
             Not sure which plan fits?
           </h2>
           <p style={{ color: ink[400], fontSize: 17, lineHeight: 1.6, marginBottom: 36 }}>
-            Tell us about your vendor network and we will recommend the right
-            plan for your organization.
+            We offer a 30-day pilot at a single site. Tell us about your vendor network
+            and we will get you up and running in days, not months.
           </p>
-          <Link href="/contact" style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "16px 32px", background: "#ffffff", color: ink[900], borderRadius: 8, fontSize: 15, fontWeight: 700, textDecoration: "none" }}>
-            Talk to Sales <ArrowRight size={16} />
-          </Link>
+
+          {/* Gradient border CTA button */}
+          <div style={{
+            display: "inline-block",
+            padding: 2,
+            borderRadius: 10,
+            background: `linear-gradient(135deg, ${accent}, #60a5fa)`,
+          }}>
+            <Link href="/contact" style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 10,
+              padding: "14px 30px",
+              background: ink[900],
+              color: "#f8fafc",
+              borderRadius: 8,
+              fontSize: 15,
+              fontWeight: 700,
+              textDecoration: "none",
+            }}>
+              Talk to Sales <ArrowRight size={16} />
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -250,6 +336,28 @@ export default function PricingPage() {
       <style>{`
         @media (max-width: 767px) {
           .pricing-grid { grid-template-columns: 1fr !important; }
+        }
+
+        /* Pricing card hover lift */
+        .pricing-card {
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .pricing-card:not(.pricing-card--highlight):hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .pricing-card--highlight:hover {
+          transform: scale(1.03) translateY(-4px);
+          box-shadow: 0 20px 56px rgba(37,99,235,0.22), 0 6px 16px rgba(0,0,0,0.10);
+        }
+
+        /* Compare details/summary toggle */
+        .compare-details summary::-webkit-details-marker { display: none; }
+        .compare-details[open] .compare-chevron {
+          transform: rotate(180deg);
+        }
+        .compare-details summary:hover {
+          color: #1d4ed8;
         }
       `}</style>
     </div>
