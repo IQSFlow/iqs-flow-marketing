@@ -569,7 +569,7 @@ const trustGapCards = [
 export function ProblemSection() {
   const { ref, inView } = useInView(0.1);
   const [cardHovered, setCardHovered] = useState<number | null>(null);
-  const [visitedCards, setVisitedCards] = useState<Set<number>>(new Set([0])); // Card 0 starts visited
+  const [visitedCards, setVisitedCards] = useState<Set<number>>(new Set());
   const [sectionVisible, setSectionVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [mobileFlipped, setMobileFlipped] = useState(false);
@@ -611,7 +611,7 @@ export function ProblemSection() {
       ([entry]) => {
         setSectionVisible(entry.isIntersecting);
         if (!entry.isIntersecting) {
-          setVisitedCards(new Set([0])); // Reset but keep card 0 as visited
+          setVisitedCards(new Set());
           setMobileFlipped(false);
         }
       },
@@ -694,7 +694,7 @@ export function ProblemSection() {
           className="problem-grid"
         >
           {trustGapCards.map((card, i) => {
-            const isHovered = i === 0 || cardHovered === i || (isMobile && mobileFlipped);
+            const isHovered = cardHovered === i || (isMobile && mobileFlipped);
             const accentColor = isHovered ? "#059669" : "#ef4444";
             const accentBg = isHovered ? "rgba(5,150,105,0.08)" : "rgba(239,68,68,0.08)";
             const accentBorder = isHovered ? "rgba(5,150,105,0.15)" : "rgba(239,68,68,0.15)";
