@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git checkout:*)",
+      "Bash(npx tsx:*)",
+      "Bash(npx next:*)",
+      "Bash(curl -s http://localhost:3001)",
+      "Bash(taskkill //f //im node.exe)",
+      "Bash(npm run:*)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001)",
+      "Bash(npx skills:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m ':*)",
+      "Bash(git log:*)",
+      "Bash(git worktree:*)",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}
