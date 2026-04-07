@@ -61,7 +61,7 @@ export default function AboutPage() {
       </section>
 
       {/* ─── Mission ─── */}
-      <section style={{ padding: "80px 32px", background: ink[25], borderBottom: `1px solid ${ink[100]}` }}>
+      <section style={{ padding: "80px 32px", background: "#f8fafc", borderBottom: `1px solid ${ink[100]}` }}>
         <div style={{ maxWidth: 1120, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 2fr", gap: 64, alignItems: "start" }} className="about-mission-grid">
           <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.8px", color: ink[900], margin: 0, position: "sticky", top: 80 }}>
             Our Mission
@@ -77,7 +77,7 @@ export default function AboutPage() {
       </section>
 
       {/* ─── Leadership ─── */}
-      <section style={{ padding: "80px 32px", borderBottom: `1px solid ${ink[100]}` }}>
+      <section style={{ padding: "80px 32px", background: "#ffffff", borderBottom: `1px solid ${ink[100]}` }}>
         <div style={{ maxWidth: 1120, margin: "0 auto" }}>
           <div style={{ marginBottom: 48 }}>
             <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.8px", marginBottom: 4 }}>
@@ -87,54 +87,50 @@ export default function AboutPage() {
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }} className="about-team-grid">
             {/* Venice Collier */}
-            <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }} className="about-team-card">
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "40px 32px", border: "1px solid #e2e8f0", boxShadow: "0 1px 3px rgba(0,0,0,0.04)", borderRadius: 12, background: "#ffffff" }} className="about-team-card">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/venice-collier.jpg"
                 alt="Venice Collier"
-                style={{ width: 80, height: 80, borderRadius: "50%", objectFit: "cover", border: `2px solid ${ink[100]}`, flexShrink: 0 }}
+                style={{ width: 160, height: 160, borderRadius: "50%", objectFit: "cover", border: "3px solid #e2e8f0", marginBottom: 24, flexShrink: 0 }}
               />
-              <div>
-                <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 2, marginTop: 0 }}>Venice Collier</h3>
-                <div style={{ fontSize: 12, fontWeight: 600, color: accent, marginBottom: 16, textTransform: "uppercase" as const, letterSpacing: "0.06em" }}>
-                  Chief Executive Officer
-                </div>
-                <p style={{ fontSize: 14, color: ink[500], lineHeight: 1.7, margin: "0 0 12px" }}>
-                  Venice brings deep expertise in operations management, workforce administration, and operational leadership built through her experience at Ubiquity Resources Group and ABM Industries.
-                </p>
-                <p style={{ fontSize: 14, color: ink[500], lineHeight: 1.7, margin: "0 0 12px" }}>
-                  She saw firsthand the gap between the level of service clients expect and what many vendors deliver. That insight became the foundation for IQS Flow.
-                </p>
+              <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4, marginTop: 0 }}>Venice Collier</h3>
+              <div style={{ fontSize: 12, fontWeight: 600, color: accent, marginBottom: 20, textTransform: "uppercase" as const, letterSpacing: "0.06em" }}>
+                Chief Executive Officer
               </div>
+              <p style={{ fontSize: 14, color: ink[500], lineHeight: 1.7, margin: "0 0 12px", textAlign: "left" }}>
+                Venice brings deep expertise in operations management, workforce administration, and operational leadership built through her experience at Ubiquity Resources Group and ABM Industries.
+              </p>
+              <p style={{ fontSize: 14, color: ink[500], lineHeight: 1.7, margin: 0, textAlign: "left" }}>
+                She saw firsthand the gap between the level of service clients expect and what many vendors deliver. That insight became the foundation for IQS Flow.
+              </p>
             </div>
 
             {/* Joshua Hinton */}
-            <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }} className="about-team-card">
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "40px 32px", border: "1px solid #e2e8f0", boxShadow: "0 1px 3px rgba(0,0,0,0.04)", borderRadius: 12, background: "#ffffff" }} className="about-team-card">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/joshua-hinton.jpg"
                 alt="Joshua Hinton"
-                style={{ width: 80, height: 80, borderRadius: "50%", objectFit: "cover", border: `2px solid ${ink[100]}`, flexShrink: 0 }}
+                style={{ width: 160, height: 160, borderRadius: "50%", objectFit: "cover", border: "3px solid #e2e8f0", marginBottom: 24, flexShrink: 0 }}
               />
-              <div>
-                <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 2, marginTop: 0 }}>Joshua Hinton</h3>
-                <div style={{ fontSize: 12, fontWeight: 600, color: accent, marginBottom: 16, textTransform: "uppercase" as const, letterSpacing: "0.06em" }}>
-                  Chief Operating Officer
-                </div>
-                <p style={{ fontSize: 14, color: ink[500], lineHeight: 1.7, margin: "0 0 12px" }}>
-                  Joshua is a CISSP-certified engineer and Georgia Tech alumnus with a background spanning cloud infrastructure at AWS, AI/ML systems, and healthcare technology at Medeloop.
-                </p>
-                <p style={{ fontSize: 14, color: ink[500], lineHeight: 1.7, margin: 0 }}>
-                  He leads product and engineering, designing the multi-tenant architecture, real-time event systems, and analytics that power the platform.
-                </p>
+              <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4, marginTop: 0 }}>Joshua Hinton</h3>
+              <div style={{ fontSize: 12, fontWeight: 600, color: accent, marginBottom: 20, textTransform: "uppercase" as const, letterSpacing: "0.06em" }}>
+                Chief Operating Officer
               </div>
+              <p style={{ fontSize: 14, color: ink[500], lineHeight: 1.7, margin: "0 0 12px", textAlign: "left" }}>
+                Joshua is a CISSP-certified engineer and Georgia Tech alumnus with a background spanning cloud infrastructure at AWS, AI/ML systems, and healthcare technology at Medeloop.
+              </p>
+              <p style={{ fontSize: 14, color: ink[500], lineHeight: 1.7, margin: 0, textAlign: "left" }}>
+                He leads product and engineering, designing the multi-tenant architecture, real-time event systems, and analytics that power the platform.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
       {/* ─── Values ─── */}
-      <section style={{ padding: "80px 32px", background: ink[25], borderBottom: `1px solid ${ink[100]}` }}>
+      <section style={{ padding: "80px 32px", background: "#f8fafc", borderBottom: `1px solid ${ink[100]}` }}>
         <div style={{ maxWidth: 1120, margin: "0 auto" }}>
           <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.8px", marginBottom: 48 }}>
             What Drives Us
@@ -148,7 +144,7 @@ export default function AboutPage() {
               { icon: Globe, title: "Multi-Site Scale", desc: "Whether you manage 5 locations or 500, IQS Flow gives you portfolio-wide visibility with drill-down to every individual site." },
               { icon: Lock, title: "Security First", desc: "Encrypted sessions, role-based access control, and audit logging for every action. Your quality data is secure and yours alone." },
             ] as const).map(({ icon: Icon, title, desc }) => (
-              <div key={title} style={{ padding: "24px 0", borderTop: `1px solid ${ink[100]}` }}>
+              <div key={title} style={{ padding: "24px", border: "1px solid #e2e8f0", boxShadow: "0 1px 3px rgba(0,0,0,0.04)", borderRadius: 10, background: "#ffffff" }}>
                 <Icon size={20} style={{ color: accent, marginBottom: 16 }} />
                 <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>{title}</h3>
                 <p style={{ fontSize: 14, color: ink[500], lineHeight: 1.65, margin: 0 }}>{desc}</p>

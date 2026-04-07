@@ -154,6 +154,7 @@ export default function PricingPage() {
                 borderRadius: 10,
                 padding: "32px 28px",
                 border: `1px solid ${ink[100]}`,
+                boxShadow: "0 1px 4px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.04)",
                 position: "relative",
                 display: "flex",
                 flexDirection: "column",
@@ -250,7 +251,7 @@ export default function PricingPage() {
       </section>
 
       {/* FAQ */}
-      <section style={{ padding: "72px 32px", background: "#ffffff", borderTop: `1px solid ${ink[100]}` }}>
+      <section style={{ padding: "72px 32px", background: "#f8fafc", borderTop: `1px solid ${ink[100]}`, borderBottom: `1px solid ${ink[100]}` }}>
         <div style={{ maxWidth: 700, margin: "0 auto" }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-0.5px", marginBottom: 32 }}>
             Frequently Asked Questions

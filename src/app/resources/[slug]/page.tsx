@@ -58,7 +58,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     <div style={{
       minHeight: "100vh",
       fontFamily: '"IBM Plex Sans", system-ui, -apple-system, sans-serif',
-      background: "#fff",
+      background: "#f8fafc",
     }}>
       <MarketingNav />
 
@@ -78,7 +78,15 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </div>
       )}
 
-      <article style={{ maxWidth: 720, margin: "0 auto", padding: "48px 32px 88px" }}>
+      <article style={{
+        maxWidth: 720,
+        margin: "0 auto",
+        padding: "48px 32px 88px",
+        background: "#ffffff",
+        borderLeft: `1px solid ${ink[100]}`,
+        borderRight: `1px solid ${ink[100]}`,
+        boxShadow: "0 0 40px rgba(0,0,0,0.03)",
+      }}>
 
         {/* ── Back link ──────────────────────────────────────────────── */}
         <Link

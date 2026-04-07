@@ -94,7 +94,7 @@ export default function ContactPage() {
       <section style={{ padding: "64px 32px 80px" }}>
         <div style={{ maxWidth: 1120, margin: "0 auto", display: "grid", gridTemplateColumns: "3fr 2fr", gap: 40 }} className="contact-grid">
           {/* ── Form ── */}
-          <div style={{ background: "#ffffff", border: `1px solid ${ink[100]}`, borderRadius: 10, padding: "36px 32px" }}>
+          <div style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 12, padding: 32, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
             <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4 }}>Request a Demo</h2>
             <p style={{ fontSize: 14, color: ink[400], marginBottom: 28, lineHeight: 1.5 }}>
               Fill out the form and our team will reach out within one business day.
@@ -145,7 +145,7 @@ export default function ContactPage() {
 
           {/* ── Sidebar ── */}
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-            <div style={{ padding: "28px 24px", borderTop: `1px solid ${ink[100]}` }}>
+            <div style={{ padding: "28px 24px", background: "#f8fafc", border: `1px solid ${ink[100]}`, borderRadius: 10 }}>
               <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 20 }}>Get in Touch</h3>
               <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                 {[
@@ -173,7 +173,7 @@ export default function ContactPage() {
               </Link>
             </div>
 
-            <div style={{ padding: "28px 24px", borderTop: `1px solid ${ink[100]}` }}>
+            <div style={{ padding: "28px 24px", background: "#f8fafc", border: `1px solid ${ink[100]}`, borderRadius: 10 }}>
               <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>Response Time</h3>
               <div style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 14, color: ink[500] }}>
                 {[

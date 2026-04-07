@@ -108,7 +108,7 @@ export default function WhyIqsPage() {
       <section
         style={{
           padding: "80px 32px",
-          background: ink[25],
+          background: "#f0f4f8",
         }}
       >
         <div style={{ width: "90%", maxWidth: 1200, margin: "0 auto" }}>
@@ -183,6 +183,7 @@ export default function WhyIqsPage() {
                 style={{
                   background: "#fff",
                   padding: "32px 28px",
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
                 }}
               >
                 <div
@@ -230,7 +231,7 @@ export default function WhyIqsPage() {
       <div style={{ borderTop: `1px solid ${ink[100]}` }} />
 
       {/* ─── Section 2: Their Data vs Your Data ─── */}
-      <section style={{ padding: "80px 32px", background: "#fff" }}>
+      <section style={{ padding: "80px 32px", background: "#f8fafc" }}>
         <div style={{ width: "90%", maxWidth: 1200, margin: "0 auto" }}>
           <p
             style={{
@@ -287,7 +288,7 @@ export default function WhyIqsPage() {
       <section
         style={{
           padding: "80px 32px",
-          background: ink[25],
+          background: "#ffffff",
         }}
       >
         <div style={{ width: "90%", maxWidth: 1200, margin: "0 auto" }}>
@@ -329,7 +330,7 @@ export default function WhyIqsPage() {
             IQS Flow is built for the organizations that hire them.
           </p>
 
-          <div style={{ overflowX: "auto" }}>
+          <div style={{ overflowX: "auto", borderRadius: 10, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
             <table
               style={{
                 width: "100%",
@@ -469,7 +470,7 @@ export default function WhyIqsPage() {
       <div style={{ borderTop: `1px solid ${ink[100]}` }} />
 
       {/* ─── Section 4: Built for Scale ─── */}
-      <section style={{ padding: "80px 32px", background: "#fff" }}>
+      <section style={{ padding: "80px 32px", background: "#f8fafc" }}>
         <div style={{ width: "90%", maxWidth: 1200, margin: "0 auto" }}>
           <p
             style={{
@@ -545,6 +546,7 @@ export default function WhyIqsPage() {
                   borderRadius: 10,
                   padding: "28px 24px",
                   border: `1px solid ${ink[100]}`,
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
                 }}
               >
                 <div
