@@ -694,7 +694,7 @@ export function ProblemSection() {
           className="problem-grid"
         >
           {trustGapCards.map((card, i) => {
-            const isHovered = cardHovered === i || allVisited || (isMobile && mobileFlipped);
+            const isHovered = cardHovered === i || visitedCards.has(i) || (isMobile && mobileFlipped);
             const accentColor = isHovered ? "#059669" : "#ef4444";
             const accentBg = isHovered ? "rgba(5,150,105,0.08)" : "rgba(239,68,68,0.08)";
             const accentBorder = isHovered ? "rgba(5,150,105,0.15)" : "rgba(239,68,68,0.15)";
