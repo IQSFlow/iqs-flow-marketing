@@ -131,7 +131,7 @@ export default function PricingPage() {
       </section>
 
       {/* Pricing Cards */}
-      <section style={{ padding: "64px 32px 0" }}>
+      <section style={{ padding: "64px 32px 0", background: "#f8fafc" }}>
         <div style={{ maxWidth: 1120, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20, alignItems: "stretch" }} className="pricing-grid">
           {tiers.map((tier) => (
             <div
@@ -238,7 +238,7 @@ export default function PricingPage() {
       </section>
 
       {/* Every Plan Includes */}
-      <section style={{ padding: "36px 32px", background: ink[25], borderTop: `1px solid ${ink[100]}`, borderBottom: `1px solid ${ink[100]}` }}>
+      <section style={{ padding: "36px 32px", background: "#ffffff", borderTop: `1px solid ${ink[100]}`, borderBottom: `1px solid ${ink[100]}` }}>
         <div style={{ maxWidth: 900, margin: "0 auto", display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 28 }}>
           <span style={{ fontSize: 14, fontWeight: 700, color: ink[600] }}>Every plan includes:</span>
           {everyPlanIncludes.map((item) => (

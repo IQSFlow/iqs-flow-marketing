@@ -569,7 +569,7 @@ const trustGapCards = [
 export function ProblemSection() {
   const { ref, inView } = useInView(0.1);
   const [cardHovered, setCardHovered] = useState<number | null>(null);
-  const [headerSolved, setHeaderSolved] = useState(false);
+  const [visitedCards, setVisitedCards] = useState<Set<number>>(new Set([0])); // Card 0 starts visited
   const [sectionVisible, setSectionVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [mobileFlipped, setMobileFlipped] = useState(false);
@@ -591,12 +591,17 @@ export function ProblemSection() {
     }
   }, [isMobile, inView, mobileFlipped]);
 
-  // Track when any card is hovered to trigger header change
+  // Track visited cards
   useEffect(() => {
-    if (cardHovered !== null && !headerSolved) {
-      setHeaderSolved(true);
+    if (cardHovered !== null) {
+      setVisitedCards((prev) => {
+        if (prev.has(cardHovered)) return prev;
+        const next = new Set(prev);
+        next.add(cardHovered);
+        return next;
+      });
     }
-  }, [cardHovered, headerSolved]);
+  }, [cardHovered]);
 
   // Reset header when section leaves viewport
   useEffect(() => {
@@ -606,7 +611,7 @@ export function ProblemSection() {
       ([entry]) => {
         setSectionVisible(entry.isIntersecting);
         if (!entry.isIntersecting) {
-          setHeaderSolved(false);
+          setVisitedCards(new Set([0])); // Reset but keep card 0 as visited
           setMobileFlipped(false);
         }
       },
@@ -617,7 +622,8 @@ export function ProblemSection() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const solved = (headerSolved || mobileFlipped) && sectionVisible;
+  const allVisited = visitedCards.size >= 3;
+  const solved = (allVisited || mobileFlipped) && sectionVisible;
 
   return (
     <section
@@ -688,7 +694,7 @@ export function ProblemSection() {
           className="problem-grid"
         >
           {trustGapCards.map((card, i) => {
-            const isHovered = cardHovered === i || (isMobile && mobileFlipped);
+            const isHovered = i === 0 || cardHovered === i || (isMobile && mobileFlipped);
             const accentColor = isHovered ? "#059669" : "#ef4444";
             const accentBg = isHovered ? "rgba(5,150,105,0.08)" : "rgba(239,68,68,0.08)";
             const accentBorder = isHovered ? "rgba(5,150,105,0.15)" : "rgba(239,68,68,0.15)";
@@ -1680,60 +1686,6 @@ export function StatsCTASection() {
       }}
     >
       <div style={{ maxWidth: 960, margin: "0 auto" }}>
-        {/* Portal showcase — shows the 4 role-based portals with their accent colors */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: 16,
-            marginBottom: 80,
-            paddingBottom: 80,
-            borderBottom: "1px solid rgba(255,255,255,0.06)",
-          }}
-          className="stats-grid"
-        >
-          {([
-            { label: "Admin", accent: "#7c3aed", desc: "Full system control" },
-            { label: "Manager", accent: "#3b82f6", desc: "Site oversight" },
-            { label: "Worker", accent: "#059669", desc: "Mobile inspections" },
-            { label: "Client", accent: "#b45309", desc: "Read-only visibility" },
-          ] as const).map(({ label, accent: portalAccent, desc }, i) => (
-            <div
-              key={label}
-              style={{
-                textAlign: "center",
-                ...revealStyle(inView, i * 0.08),
-              }}
-            >
-              <div
-                style={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: 12,
-                  background: `${portalAccent}20`,
-                  border: `1.5px solid ${portalAccent}40`,
-                  margin: "0 auto 12px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 13,
-                  fontWeight: 800,
-                  color: portalAccent,
-                  letterSpacing: "-0.3px",
-                }}
-              >
-                {label[0]}
-              </div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: "#ffffff", marginBottom: 2 }}>
-                {label}
-              </div>
-              <div style={{ fontSize: 12, color: ink[400] }}>
-                {desc}
-              </div>
-            </div>
-          ))}
-        </div>
-
         {/* CTA */}
         <div
           style={{
@@ -1814,11 +1766,7 @@ export function StatsCTASection() {
         </div>
       </div>
 
-      <style>{`
-        @media (max-width: 640px) {
-          .stats-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
-        }
-      `}</style>
+      <style>{``}</style>
     </section>
   );
 }
