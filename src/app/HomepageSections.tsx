@@ -25,6 +25,7 @@ import {
   Shield,
   Radio,
   Sparkles,
+  ShieldCheck,
 } from "lucide-react";
 import { marketing } from "@/lib/design-tokens";
 
@@ -527,35 +528,96 @@ export function SocialProofBar() {
 }
 
 /* ════════════════════════════════════════════════
-   3. THE PROBLEM — Dark, editorial layout
+   3. THE TRUST GAP — Red-to-green hover interaction
    ════════════════════════════════════════════════ */
-const problems = [
+const trustGapCards = [
   {
-    icon: ShieldX,
+    problemIcon: ShieldX,
+    solutionIcon: ShieldCheck,
     num: "01",
-    title: "Vendor-Controlled Data",
-    body: "Your cleaning contractor reports their own performance metrics. Self-graded homework means conflicts of interest go undetected, and compliance gaps remain hidden until audits expose them.",
-    tag: "Accountability Gap",
+    problemTitle: "Vendor-Controlled Data",
+    problemBody: "Your cleaning contractor reports their own performance metrics. Self-graded homework means conflicts of interest go undetected, and compliance gaps remain hidden until audits expose them.",
+    problemTag: "Accountability Gap",
+    solutionTitle: "Independent Quality Verification",
+    solutionBody: "IQS Flow provides independent inspections with GPS verification, photo documentation, and standardized scoring. Vendors never control their own quality data again.",
+    solutionTag: "IQS Flow Solution",
   },
   {
-    icon: FileEdit,
+    problemIcon: FileEdit,
+    solutionIcon: CheckCircle2,
     num: "02",
-    title: "Manual Inconsistent Audits",
-    body: "Paper forms, disconnected spreadsheets, and occasional walkthroughs produce inconsistent results. No photo documentation, no timestamp trail, no defensible audit record when issues escalate.",
-    tag: "Process Failure",
+    problemTitle: "Manual Inconsistent Audits",
+    problemBody: "Paper forms, disconnected spreadsheets, and occasional walkthroughs produce inconsistent results. No photo documentation, no timestamp trail, no defensible audit record when issues escalate.",
+    problemTag: "Process Failure",
+    solutionTitle: "Digital Inspections with Photo Evidence",
+    solutionBody: "Structured digital forms with required photo evidence, GPS timestamps, and automatic scoring. Every inspection is consistent, documented, and audit-ready from day one.",
+    solutionTag: "IQS Flow Solution",
   },
   {
-    icon: EyeOff,
+    problemIcon: EyeOff,
+    solutionIcon: BarChart2,
     num: "03",
-    title: "No Portfolio-Wide Visibility",
-    body: "Each site operates as an island. You cannot benchmark standards, identify systemic patterns, or compare contractor performance across locations without weeks of manual data aggregation.",
-    tag: "Strategic Blind Spot",
+    problemTitle: "No Portfolio-Wide Visibility",
+    problemBody: "Each site operates as an island. You cannot benchmark standards, identify systemic patterns, or compare contractor performance across locations without weeks of manual data aggregation.",
+    problemTag: "Strategic Blind Spot",
+    solutionTitle: "Unified Multi-Site Dashboard",
+    solutionBody: "One dashboard aggregates quality data across every site, vendor, and compliance framework. Benchmark performance, spot trends, and compare contractors in real time.",
+    solutionTag: "IQS Flow Solution",
   },
 ];
 
 export function ProblemSection() {
   const { ref, inView } = useInView(0.1);
   const [cardHovered, setCardHovered] = useState<number | null>(null);
+  const [headerSolved, setHeaderSolved] = useState(false);
+  const [sectionVisible, setSectionVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [mobileFlipped, setMobileFlipped] = useState(false);
+
+  // Detect mobile (no hover)
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  // On mobile, auto-flip cards when section scrolls into view
+  useEffect(() => {
+    if (isMobile && inView && !mobileFlipped) {
+      const timer = setTimeout(() => setMobileFlipped(true), 800);
+      return () => clearTimeout(timer);
+    }
+  }, [isMobile, inView, mobileFlipped]);
+
+  // Track when any card is hovered to trigger header change
+  useEffect(() => {
+    if (cardHovered !== null && !headerSolved) {
+      setHeaderSolved(true);
+    }
+  }, [cardHovered, headerSolved]);
+
+  // Reset header when section leaves viewport
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        setSectionVisible(entry.isIntersecting);
+        if (!entry.isIntersecting) {
+          setHeaderSolved(false);
+          setMobileFlipped(false);
+        }
+      },
+      { threshold: 0.05 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const solved = (headerSolved || mobileFlipped) && sectionVisible;
 
   return (
     <section
@@ -571,7 +633,7 @@ export function ProblemSection() {
       <FloatingDots />
 
       <div style={{ maxWidth: CONTENT_MAX, margin: "0 auto", position: "relative", zIndex: 1 }}>
-        {/* Header — left-aligned */}
+        {/* Header — left-aligned, transitions red->green */}
         <div
           style={{
             maxWidth: NARROW_MAX,
@@ -588,32 +650,35 @@ export function ProblemSection() {
               fontWeight: 700,
               letterSpacing: "0.08em",
               textTransform: "uppercase",
-              color: "#ef4444",
+              color: solved ? "#059669" : "#ef4444",
               marginBottom: 20,
+              transition: "color 0.5s ease",
             }}
           >
-            <AlertTriangle size={14} />
-            The Trust Gap
+            {solved ? <CheckCircle2 size={14} /> : <AlertTriangle size={14} />}
+            {solved ? "The Trust Gap, Solved" : "The Trust Gap"}
           </div>
           <h2
             style={{
-              color: "#f8fafc",
+              color: solved ? "#34d399" : "#f8fafc",
               fontSize: "clamp(28px, 3.5vw, 42px)",
               fontWeight: 800,
               letterSpacing: "-1.5px",
               lineHeight: 1.1,
               marginBottom: 16,
+              transition: "color 0.5s ease",
             }}
           >
-            Your quality data has a trust problem.
+            {solved ? "Your quality data, verified independently." : "Your quality data has a trust problem."}
           </h2>
           <p style={{ color: ink[400], fontSize: 16, lineHeight: 1.7 }}>
-            Three systemic failures that put your operations, your compliance,
-            and your reputation at risk every day.
+            {solved
+              ? "Three ways IQS Flow replaces vendor self-reporting with independent, verifiable quality intelligence."
+              : "Three systemic failures that put your operations, your compliance, and your reputation at risk every day."}
           </p>
         </div>
 
-        {/* Cards — dominant first card */}
+        {/* Cards — red/problem default, green/solution on hover */}
         <div
           style={{
             display: "grid",
@@ -622,78 +687,97 @@ export function ProblemSection() {
           }}
           className="problem-grid"
         >
-          {problems.map(({ icon: ProblemIcon, num, title, body, tag }, i) => (
-            <div
-              key={title}
-              onMouseEnter={() => setCardHovered(i)}
-              onMouseLeave={() => setCardHovered(null)}
-              style={{
-                background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(255,255,255,0.06)",
-                borderRadius: 12,
-                padding: i === 0 ? "36px 32px" : "28px 24px",
-                cursor: "default",
-                transform: cardHovered === i ? "translateY(-4px)" : "none",
-                transition: "all 0.3s ease",
-                ...revealStyle(inView, 0.1 + i * 0.1),
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  color: "#ef4444",
-                  marginBottom: 20,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                }}
-              >
-                <span style={{ color: "rgba(255,255,255,0.2)", fontWeight: 800, fontSize: 12 }}>{num}</span>
-                {tag}
-              </div>
+          {trustGapCards.map((card, i) => {
+            const isHovered = cardHovered === i || (isMobile && mobileFlipped);
+            const accentColor = isHovered ? "#059669" : "#ef4444";
+            const accentBg = isHovered ? "rgba(5,150,105,0.08)" : "rgba(239,68,68,0.08)";
+            const accentBorder = isHovered ? "rgba(5,150,105,0.15)" : "rgba(239,68,68,0.15)";
+            const CardIcon = isHovered ? card.solutionIcon : card.problemIcon;
 
+            return (
               <div
+                key={card.num}
+                onMouseEnter={() => setCardHovered(i)}
+                onMouseLeave={() => setCardHovered(null)}
                 style={{
-                  width: 40,
-                  height: 40,
-                  background: "rgba(239,68,68,0.08)",
-                  border: "1px solid rgba(239,68,68,0.15)",
-                  borderRadius: 8,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginBottom: 20,
+                  background: isHovered ? "rgba(5,150,105,0.04)" : "rgba(255,255,255,0.03)",
+                  border: `1px solid ${isHovered ? "rgba(5,150,105,0.12)" : "rgba(255,255,255,0.06)"}`,
+                  borderRadius: 12,
+                  padding: i === 0 ? "36px 32px" : "28px 24px",
+                  cursor: "default",
+                  transform: isHovered ? "translateY(-4px)" : "none",
+                  transition: "all 0.3s ease",
+                  position: "relative",
+                  ...revealStyle(inView, 0.1 + i * 0.1),
                 }}
+                className="trust-gap-card"
               >
-                <ProblemIcon size={20} style={{ color: "#ef4444" }} />
-              </div>
+                <div
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 700,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    color: accentColor,
+                    marginBottom: 20,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    transition: "color 0.3s ease",
+                  }}
+                >
+                  <span style={{ color: "rgba(255,255,255,0.2)", fontWeight: 800, fontSize: 12 }}>{card.num}</span>
+                  {isHovered ? card.solutionTag : card.problemTag}
+                </div>
 
-              <h3
-                style={{
-                  color: "#f1f5f9",
-                  fontSize: i === 0 ? 20 : 17,
-                  fontWeight: 700,
-                  letterSpacing: "-0.3px",
-                  marginBottom: 12,
-                  lineHeight: 1.25,
-                }}
-              >
-                {title}
-              </h3>
-              <p style={{ color: ink[300], fontSize: 14, lineHeight: 1.7, margin: 0 }}>
-                {body}
-              </p>
-            </div>
-          ))}
+                <div
+                  style={{
+                    width: 40,
+                    height: 40,
+                    background: accentBg,
+                    border: `1px solid ${accentBorder}`,
+                    borderRadius: 8,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: 20,
+                    transition: "all 0.3s ease",
+                  }}
+                >
+                  <CardIcon size={20} style={{ color: accentColor, transition: "color 0.3s ease" }} />
+                </div>
+
+                <h3
+                  style={{
+                    color: "#f1f5f9",
+                    fontSize: i === 0 ? 20 : 17,
+                    fontWeight: 700,
+                    letterSpacing: "-0.3px",
+                    marginBottom: 12,
+                    lineHeight: 1.25,
+                  }}
+                >
+                  {isHovered ? card.solutionTitle : card.problemTitle}
+                </h3>
+                <p style={{ color: ink[300], fontSize: 14, lineHeight: 1.7, margin: 0 }}>
+                  {isHovered ? card.solutionBody : card.problemBody}
+                </p>
+              </div>
+            );
+          })}
         </div>
       </div>
 
       <style>{`
         @media (max-width: 767px) {
           .problem-grid { grid-template-columns: 1fr !important; }
+          .trust-gap-card {
+            animation: trustCardReveal 0.6s ease forwards;
+          }
+          @keyframes trustCardReveal {
+            0% { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.06); }
+            100% { background: rgba(5,150,105,0.04); border-color: rgba(5,150,105,0.12); }
+          }
         }
       `}</style>
     </section>
