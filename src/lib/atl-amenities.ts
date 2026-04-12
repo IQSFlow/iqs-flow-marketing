@@ -44,10 +44,10 @@ export const ATL_RESTROOMS: Amenity[] = [
 
 // Delta Sky Clubs and independent lounges at ATL
 export const ATL_LOUNGES: Amenity[] = [
-  { id: "l-atl-skyclub-t", label: "Delta Sky Club – Concourse T",  lat: 33.6408, lon: -84.4420, detail: "Delta Air Lines — near gate T7" },
-  { id: "l-atl-skyclub-a", label: "Delta Sky Club – Concourse A",  lat: 33.6412, lon: -84.4394, detail: "Delta Air Lines — near gate A17" },
-  { id: "l-atl-skyclub-b", label: "Delta Sky Club – Concourse B",  lat: 33.6412, lon: -84.4355, detail: "Delta Air Lines — flagship location near gate B18" },
-  { id: "l-atl-skyclub-e", label: "Delta Sky Club – Concourse E",  lat: 33.6412, lon: -84.4253, detail: "Delta Air Lines — international concourse" },
-  { id: "l-atl-skyclub-f", label: "Delta Sky Club – Concourse F",  lat: 33.6398, lon: -84.4191, detail: "Delta Air Lines — international concourse" },
-  { id: "l-atl-club-f",    label: "The Club ATL – Concourse F",    lat: 33.6403, lon: -84.4191, detail: "Independent lounge — Concourse F" },
+  { id: "l-atl-skyclub-t", label: "Delta Sky Club – Concourse T",  lat: 33.6408, lon: -84.4420, detail: "Delta Air Lines - near gate T7" },
+  { id: "l-atl-skyclub-a", label: "Delta Sky Club – Concourse A",  lat: 33.6412, lon: -84.4394, detail: "Delta Air Lines - near gate A17" },
+  { id: "l-atl-skyclub-b", label: "Delta Sky Club – Concourse B",  lat: 33.6412, lon: -84.4355, detail: "Delta Air Lines - flagship location near gate B18" },
+  { id: "l-atl-skyclub-e", label: "Delta Sky Club – Concourse E",  lat: 33.6412, lon: -84.4253, detail: "Delta Air Lines - international concourse" },
+  { id: "l-atl-skyclub-f", label: "Delta Sky Club – Concourse F",  lat: 33.6398, lon: -84.4191, detail: "Delta Air Lines - international concourse" },
+  { id: "l-atl-club-f",    label: "The Club ATL – Concourse F",    lat: 33.6403, lon: -84.4191, detail: "Independent lounge - Concourse F" },
 ];

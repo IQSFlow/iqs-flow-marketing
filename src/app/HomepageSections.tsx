@@ -40,7 +40,7 @@ const ink = marketing.ink;
 const accent = marketing.accent;
 const accentDark = marketing.accentDark;
 
-/* (counter hook removed — no longer using animated stats) */
+/* (counter hook removed - no longer using animated stats) */
 
 /* ─── Intersection observer hook ─── */
 function useInView(threshold = 0.15) {
@@ -68,7 +68,7 @@ function revealStyle(inView: boolean, delay = 0): React.CSSProperties {
   };
 }
 
-/* ─── FloatingDots component — worker movement through facility corridors ─── */
+/* ─── FloatingDots component - worker movement through facility corridors ─── */
 function FloatingDots() {
   const dots = [
     { size: 6, top: "12%", color: "rgba(29,78,216,0.08)", duration: 24, delay: 0, diagonal: false },
@@ -157,7 +157,7 @@ export function ScrollProgressBar() {
 }
 
 /* ════════════════════════════════════════════════
-   1. HERO — Left-aligned, asymmetric 3:2 layout
+   1. HERO - Left-aligned, asymmetric 3:2 layout
    ════════════════════════════════════════════════ */
 export function HeroSection() {
   const [demoHovered, setDemoHovered] = useState(false);
@@ -475,7 +475,7 @@ export function HeroSection() {
 }
 
 /* ════════════════════════════════════════════════
-   2. SOCIAL PROOF BAR — Numbers-first strip
+   2. SOCIAL PROOF BAR - Numbers-first strip
    ════════════════════════════════════════════════ */
 export function SocialProofBar() {
   const { ref, inView } = useInView(0.3);
@@ -512,7 +512,7 @@ export function SocialProofBar() {
 }
 
 /* ════════════════════════════════════════════════
-   3. THE TRUST GAP — Red-to-green hover interaction
+   3. THE TRUST GAP - Red-to-green hover interaction
    ════════════════════════════════════════════════ */
 const trustGapCards = [
   {
@@ -623,7 +623,7 @@ export function ProblemSection() {
       <FloatingDots />
 
       <div style={{ maxWidth: CONTENT_MAX, margin: "0 auto", position: "relative", zIndex: 1 }}>
-        {/* Header — left-aligned, transitions red->green */}
+        {/* Header - left-aligned, transitions red->green */}
         <div
           style={{
             maxWidth: NARROW_MAX,
@@ -668,7 +668,7 @@ export function ProblemSection() {
           </p>
         </div>
 
-        {/* Cards — red/problem default, green/solution on hover */}
+        {/* Cards - red/problem default, green/solution on hover */}
         <div
           style={{
             display: "grid",
@@ -775,7 +775,7 @@ export function ProblemSection() {
 }
 
 /* ════════════════════════════════════════════════
-   4. PLATFORM OVERVIEW — Staggered feature layout
+   4. PLATFORM OVERVIEW - Staggered feature layout
    ════════════════════════════════════════════════ */
 const features = [
   {
@@ -872,7 +872,7 @@ export function PlatformSection() {
           </p>
         </div>
 
-        {/* Feature cards — first card is 2:1 width ratio to emphasize */}
+        {/* Feature cards - first card is 2:1 width ratio to emphasize */}
         <div
           style={{
             display: "grid",
@@ -969,7 +969,7 @@ export function PlatformSection() {
 }
 
 /* ════════════════════════════════════════════════
-   5. HOW IT WORKS — Horizontal timeline
+   5. HOW IT WORKS - Horizontal timeline
    ════════════════════════════════════════════════ */
 const steps = [
   { num: "01", icon: Link2, title: "Integrate", body: "Connect your sites, vendors, and existing systems in hours, not months." },
@@ -992,7 +992,7 @@ export function HowItWorksSection() {
       }}
     >
       <div style={{ maxWidth: CONTENT_MAX, margin: "0 auto" }}>
-        {/* Header — centered for this section (timeline demands it) */}
+        {/* Header - centered for this section (timeline demands it) */}
         <div
           style={{
             textAlign: "center",
@@ -1028,7 +1028,7 @@ export function HowItWorksSection() {
           </p>
         </div>
 
-        {/* Steps — 4 columns with connecting line */}
+        {/* Steps - 4 columns with connecting line */}
         <div
           style={{
             display: "grid",
@@ -1128,9 +1128,9 @@ export function HowItWorksSection() {
 }
 
 /* ════════════════════════════════════════════════
-   6. INDUSTRY SOLUTIONS — Tab layout, left header
+   6. INDUSTRY SOLUTIONS - Tab layout, left header
    ════════════════════════════════════════════════ */
-/* Industry accent colors — each industry gets its own subtle tint */
+/* Industry accent colors - each industry gets its own subtle tint */
 const industryAccents: Record<string, string> = {
   airlines: "#3b82f6",  // manager blue
   airports: "#1d4ed8",  // navy blue
@@ -1139,7 +1139,7 @@ const industryAccents: Record<string, string> = {
   maintenance: "#6366f1", // indigo
 };
 
-/* Industry stat block background gradients — subtle overlay per industry */
+/* Industry stat block background gradients - subtle overlay per industry */
 const industryStatGradients: Record<string, string> = {
   airlines: "linear-gradient(135deg, rgba(59,130,246,0.04) 0%, rgba(41,128,185,0.03) 100%)",
   airports: "linear-gradient(135deg, rgba(29,78,216,0.04) 0%, rgba(30,64,175,0.03) 100%)",
@@ -1350,7 +1350,7 @@ export function IndustrySolutionsSection() {
           })}
         </div>
 
-        {/* Tab content — 3:2 split */}
+        {/* Tab content - 3:2 split */}
         <div
           style={{
             display: "grid",
@@ -1503,7 +1503,7 @@ export function IndustrySolutionsSection() {
 }
 
 /* ════════════════════════════════════════════════
-   6b. VENICE TESTIMONIAL — photo + large serif quote
+   6b. VENICE TESTIMONIAL - photo + large serif quote
    ════════════════════════════════════════════════ */
 export function VeniceTestimonialSection() {
   const { ref, inView } = useInView(0.15);
@@ -1553,7 +1553,7 @@ export function VeniceTestimonialSection() {
               fontFamily: "var(--font-serif), Georgia, serif",
             }}
           >
-            &ldquo;We built IQS Flow because we lived the problem. When you manage cleaning for an airline, you need proof that the work happened &mdash; not a vendor&rsquo;s word for it.&rdquo;
+            &ldquo;We built IQS Flow because we lived the problem. When you manage cleaning for an airline, you need proof that the work happened - not a vendor&rsquo;s word for it.&rdquo;
           </blockquote>
           <div style={{ fontSize: 14, fontWeight: 700, color: ink[800] }}>Venice Collier</div>
           <div style={{ fontSize: 13, color: ink[400] }}>Co-Founder &amp; CEO &middot; 20+ years in facility management</div>
@@ -1575,7 +1575,7 @@ export function VeniceTestimonialSection() {
 }
 
 /* ════════════════════════════════════════════════
-   7. FOUNDER QUOTE — editorial testimonial
+   7. FOUNDER QUOTE - editorial testimonial
    ════════════════════════════════════════════════ */
 export function FounderQuoteSection() {
   const { ref, inView } = useInView(0.15);
@@ -1620,12 +1620,11 @@ export function FounderQuoteSection() {
             fontFamily: "var(--font-serif), Georgia, serif",
           }}
         >
-          We built IQS Flow because we ran the programs ourselves. After 15+ years
-          managing vendor operations, we knew the industry needed independent quality
-          intelligence, not more vendor self-reporting.
+          We built IQS Flow on multi-tenant isolation because every client&rsquo;s
+          quality data is sensitive. Your vendors never see each other&rsquo;s scores.
         </blockquote>
         <div style={{ fontSize: 14, fontWeight: 700, color: ink[500], letterSpacing: "0.04em" }}>
-          Venice Collier &amp; Joshua Hinton, Co-founders
+          Joshua Hinton, COO &amp; Co-Founder
         </div>
       </div>
     </section>
@@ -1633,7 +1632,7 @@ export function FounderQuoteSection() {
 }
 
 /* ════════════════════════════════════════════════
-   8. ASSESSMENT CTA — vendor oversight hook
+   8. ASSESSMENT CTA - vendor oversight hook
    ════════════════════════════════════════════════ */
 export function AssessmentCTASection() {
   const { ref, inView } = useInView(0.15);
@@ -1728,7 +1727,7 @@ export function AssessmentCTASection() {
 }
 
 /* ════════════════════════════════════════════════
-   9. PORTAL SHOWCASE + CTA — dark, confident
+   9. PORTAL SHOWCASE + CTA - dark, confident
    ════════════════════════════════════════════════ */
 export function StatsCTASection() {
   const { ref, inView } = useInView(0.15);

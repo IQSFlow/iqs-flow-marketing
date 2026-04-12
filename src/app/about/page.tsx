@@ -139,7 +139,7 @@ export default function AboutPage() {
         <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
           <div style={{ fontSize: 48, lineHeight: 1, color: ink[200], marginBottom: 20, fontFamily: "var(--font-serif), Georgia, serif" }}>&ldquo;</div>
           <blockquote style={{ fontSize: "clamp(18px, 2.2vw, 24px)", lineHeight: 1.7, color: ink[700], fontStyle: "italic", margin: "0 0 24px", fontFamily: "var(--font-serif), Georgia, serif" }}>
-            Clients deserve the same quality data their vendors keep internally. That&rsquo;s not a feature request &mdash; it&rsquo;s a market gap.
+            Clients deserve the same quality data their vendors keep internally. That&rsquo;s not a feature request - it&rsquo;s a market gap.
           </blockquote>
           <div style={{ fontSize: 13, fontWeight: 700, color: ink[400], letterSpacing: "0.04em" }}>Venice Collier, CEO &amp; Founder</div>
         </div>

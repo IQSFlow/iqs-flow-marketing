@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════
-// Design tokens — single source of truth for IQS Flow visual constants
+// Design tokens - single source of truth for IQS Flow visual constants
 // Shared across marketing site and web app portal
 // Use inline React style objects with these values (no Tailwind/CSS modules)
 // ═══════════════════════════════════════════════════════════════════════

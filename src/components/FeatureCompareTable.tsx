@@ -9,13 +9,13 @@ const ROWS: { feature: string; values: string[] }[] = [
     feature: "Inspections",
     values: ["Standard forms", "Custom forms", "Custom + API"],
   },
-  { feature: "Vendor Onboarding", values: ["—", "Yes", "Unlimited"] },
-  { feature: "Vendor Portal", values: ["—", "—", "Yes"] },
-  { feature: "Compliance Scoring", values: ["—", "Yes", "Yes"] },
-  { feature: "Client Portal", values: ["—", "Yes", "Yes"] },
-  { feature: "SLA Tracking", values: ["—", "Yes", "Custom SLAs"] },
-  { feature: "API Access", values: ["—", "—", "Yes"] },
-  { feature: "SSO / SAML", values: ["—", "—", "Yes"] },
+  { feature: "Vendor Onboarding", values: ["-", "Yes", "Unlimited"] },
+  { feature: "Vendor Portal", values: ["-", "-", "Yes"] },
+  { feature: "Compliance Scoring", values: ["-", "Yes", "Yes"] },
+  { feature: "Client Portal", values: ["-", "Yes", "Yes"] },
+  { feature: "SLA Tracking", values: ["-", "Yes", "Custom SLAs"] },
+  { feature: "API Access", values: ["-", "-", "Yes"] },
+  { feature: "SSO / SAML", values: ["-", "-", "Yes"] },
   { feature: "Support", values: ["Email", "Priority", "Dedicated AM"] },
 ];
 
@@ -27,8 +27,8 @@ function CellValue({ value, colIndex }: { value: string; colIndex: number }) {
       </span>
     );
   }
-  if (value === "—") {
-    return <span style={{ color: "#94a3b8", fontSize: 16 }}>—</span>;
+  if (value === "-") {
+    return <span style={{ color: "#94a3b8", fontSize: 16 }}>-</span>;
   }
   return (
     <span

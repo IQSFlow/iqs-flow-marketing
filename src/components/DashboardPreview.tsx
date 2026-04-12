@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * DashboardPreview — Mock analytics dashboard section showing
+ * DashboardPreview - Mock analytics dashboard section showing
  * quality scores, compliance metrics, and performance charts.
  * Renders as a stylized card on the marketing site.
  */
@@ -41,7 +41,7 @@ export default function DashboardPreview() {
             }}
           >
             Real-time dashboards, compliance scoring, and performance analytics
-            — all in one place. No spreadsheets, no guesswork.
+            - all in one place. No spreadsheets, no guesswork.
           </p>
         </div>
 

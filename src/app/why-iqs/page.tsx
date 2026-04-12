@@ -225,7 +225,7 @@ export default function WhyIqsPage() {
       <section style={{ padding: "64px 32px", background: "#ffffff", borderBottom: `1px solid ${ink[100]}` }}>
         <div style={{ maxWidth: 800, margin: "0 auto", textAlign: "center" }}>
           <blockquote style={{ fontSize: "clamp(20px, 2.5vw, 28px)", lineHeight: 1.65, color: ink[700], fontStyle: "italic", margin: "0 0 20px", fontFamily: "var(--font-serif), Georgia, serif" }}>
-            After 15 years managing vendor operations, we knew the industry needed independent quality intelligence &mdash; not more vendor self-reporting.
+            After 15 years managing vendor operations, we knew the industry needed independent quality intelligence - not more vendor self-reporting.
           </blockquote>
           <div style={{ fontSize: 13, fontWeight: 700, color: ink[400], letterSpacing: "0.04em" }}>Venice Collier, CEO</div>
         </div>
@@ -464,7 +464,7 @@ export default function WhyIqsPage() {
         </div>
       </section>
 
-      {/* ─── Section 4: Built for Scale (dark navy) — asymmetric 40/60 ─── */}
+      {/* ─── Section 4: Built for Scale (dark navy) - asymmetric 40/60 ─── */}
       <section style={{ padding: "80px 32px", background: "#0a0f1a" }}>
         <div style={{ width: "90%", maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: "2fr 3fr", gap: 64, alignItems: "start" }} className="why-arch-grid">
           {/* Left: sticky header */}

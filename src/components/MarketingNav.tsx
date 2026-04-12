@@ -193,7 +193,7 @@ export default function MarketingNav() {
       >
         {/* Logo */}
         <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
-          <Image src="/logo.png" alt="IQS Flow" width={126} height={36} priority />
+          <Image src="/logo.png" alt="IQS Flow" width={154} height={44} priority />
         </Link>
 
         {/* Desktop links: hidden below 768px via inline style trick */}

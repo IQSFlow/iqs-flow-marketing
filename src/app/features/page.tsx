@@ -304,7 +304,7 @@ export default function FeaturesPage() {
       <section style={{ padding: "64px 32px", background: ink[25], borderTop: `1px solid ${ink[100]}`, borderBottom: `1px solid ${ink[100]}` }}>
         <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" }}>
           <blockquote style={{ fontSize: "clamp(18px, 2.2vw, 24px)", lineHeight: 1.7, color: ink[700], fontStyle: "italic", margin: "0 0 20px", fontFamily: "var(--font-serif), Georgia, serif" }}>
-            Every task tracked. Every inspection verified. Every vendor held to the same standard &mdash; automatically.
+            Every task tracked. Every inspection verified. Every vendor held to the same standard - automatically.
           </blockquote>
           <div style={{ fontSize: 13, fontWeight: 700, color: ink[400], letterSpacing: "0.04em" }}>The IQS Flow platform promise</div>
         </div>

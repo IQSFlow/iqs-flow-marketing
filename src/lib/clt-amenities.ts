@@ -34,11 +34,11 @@ export const CLT_RESTROOMS: Amenity[] = [
 ];
 
 export const CLT_LOUNGES: Amenity[] = [
-  { id: "l-admirals-b",  label: "Admirals Club – Concourse B", lat: 35.2194468, lon: -80.9451949, detail: "American Airlines — Concourse B" },
-  { id: "l-admirals-d",  label: "Admirals Club – Concourse D", lat: 35.2204355, lon: -80.9430717, detail: "American Airlines — Concourse D" },
-  { id: "l-explorer",    label: "Explorer Lounge",             lat: 35.2244528, lon: -80.9404711, detail: "Concourse E — Priority Pass" },
+  { id: "l-admirals-b",  label: "Admirals Club – Concourse B", lat: 35.2194468, lon: -80.9451949, detail: "American Airlines - Concourse B" },
+  { id: "l-admirals-d",  label: "Admirals Club – Concourse D", lat: 35.2204355, lon: -80.9430717, detail: "American Airlines - Concourse D" },
+  { id: "l-explorer",    label: "Explorer Lounge",             lat: 35.2244528, lon: -80.9404711, detail: "Concourse E - Priority Pass" },
   { id: "l-delta-sky",   label: "Delta Sky Club",              lat: 35.2248903, lon: -80.9477933, detail: "Concourse A (far north)" },
-  { id: "l-the-club",    label: "The Club CLT",                lat: 35.2215709, lon: -80.9466962, detail: "Terminal Lobby — Priority Pass" },
+  { id: "l-the-club",    label: "The Club CLT",                lat: 35.2215709, lon: -80.9466962, detail: "Terminal Lobby - Priority Pass" },
   { id: "l-uptown-bar",  label: "Uptown Bar & Lounge",         lat: 35.2201769, lon: -80.9473042, detail: "Concourse A" },
-  { id: "l-red-star",    label: "Red Star Lounge",             lat: 35.2181194, lon: -80.9452104, detail: "Concourse B — Priority Pass" },
+  { id: "l-red-star",    label: "Red Star Lounge",             lat: 35.2181194, lon: -80.9452104, detail: "Concourse B - Priority Pass" },
 ];

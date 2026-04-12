@@ -264,7 +264,7 @@ export default function PricingPage() {
       <section style={{ padding: "56px 32px", background: "#ffffff", borderBottom: `1px solid ${ink[100]}` }}>
         <div style={{ maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
           <blockquote style={{ fontSize: "clamp(17px, 2vw, 22px)", lineHeight: 1.7, color: ink[600], fontStyle: "italic", margin: 0, fontFamily: "var(--font-serif), Georgia, serif" }}>
-            We price for the client, not the cleaning company. Every plan gives you full visibility &mdash; no per-vendor add-ons, no hidden fees.
+            We price for the client, not the cleaning company. Every plan gives you full visibility - no per-vendor add-ons, no hidden fees.
           </blockquote>
         </div>
       </section>

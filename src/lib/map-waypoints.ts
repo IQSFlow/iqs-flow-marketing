@@ -25,7 +25,7 @@ interface CorridorGraph {
 
 const CLT_HUB: LatLon = [35.2205, -80.9440];
 
-// Concourse A — 3 sub-segments radiating west from the hub
+// Concourse A - 3 sub-segments radiating west from the hub
 // A south wing (A1–A13): runs west from hub
 const A_SOUTH: LatLon[] = [
   [35.2205, -80.9455],  // junction near hub
@@ -55,7 +55,7 @@ const A_EXT: LatLon[] = [
   [35.2250, -80.9483],  // near A36/A37/A38/A39
 ];
 
-// Concourse B — runs south from hub
+// Concourse B - runs south from hub
 const B_CORRIDOR: LatLon[] = [
   [35.2205, -80.9447],  // junction near hub
   [35.2199, -80.9450],  // near B1/B2
@@ -67,7 +67,7 @@ const B_CORRIDOR: LatLon[] = [
   [35.2178, -80.9454],  // near B13/B14/B15/B16
 ];
 
-// Concourse C — runs south-southeast from hub
+// Concourse C - runs south-southeast from hub
 const C_CORRIDOR: LatLon[] = [
   [35.2205, -80.9432],  // junction near hub
   [35.2200, -80.9425],  // near C1/C2
@@ -81,7 +81,7 @@ const C_CORRIDOR: LatLon[] = [
   [35.2178, -80.9422],  // near C16/C17/C18/C19
 ];
 
-// Concourse D — runs east from hub
+// Concourse D - runs east from hub
 const D_CORRIDOR: LatLon[] = [
   [35.2205, -80.9425],  // junction near hub
   [35.2204, -80.9414],  // near D1/D2
@@ -92,7 +92,7 @@ const D_CORRIDOR: LatLon[] = [
   [35.2207, -80.9393],  // near D11/D12/D13
 ];
 
-// Concourse E — runs northeast from hub, has south wing (E1-E19) + north wing (E20-E42)
+// Concourse E - runs northeast from hub, has south wing (E1-E19) + north wing (E20-E42)
 const E_SOUTH: LatLon[] = [
   [35.2210, -80.9420],  // junction near hub
   [35.2219, -80.9416],  // near E1/E2/E3
@@ -287,7 +287,7 @@ const ATL_CORRIDORS = [
 function buildATLGateMap(): Record<string, { corridor: number; wpIndex: number }> {
   const m: Record<string, { corridor: number; wpIndex: number }> = {};
 
-  // T (corridor 0) — 14 gates, 4 waypoints
+  // T (corridor 0) - 14 gates, 4 waypoints
   for (const [code, wp] of Object.entries({
     T1: 0, T2: 0, T3: 0, T4: 0,
     T5: 1, T6: 1, T7: 1, T8: 1,
@@ -295,7 +295,7 @@ function buildATLGateMap(): Record<string, { corridor: number; wpIndex: number }
     T13: 3, T14: 3,
   })) m[code] = { corridor: 0, wpIndex: wp };
 
-  // A (corridor 1) — 34 gates, 6 waypoints
+  // A (corridor 1) - 34 gates, 6 waypoints
   for (const [code, wp] of Object.entries({
     A1: 0, A2: 0, A3: 0, A4: 0, A5: 1, A6: 1, A7: 1, A8: 1,
     A9: 1, A10: 1, A11: 2, A12: 2, A13: 2, A14: 2, A15: 2, A16: 2,
@@ -304,7 +304,7 @@ function buildATLGateMap(): Record<string, { corridor: number; wpIndex: number }
     A31: 5, A32: 5, A33: 5, A34: 5,
   })) m[code] = { corridor: 1, wpIndex: wp };
 
-  // B (corridor 2) — 36 gates, 6 waypoints
+  // B (corridor 2) - 36 gates, 6 waypoints
   for (const [code, wp] of Object.entries({
     B1: 0, B2: 0, B3: 0, B4: 0, B5: 1, B6: 1, B7: 1, B8: 1,
     B9: 1, B10: 1, B11: 1, B12: 1,
@@ -314,7 +314,7 @@ function buildATLGateMap(): Record<string, { corridor: number; wpIndex: number }
     B31: 5, B32: 5, B33: 5, B34: 5, B35: 5, B36: 5,
   })) m[code] = { corridor: 2, wpIndex: wp };
 
-  // C (corridor 3) — 48 gates, 7 waypoints
+  // C (corridor 3) - 48 gates, 7 waypoints
   for (const [code, wp] of Object.entries({
     C1: 0, C2: 0, C3: 0, C4: 0, C5: 1, C6: 1, C7: 1, C8: 1,
     C9: 1, C10: 1, C11: 1, C12: 1,
@@ -328,7 +328,7 @@ function buildATLGateMap(): Record<string, { corridor: number; wpIndex: number }
     C47: 6, C48: 6,
   })) m[code] = { corridor: 3, wpIndex: wp };
 
-  // D (corridor 4) — 42 gates, 6 waypoints
+  // D (corridor 4) - 42 gates, 6 waypoints
   for (const [code, wp] of Object.entries({
     D1: 0, D2: 0, D3: 0, D4: 0, D5: 1, D6: 1, D7: 1, D8: 1,
     D9: 1, D10: 1, D11: 1, D12: 1,
@@ -341,7 +341,7 @@ function buildATLGateMap(): Record<string, { corridor: number; wpIndex: number }
     D41: 5, D42: 5,
   })) m[code] = { corridor: 4, wpIndex: wp };
 
-  // E (corridor 5) — 36 gates, 6 waypoints
+  // E (corridor 5) - 36 gates, 6 waypoints
   for (const [code, wp] of Object.entries({
     E1: 0, E2: 0, E3: 0, E4: 0, E5: 1, E6: 1, E7: 1, E8: 1,
     E9: 1, E10: 1, E11: 1, E12: 1,
@@ -351,7 +351,7 @@ function buildATLGateMap(): Record<string, { corridor: number; wpIndex: number }
     E31: 5, E32: 5, E33: 5, E34: 5, E35: 5, E36: 5,
   })) m[code] = { corridor: 5, wpIndex: wp };
 
-  // F (corridor 6) — 14 gates, 4 waypoints
+  // F (corridor 6) - 14 gates, 4 waypoints
   for (const [code, wp] of Object.entries({
     F1: 0, F2: 0, F3: 0, F4: 0,
     F5: 1, F6: 1, F7: 1, F8: 1,
@@ -364,7 +364,7 @@ function buildATLGateMap(): Record<string, { corridor: number; wpIndex: number }
 
 // ─── JFK (John F. Kennedy International) corridor data ───────────────────────
 // JFK has separate terminal buildings. Each terminal is its own corridor.
-// There's no shared hub — cross-terminal routing isn't walkable (AirTrain only).
+// There's no shared hub - cross-terminal routing isn't walkable (AirTrain only).
 // Coordinates from OSM Overpass API building outlines + parking positions (2025).
 
 const JFK_HUB: LatLon = [40.6455, -73.7870]; // approximate center of terminal complex
@@ -447,13 +447,13 @@ const JFK_CORRIDORS = [
 function buildJFKGateMap(): Record<string, { corridor: number; wpIndex: number }> {
   const m: Record<string, { corridor: number; wpIndex: number }> = {};
 
-  // T1 (corridor 0) — 11 gates along 6 waypoints
+  // T1 (corridor 0) - 11 gates along 6 waypoints
   for (const [code, wp] of Object.entries({
     "1": 0, "2": 0, "3": 1, "4": 1, "5": 2, "6": 2,
     "7": 3, "8": 3, "9": 4, "10": 4, "11": 5,
   })) m[`T1-${code}`] = { corridor: 0, wpIndex: wp };
 
-  // T4 (corridor 1) — 28 B-gates along 9 waypoints
+  // T4 (corridor 1) - 28 B-gates along 9 waypoints
   for (const [code, wp] of Object.entries({
     "B20": 0, "B21": 0, "B22": 0,
     "B23": 1, "B24": 1, "B25": 1,
@@ -466,7 +466,7 @@ function buildJFKGateMap(): Record<string, { corridor: number; wpIndex: number }
     "B46": 8, "B47": 8,
   })) m[`T4-${code}`] = { corridor: 1, wpIndex: wp };
 
-  // T5 Pier 1 (corridor 2) — gates 1-14 along 5 waypoints
+  // T5 Pier 1 (corridor 2) - gates 1-14 along 5 waypoints
   for (const [code, wp] of Object.entries({
     "1": 0, "2": 0, "3": 0,
     "4": 1, "5": 1, "6": 1,
@@ -475,7 +475,7 @@ function buildJFKGateMap(): Record<string, { corridor: number; wpIndex: number }
     "13": 4, "14": 4,
   })) m[`T5-${code}`] = { corridor: 2, wpIndex: wp };
 
-  // T5 Pier 2 (corridor 3) — gates 15-29 along 5 waypoints
+  // T5 Pier 2 (corridor 3) - gates 15-29 along 5 waypoints
   for (const [code, wp] of Object.entries({
     "15": 0, "16": 0, "17": 0,
     "18": 1, "19": 1, "20": 1,
@@ -484,14 +484,14 @@ function buildJFKGateMap(): Record<string, { corridor: number; wpIndex: number }
     "27": 4, "28": 4, "29": 4,
   })) m[`T5-${code}`] = { corridor: 3, wpIndex: wp };
 
-  // T7 (corridor 4) — 12 gates along 6 waypoints
+  // T7 (corridor 4) - 12 gates along 6 waypoints
   for (const [code, wp] of Object.entries({
     "1": 0, "2": 0, "3": 1, "4": 1,
     "5": 2, "6": 2, "7": 3, "8": 3,
     "9": 4, "10": 4, "11": 5, "12": 5,
   })) m[`T7-${code}`] = { corridor: 4, wpIndex: wp };
 
-  // T8 (corridor 5) — 50 gates along 11 waypoints
+  // T8 (corridor 5) - 50 gates along 11 waypoints
   for (const [code, wp] of Object.entries({
     "1": 0, "2": 0, "3": 0, "4": 0, "5": 0,
     "6": 1, "7": 1, "8": 1, "9": 1, "10": 1,
@@ -555,13 +555,13 @@ export function getWalkingPath(
   toGateCode: string,
 ): LatLon[] {
   const graph = AIRPORT_GRAPHS[airportIata];
-  if (!graph) return []; // no data — caller should fall back to straight line
+  if (!graph) return []; // no data - caller should fall back to straight line
 
   const from = graph.gateMap[fromGateCode];
   const to = graph.gateMap[toGateCode];
   if (!from || !to) return []; // unknown gates
 
-  // Same corridor — just walk along it
+  // Same corridor - just walk along it
   if (from.corridor === to.corridor) {
     return sliceCorridor(graph.corridors[from.corridor].points, from.wpIndex, to.wpIndex);
   }
@@ -581,7 +581,7 @@ export function getWalkingPath(
     }
   }
 
-  // Different corridors — route through hub
+  // Different corridors - route through hub
   const fromCorridor = graph.corridors[from.corridor].points;
   const toCorridor = graph.corridors[to.corridor].points;
 
@@ -705,7 +705,7 @@ export function snapTrailToCorridor(
     const to = located[i];
 
     if (from.corridor === to.corridor) {
-      // Same corridor — walk along it
+      // Same corridor - walk along it
       const seg = sliceCorridor(graph.corridors[from.corridor].points, from.wpIndex, to.wpIndex);
       // Skip first point (already in result)
       for (let j = 1; j < seg.length; j++) result.push(seg[j]);
@@ -732,7 +732,7 @@ export function snapTrailToCorridor(
       }
 
       if (!routed) {
-        // Different corridors — route through hub
+        // Different corridors - route through hub
         const seg1 = sliceCorridor(graph.corridors[from.corridor].points, from.wpIndex, 0);
         const seg2 = sliceCorridor(graph.corridors[to.corridor].points, 0, to.wpIndex);
         for (let j = 1; j < seg1.length; j++) result.push(seg1[j]);
@@ -765,7 +765,7 @@ export function detectAirport(lat: number, lon: number): string | null {
   for (const [iata, center] of Object.entries(AIRPORT_CENTERS)) {
     const dlat = lat - center[0];
     const dlon = lon - center[1];
-    // ~0.02 degrees ≈ 2km — well within any airport's footprint
+    // ~0.02 degrees ≈ 2km - well within any airport's footprint
     if (dlat * dlat + dlon * dlon < 0.02 * 0.02) return iata;
   }
   return null;

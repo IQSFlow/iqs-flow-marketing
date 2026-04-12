@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -67,7 +66,16 @@ export default function MarketingFooter() {
         >
           {/* Brand */}
           <div>
-            <Image src="/logo.png" alt="IQS Flow" width={110} height={32} style={{ filter: "brightness(0) invert(1)" }} />
+            <div
+              style={{
+                color: "#f1f5f9",
+                fontSize: 20,
+                fontWeight: 800,
+                letterSpacing: "-0.02em",
+              }}
+            >
+              IQS Flow
+            </div>
             <p
               style={{
                 marginTop: 8,
