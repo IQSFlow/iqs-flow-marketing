@@ -14,11 +14,27 @@ const sourceSerif = Source_Serif_4({
 });
 
 export const metadata: Metadata = {
-  title: "IQS Flow - Quality Oversight Across Every Site",
+  metadataBase: new URL("https://iqsflow.com"),
+  title: {
+    default: "IQS Flow - Quality Oversight Across Every Site",
+    template: "%s | IQS Flow",
+  },
   description: "Real-time visibility into service quality, compliance, and workforce performance.",
   icons: {
     icon: "/favicon.png",
     apple: "/favicon.png",
+  },
+  openGraph: {
+    title: "IQS Flow - Quality Oversight Across Every Site",
+    description: "Real-time visibility into service quality, compliance, and workforce performance.",
+    url: "https://iqsflow.com",
+    siteName: "IQS Flow",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "IQS Flow - Quality Oversight Across Every Site",
+    description: "Real-time visibility into service quality, compliance, and workforce performance.",
   },
 };
 

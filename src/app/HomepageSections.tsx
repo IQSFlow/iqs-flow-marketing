@@ -1225,7 +1225,7 @@ const industries = [
       "Contractor performance varies by shift with no real-time oversight",
     ],
     features: [
-      "Meet regulatory standards across facilities",
+      "Meet regulatory standards across every site",
       "Inspection scoring by framework",
       "Complete audit trails",
       "Independent verification of cleaning quality",
@@ -1570,63 +1570,6 @@ export function VeniceTestimonialSection() {
           }
         }
       `}</style>
-    </section>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   7. FOUNDER QUOTE - editorial testimonial
-   ════════════════════════════════════════════════ */
-export function FounderQuoteSection() {
-  const { ref, inView } = useInView(0.15);
-
-  return (
-    <section
-      ref={ref}
-      style={{
-        background: ink[25],
-        borderTop: `1px solid ${ink[100]}`,
-        borderBottom: `1px solid ${ink[100]}`,
-        padding: `${SECTION_Y}px 32px`,
-      }}
-    >
-      <div
-        style={{
-          maxWidth: NARROW_MAX,
-          margin: "0 auto",
-          textAlign: "center",
-          ...revealStyle(inView),
-        }}
-      >
-        <div
-          style={{
-            fontSize: 48,
-            lineHeight: 1,
-            color: ink[200],
-            marginBottom: 24,
-            fontFamily: "var(--font-serif), Georgia, serif",
-          }}
-        >
-          &ldquo;
-        </div>
-        <blockquote
-          style={{
-            fontSize: "clamp(17px, 2vw, 21px)",
-            lineHeight: 1.7,
-            color: ink[700],
-            fontStyle: "italic",
-            margin: "0 0 32px",
-            fontWeight: 400,
-            fontFamily: "var(--font-serif), Georgia, serif",
-          }}
-        >
-          We built IQS Flow on multi-tenant isolation because every client&rsquo;s
-          quality data is sensitive. Your vendors never see each other&rsquo;s scores.
-        </blockquote>
-        <div style={{ fontSize: 14, fontWeight: 700, color: ink[500], letterSpacing: "0.04em" }}>
-          Joshua Hinton, COO &amp; Co-Founder
-        </div>
-      </div>
     </section>
   );
 }
