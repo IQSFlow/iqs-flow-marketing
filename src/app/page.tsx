@@ -8,6 +8,7 @@ import {
   PlatformSection,
   HowItWorksSection,
   IndustrySolutionsSection,
+  VeniceTestimonialSection,
   FounderQuoteSection,
   AssessmentCTASection,
   StatsCTASection,
@@ -24,6 +25,7 @@ export default function HomePage() {
       <PlatformSection />
       <HowItWorksSection />
       <IndustrySolutionsSection />
+      <VeniceTestimonialSection />
       <FounderQuoteSection />
       <AssessmentCTASection />
       <StatsCTASection />

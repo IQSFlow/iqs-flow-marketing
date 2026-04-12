@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import MarketingNav from "@/components/MarketingNav";
 import MarketingFooter from "@/components/MarketingFooter";
-import { ArrowRight, Check, Camera, Languages, Brain, TrendingUp, Sparkles } from "lucide-react";
+import { ArrowRight, Check, Camera, Languages, Brain, Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Platform Features - IQS Flow",
@@ -35,7 +35,7 @@ const FEATURES = [
       "Photo and signature capture on mobile with no paper, no gaps",
       "Full audit trail from creation to close, forever searchable",
     ],
-    photo: "/verne-ho-MwW-zrkYSIU-unsplash.jpg",
+    photo: "/facility-cleaning-terminal.jpg",
     photoAlt: "Facility cleaner mopping in a modern airport terminal",
   },
   {
@@ -50,7 +50,7 @@ const FEATURES = [
       "Automatic conflict detection and coverage gap alerts",
       "Recurring patterns with holiday and exception handling",
     ],
-    photo: "/oskar-kadaksoo-DDBDkz0p918-unsplash.jpg",
+    photo: "/airport-gate-lounge.jpg",
     photoAlt: "Airport gate lounge with aircraft visible through terminal window",
   },
   {
@@ -65,7 +65,7 @@ const FEATURES = [
       "Photo evidence requirements per checklist item, no drive-bys",
       "Automatic scoring with instant dashboard visibility",
     ],
-    photo: "/fumiaki-hayashi-24EyKkrgJJI-unsplash.jpg",
+    photo: "/facility-operations-aerial.jpg",
     photoAlt: "Aerial view of facility operations on geometric patterned floor",
   },
   {
@@ -80,7 +80,7 @@ const FEATURES = [
       "Configurable thresholds with automatic escalation workflows",
       "One-click audit-ready PDF and CSV export for any date range",
     ],
-    photo: "/dennis-gecaj-jVvtCCycgcQ-unsplash.jpg",
+    photo: "/airport-departure-lounge.jpg",
     photoAlt: "Airport departure lounge with aircraft at gate",
   },
   {
@@ -95,7 +95,7 @@ const FEATURES = [
       "Side-by-side contractor comparison with trend lines",
       "Automated alerts when any vendor falls below your threshold",
     ],
-    photo: "/zhang-shuaizhang-P65ogppIhUg-unsplash.jpg",
+    photo: "/hospital-corridor.jpg",
     photoAlt: "Hospital corridor with clean floors",
   },
   {
@@ -110,7 +110,7 @@ const FEATURES = [
       "Live quality scores, recent inspections, and open tickets",
       "Branded experience your clients can access 24/7",
     ],
-    photo: "/ledc-GBlrhQ2l1MM-unsplash.jpg",
+    photo: "/commercial-office-building.jpg",
     photoAlt: "Modern commercial office building with glass facade",
   },
 ];
@@ -236,9 +236,10 @@ export default function FeaturesPage() {
                 </div>
                 <div style={{
                   flex: 1,
-                  fontSize: 11,
                   color: "#94a3b8",
-                  fontFamily: "monospace",
+                  fontSize: 12,
+                  fontWeight: 500,
+                  letterSpacing: "0.04em",
                   background: "rgba(0,0,0,0.04)",
                   borderRadius: 4,
                   padding: "3px 10px",
@@ -246,7 +247,7 @@ export default function FeaturesPage() {
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
                 }}>
-                  app.iqsflow.com/{feature.id}
+                  {feature.tag}
                 </div>
               </div>
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -299,6 +300,16 @@ export default function FeaturesPage() {
         );
       })}
 
+      {/* ── Pull Quote ── */}
+      <section style={{ padding: "64px 32px", background: ink[25], borderTop: `1px solid ${ink[100]}`, borderBottom: `1px solid ${ink[100]}` }}>
+        <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" }}>
+          <blockquote style={{ fontSize: "clamp(18px, 2.2vw, 24px)", lineHeight: 1.7, color: ink[700], fontStyle: "italic", margin: "0 0 20px", fontFamily: "var(--font-serif), Georgia, serif" }}>
+            Every task tracked. Every inspection verified. Every vendor held to the same standard &mdash; automatically.
+          </blockquote>
+          <div style={{ fontSize: 13, fontWeight: 700, color: ink[400], letterSpacing: "0.04em" }}>The IQS Flow platform promise</div>
+        </div>
+      </section>
+
       {/* ── AI Intelligence Section ── */}
       <section
         id="ai-intelligence"
@@ -313,12 +324,12 @@ export default function FeaturesPage() {
           style={{
             position: "absolute",
             inset: 0,
-            background: "radial-gradient(ellipse 60% 50% at 50% 30%, rgba(124,58,237,0.1) 0%, transparent 60%)",
+            background: "radial-gradient(ellipse 60% 50% at 50% 30%, rgba(29,78,216,0.1) 0%, transparent 60%)",
             pointerEvents: "none",
           }}
         />
         <div style={{ maxWidth: 1120, margin: "0 auto", position: "relative", zIndex: 1 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "#7c3aed", marginBottom: 20 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "#1d4ed8", marginBottom: 20 }}>
             <Sparkles size={14} />
             AI-Powered Intelligence
           </div>
@@ -329,13 +340,12 @@ export default function FeaturesPage() {
             Every photo analyzed, every ticket prioritized, every form translated. No configuration required.
           </p>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }} className="ai-feature-grid">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }} className="ai-feature-grid">
             {([
-              { icon: Camera, title: "Photo Verification", desc: "Vision AI scores every cleaning photo for debris, stains, and quality.", color: "#7c3aed", comingSoon: false },
-              { icon: Languages, title: "Auto-Translation", desc: "Inspection forms translate to Spanish and French automatically.", color: "#3b82f6", comingSoon: false },
-              { icon: Brain, title: "Sentiment Analysis", desc: "NLP detects urgency and sentiment, auto-escalating critical tickets.", color: "#059669", comingSoon: false },
-              { icon: TrendingUp, title: "Predictive Quality", desc: "Historical data predicts which sites need attention next.", color: "#b45309", comingSoon: true },
-            ] as const).map(({ icon: Icon, title, desc, color, comingSoon }) => (
+              { icon: Camera, title: "Photo Verification", desc: "Vision AI scores every cleaning photo for debris, stains, and quality.", color: "#1d4ed8" },
+              { icon: Languages, title: "Auto-Translation", desc: "Inspection forms translate to Spanish and French automatically.", color: "#3b82f6" },
+              { icon: Brain, title: "Sentiment Analysis", desc: "NLP detects urgency and sentiment, auto-escalating critical tickets.", color: "#059669" },
+            ] as const).map(({ icon: Icon, title, desc, color }) => (
               <div
                 key={title}
                 className="ai-card"
@@ -350,19 +360,14 @@ export default function FeaturesPage() {
                 <div style={{ width: 40, height: 40, borderRadius: 8, background: `${color}15`, border: `1px solid ${color}30`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
                   <Icon size={20} style={{ color }} />
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                  <h3 style={{ fontSize: 16, fontWeight: 700, color: "#f1f5f9", margin: 0 }}>{title}</h3>
-                  {comingSoon && (
-                    <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase" as const, color, background: `${color}15`, padding: "2px 6px", borderRadius: 3 }}>Soon</span>
-                  )}
-                </div>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: "#f1f5f9", margin: "0 0 8px" }}>{title}</h3>
                 <p style={{ fontSize: 13, color: ink[300], lineHeight: 1.6, margin: 0 }}>{desc}</p>
               </div>
             ))}
           </div>
 
           <div style={{ marginTop: 40 }}>
-            <Link href="/features/ai" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 14, fontWeight: 600, color: "#7c3aed", textDecoration: "none" }}>
+            <Link href="/features/ai" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 14, fontWeight: 600, color: "#1d4ed8", textDecoration: "none" }}>
               Learn more about AI capabilities <ArrowRight size={14} />
             </Link>
           </div>

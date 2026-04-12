@@ -15,7 +15,7 @@ export const PORTAL_COLORS: Record<string, string> = {
   manager: "#1d4ed8",
   worker: "#059669",
   client: "#b45309",
-  admin: "#7c3aed",
+  admin: "#1d4ed8",
 };
 
 export const TOUR_STEPS: TourStep[] = [

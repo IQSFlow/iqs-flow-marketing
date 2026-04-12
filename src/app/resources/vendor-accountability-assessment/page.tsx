@@ -199,7 +199,7 @@ export default function VendorAccountabilityAssessment() {
     const recommendations = getRecommendations(answers);
 
     return (
-      <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif' }}>
+      <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: 'var(--font-sans), sans-serif' }}>
         <MarketingNav />
         <main style={{ maxWidth: 640, margin: "0 auto", padding: "64px 24px 80px" }}>
           <div style={{ textAlign: "center", marginBottom: 48 }}>
@@ -360,7 +360,7 @@ export default function VendorAccountabilityAssessment() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif' }}>
+    <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: 'var(--font-sans), sans-serif' }}>
       <MarketingNav />
 
       {/* Progress bar */}

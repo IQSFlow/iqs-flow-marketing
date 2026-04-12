@@ -121,17 +121,14 @@ export default function SecurityPage() {
             margin: "0 auto",
             padding: "32px 32px",
             display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: 0,
+            gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))",
+            gap: 24,
           }}
         >
-          {highlights.map((h, i) => (
+          {highlights.map((h) => (
             <div
               key={h.label}
               style={{
-                padding: "0 24px 0 0",
-                borderRight: i < highlights.length - 1 ? "1px solid #1e293b" : "none",
-                marginRight: i < highlights.length - 1 ? 24 : 0,
               }}
             >
               <div

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -191,17 +192,8 @@ export default function MarketingNav() {
         }}
       >
         {/* Logo */}
-        <Link
-          href="/"
-          style={{
-            fontWeight: 700,
-            fontSize: 20,
-            color: "#0f172a",
-            textDecoration: "none",
-            letterSpacing: "-0.3px",
-          }}
-        >
-          IQS Flow
+        <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
+          <Image src="/logo.png" alt="IQS Flow" width={126} height={36} priority />
         </Link>
 
         {/* Desktop links: hidden below 768px via inline style trick */}

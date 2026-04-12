@@ -88,7 +88,6 @@ const comparisonFeatures = [
   { feature: "Compliance Scoring", starter: "-", pro: "\u2713", enterprise: "\u2713" },
   { feature: "Client Portal", starter: "-", pro: "\u2713", enterprise: "\u2713" },
   { feature: "SLA Tracking", starter: "-", pro: "\u2713", enterprise: "Custom SLAs" },
-  { feature: "Flight Integration", starter: "-", pro: "-", enterprise: "Coming Soon" },
   { feature: "API Access", starter: "-", pro: "-", enterprise: "\u2713" },
   { feature: "SSO / SAML", starter: "-", pro: "-", enterprise: "\u2713" },
   { feature: "Support", starter: "Email", pro: "Priority", enterprise: "Dedicated AM" },
@@ -164,7 +163,7 @@ export default function PricingPage() {
                 borderRadius: 10,
                 padding: "32px 28px",
                 border: `1px solid ${ink[100]}`,
-                borderTop: `3px solid #7c3aed`,
+                borderTop: `3px solid #1d4ed8`,
                 boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
                 position: "relative",
                 display: "flex",
@@ -258,6 +257,15 @@ export default function PricingPage() {
               {item}
             </span>
           ))}
+        </div>
+      </section>
+
+      {/* Pull Quote */}
+      <section style={{ padding: "56px 32px", background: "#ffffff", borderBottom: `1px solid ${ink[100]}` }}>
+        <div style={{ maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
+          <blockquote style={{ fontSize: "clamp(17px, 2vw, 22px)", lineHeight: 1.7, color: ink[600], fontStyle: "italic", margin: 0, fontFamily: "var(--font-serif), Georgia, serif" }}>
+            We price for the client, not the cleaning company. Every plan gives you full visibility &mdash; no per-vendor add-ons, no hidden fees.
+          </blockquote>
         </div>
       </section>
 

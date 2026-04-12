@@ -57,7 +57,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   return (
     <div style={{
       minHeight: "100vh",
-      fontFamily: '"IBM Plex Sans", system-ui, -apple-system, sans-serif',
+      fontFamily: 'var(--font-sans), sans-serif',
       background: "#f8fafc",
     }}>
       <MarketingNav />

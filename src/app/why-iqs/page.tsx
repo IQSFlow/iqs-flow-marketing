@@ -36,7 +36,7 @@ export default function WhyIqsPage() {
     <div
       style={{
         minHeight: "100vh",
-        fontFamily: '"DM Sans", system-ui, -apple-system, sans-serif',
+        fontFamily: 'var(--font-sans), sans-serif',
         color: ink[800],
         background: "#ffffff",
       }}
@@ -218,6 +218,16 @@ export default function WhyIqsPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ─── Pull Quote ─── */}
+      <section style={{ padding: "64px 32px", background: "#ffffff", borderBottom: `1px solid ${ink[100]}` }}>
+        <div style={{ maxWidth: 800, margin: "0 auto", textAlign: "center" }}>
+          <blockquote style={{ fontSize: "clamp(20px, 2.5vw, 28px)", lineHeight: 1.65, color: ink[700], fontStyle: "italic", margin: "0 0 20px", fontFamily: "var(--font-serif), Georgia, serif" }}>
+            After 15 years managing vendor operations, we knew the industry needed independent quality intelligence &mdash; not more vendor self-reporting.
+          </blockquote>
+          <div style={{ fontSize: 13, fontWeight: 700, color: ink[400], letterSpacing: "0.04em" }}>Venice Collier, CEO</div>
         </div>
       </section>
 
@@ -454,121 +464,39 @@ export default function WhyIqsPage() {
         </div>
       </section>
 
-      {/* ─── Section 4: Built for Scale (dark navy) ─── */}
+      {/* ─── Section 4: Built for Scale (dark navy) — asymmetric 40/60 ─── */}
       <section style={{ padding: "80px 32px", background: "#0a0f1a" }}>
-        <div style={{ width: "90%", maxWidth: 1200, margin: "0 auto" }}>
-          <p
-            style={{
-              fontSize: 11,
-              fontWeight: 700,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase" as const,
-              color: ink[500],
-              marginBottom: 16,
-            }}
-          >
-            Architecture
-          </p>
-          <h2
-            style={{
-              fontSize: "clamp(26px, 3.5vw, 38px)",
-              fontWeight: 800,
-              letterSpacing: "-1px",
-              lineHeight: 1.15,
-              marginBottom: 16,
-              color: "#f8fafc",
-              maxWidth: 560,
-            }}
-          >
-            Built for scale from day one.
-          </h2>
-          <p
-            style={{
-              fontSize: 17,
-              color: ink[300],
-              lineHeight: 1.7,
-              maxWidth: 560,
-              marginBottom: 56,
-            }}
-          >
-            IQS Flow is architected from the ground up for organizations
-            managing cleaning vendors across many sites.
-          </p>
+        <div style={{ width: "90%", maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: "2fr 3fr", gap: 64, alignItems: "start" }} className="why-arch-grid">
+          {/* Left: sticky header */}
+          <div style={{ position: "sticky", top: 80 }}>
+            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: ink[500], marginBottom: 16 }}>
+              Architecture
+            </p>
+            <h2 style={{ fontSize: "clamp(26px, 3.5vw, 38px)", fontWeight: 800, letterSpacing: "-1px", lineHeight: 1.15, marginBottom: 16, color: "#f8fafc" }}>
+              Built for scale from day one.
+            </h2>
+            <p style={{ fontSize: 17, color: ink[300], lineHeight: 1.7, margin: 0 }}>
+              IQS Flow is architected from the ground up for organizations
+              managing cleaning vendors across many sites.
+            </p>
+          </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
-              gap: 24,
-            }}
-          >
+          {/* Right: stacked items */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
             {[
-              {
-                icon: <Globe size={20} color={accent} strokeWidth={2} />,
-                title: "Multi-Tenant",
-                desc: "Each organization gets an isolated environment with their own data, users, and vendor configurations.",
-              },
-              {
-                icon: <Users size={20} color={accent} strokeWidth={2} />,
-                title: "Multi-Vendor",
-                desc: "Track unlimited cleaning vendors from a single dashboard. Compare performance across partners.",
-              },
-              {
-                icon: <Building2 size={20} color={accent} strokeWidth={2} />,
-                title: "Multi-Site",
-                desc: "From 5 locations to 500. Portfolio-wide quality views with drill-down to individual sites.",
-              },
-              {
-                icon: <Lock size={20} color={accent} strokeWidth={2} />,
-                title: "Role-Based Access",
-                desc: "Four portal views (Admin, Manager, Worker, Client), each with exactly the data and permissions they need.",
-              },
-            ].map(({ icon, title, desc }) => (
-              <div
-                key={title}
-                style={{
-                  background: "rgba(255,255,255,0.03)",
-                  borderRadius: 10,
-                  padding: "28px 24px",
-                  border: "1px solid rgba(255,255,255,0.06)",
-                }}
-              >
-                <div
-                  style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: 8,
-                    background: "rgba(37,99,235,0.15)",
-                    border: "1px solid rgba(37,99,235,0.25)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginBottom: 18,
-                  }}
-                >
+              { icon: <Globe size={20} color={accent} strokeWidth={2} />, title: "Multi-Tenant", desc: "Each organization gets an isolated environment with their own data, users, and vendor configurations." },
+              { icon: <Users size={20} color={accent} strokeWidth={2} />, title: "Multi-Vendor", desc: "Track unlimited cleaning vendors from a single dashboard. Compare performance across partners." },
+              { icon: <Building2 size={20} color={accent} strokeWidth={2} />, title: "Multi-Site", desc: "From 5 locations to 500. Portfolio-wide quality views with drill-down to individual sites." },
+              { icon: <Lock size={20} color={accent} strokeWidth={2} />, title: "Role-Based Access", desc: "Four portal views (Admin, Manager, Worker, Client), each with exactly the data and permissions they need." },
+            ].map(({ icon, title, desc }, i) => (
+              <div key={title} style={{ display: "flex", gap: 16, padding: "24px 0", borderTop: i > 0 ? "1px solid rgba(255,255,255,0.06)" : "none" }}>
+                <div style={{ width: 36, height: 36, borderRadius: 8, background: "rgba(37,99,235,0.15)", border: "1px solid rgba(37,99,235,0.25)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                   {icon}
                 </div>
-                <h3
-                  style={{
-                    fontSize: 15,
-                    fontWeight: 700,
-                    marginBottom: 8,
-                    color: "#f8fafc",
-                    letterSpacing: "-0.3px",
-                  }}
-                >
-                  {title}
-                </h3>
-                <p
-                  style={{
-                    fontSize: 14,
-                    color: ink[300],
-                    lineHeight: 1.65,
-                    margin: 0,
-                  }}
-                >
-                  {desc}
-                </p>
+                <div>
+                  <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 6, color: "#f8fafc", letterSpacing: "-0.3px" }}>{title}</h3>
+                  <p style={{ fontSize: 14, color: ink[300], lineHeight: 1.65, margin: 0 }}>{desc}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -670,6 +598,12 @@ export default function WhyIqsPage() {
       </section>
 
       <MarketingFooter />
+
+      <style>{`
+        @media (max-width: 767px) {
+          .why-arch-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+        }
+      `}</style>
     </div>
   );
 }

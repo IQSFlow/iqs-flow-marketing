@@ -55,9 +55,9 @@ export default function MarketingBackground({ height }: { height?: string }) {
           </linearGradient>
           <linearGradient id="mbg2" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#6366f1" stopOpacity="0" />
-            <stop offset="40%" stopColor="#818cf8" stopOpacity="0.4" />
-            <stop offset="60%" stopColor="#a78bfa" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="#c4b5fd" stopOpacity="0" />
+            <stop offset="40%" stopColor="#3b82f6" stopOpacity="0.4" />
+            <stop offset="60%" stopColor="#60a5fa" stopOpacity="0.25" />
+            <stop offset="100%" stopColor="#93c5fd" stopOpacity="0" />
           </linearGradient>
           <linearGradient id="mbg3" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#0ea5e9" stopOpacity="0" />
@@ -146,7 +146,7 @@ export default function MarketingBackground({ height }: { height?: string }) {
             <mpath href="#trackPath1" />
           </animateMotion>
         </circle>
-        <circle r="3" fill="#8b5cf6" filter="url(#dotGlow)" opacity="0.7">
+        <circle r="3" fill="#1d4ed8" filter="url(#dotGlow)" opacity="0.7">
           <animateMotion dur="22s" repeatCount="indefinite">
             <mpath href="#trackPath2" />
           </animateMotion>
@@ -162,7 +162,7 @@ export default function MarketingBackground({ height }: { height?: string }) {
             <mpath href="#trackPath1" />
           </animateMotion>
         </circle>
-        <circle r="2.5" fill="#a78bfa" filter="url(#dotGlow)" opacity="0.5">
+        <circle r="2.5" fill="#60a5fa" filter="url(#dotGlow)" opacity="0.5">
           <animateMotion dur="22s" begin="11s" repeatCount="indefinite">
             <mpath href="#trackPath2" />
           </animateMotion>

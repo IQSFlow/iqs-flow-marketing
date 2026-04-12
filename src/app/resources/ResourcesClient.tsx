@@ -290,7 +290,7 @@ export default function ResourcesClient({ posts }: { posts: BlogPost[] }) {
   return (
     <div style={{
       minHeight: "100vh",
-      fontFamily: '"IBM Plex Sans", system-ui, -apple-system, sans-serif',
+      fontFamily: 'var(--font-sans), sans-serif',
       color: ink[800],
       background: ink[25],
     }}>

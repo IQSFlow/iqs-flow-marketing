@@ -22,7 +22,7 @@ const CONTENT_DIR = path.join(process.cwd(), "content/blog");
 
 const CATEGORY_COLORS: Record<string, string> = {
   "Case Study": "#059669",
-  "Whitepaper": "#7c3aed",
+  "Whitepaper": "#1d4ed8",
   "Blog Post": "#2563eb",
 };
 

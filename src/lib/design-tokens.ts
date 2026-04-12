@@ -11,12 +11,12 @@ import type React from "react";
 export const colors = {
   // Brand (logo-derived)
   brand: "#0f2b4a",       // logo navy
-  brandAccent: "#2980b9", // logo blue
+  brandAccent: "#1d4ed8", // logo blue
 
   // Portal header/accent colors (one per role)
   portal: {
-    admin: { bg: "#111", accent: "#7c3aed" },       // violet
-    dashboard: { bg: "#0f2b4a", accent: "#2980b9" }, // logo navy/blue
+    admin: { bg: "#111", accent: "#1d4ed8" },       // violet
+    dashboard: { bg: "#0f2b4a", accent: "#1d4ed8" }, // logo navy/blue
     worker: { bg: "#059669", accent: "#059669" },    // emerald
     client: { bg: "#0f2b4a", accent: "#0f2b4a" },    // logo navy
   },
@@ -67,8 +67,8 @@ export const colors = {
 
   // Role badges
   role: {
-    admin: { bg: "#ede9fe", color: "#6d28d9" },
-    manager: { bg: "#dbeafe", color: "#2980b9" },
+    admin: { bg: "#eff6ff", color: "#1e40af" },
+    manager: { bg: "#dbeafe", color: "#1d4ed8" },
     worker: { bg: "#d1fae5", color: "#065f46" },
     client: { bg: "#e0e7f0", color: "#0f2b4a" },
   },
@@ -86,10 +86,10 @@ export const tokens = {
   colors: {
     sidebar: "#0f1729",
     brand: "#0f2b4a",       // logo navy -- the IQS Flow brand color
-    brandAccent: "#2980b9", // logo blue -- lighter accent from logo swoosh
+    brandAccent: "#1d4ed8", // logo blue -- lighter accent from logo swoosh
     accent: {
-      admin: "#7c3aed",   // violet -- system authority
-      manager: "#2980b9", // logo blue -- leadership, oversight
+      admin: "#1d4ed8",   // violet -- system authority
+      manager: "#1d4ed8", // logo blue -- leadership, oversight
       client: "#0f2b4a",  // logo navy -- executive, trust
       worker: "#059669",  // emerald -- action, field work
     },
@@ -165,7 +165,7 @@ export const marketing = {
   },
 
   // Primary accent (logo-derived)
-  accent: "#2980b9",      // logo blue
+  accent: "#1d4ed8",      // logo blue
   accentDark: "#0f2b4a",  // logo navy
   accentLight: "#dbeafe",
 

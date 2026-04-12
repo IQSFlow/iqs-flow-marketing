@@ -68,17 +68,19 @@ function revealStyle(inView: boolean, delay = 0): React.CSSProperties {
   };
 }
 
-/* ─── FloatingDots component ─── */
+/* ─── FloatingDots component — worker movement through facility corridors ─── */
 function FloatingDots() {
   const dots = [
-    { size: 8, top: "10%", left: "5%", color: "#2980b9", opacity: 0.06, duration: 18, delay: 0 },
-    { size: 12, top: "25%", left: "88%", color: "#2980b9", opacity: 0.05, duration: 22, delay: 3 },
-    { size: 5, top: "60%", left: "12%", color: "#3b82f6", opacity: 0.07, duration: 15, delay: 1.5 },
-    { size: 10, top: "80%", left: "75%", color: "#2980b9", opacity: 0.04, duration: 28, delay: 5 },
-    { size: 7, top: "45%", left: "95%", color: "#60a5fa", opacity: 0.06, duration: 20, delay: 2 },
-    { size: 9, top: "15%", left: "55%", color: "#2980b9", opacity: 0.05, duration: 25, delay: 4 },
-    { size: 4, top: "70%", left: "35%", color: "#3b82f6", opacity: 0.08, duration: 17, delay: 0.5 },
-    { size: 11, top: "90%", left: "20%", color: "#2980b9", opacity: 0.04, duration: 30, delay: 6 },
+    { size: 6, top: "12%", color: "rgba(29,78,216,0.08)", duration: 24, delay: 0, diagonal: false },
+    { size: 8, top: "28%", color: "rgba(59,130,246,0.06)", duration: 30, delay: 4, diagonal: false },
+    { size: 4, top: "45%", color: "rgba(96,165,250,0.05)", duration: 20, delay: 1, diagonal: true },
+    { size: 12, top: "62%", color: "rgba(29,78,216,0.08)", duration: 36, delay: 8, diagonal: false },
+    { size: 6, top: "75%", color: "rgba(59,130,246,0.06)", duration: 22, delay: 3, diagonal: false },
+    { size: 8, top: "35%", color: "rgba(96,165,250,0.05)", duration: 28, delay: 6, diagonal: true },
+    { size: 4, top: "88%", color: "rgba(29,78,216,0.08)", duration: 32, delay: 2, diagonal: false },
+    { size: 6, top: "18%", color: "rgba(59,130,246,0.06)", duration: 26, delay: 5, diagonal: false },
+    { size: 8, top: "52%", color: "rgba(96,165,250,0.05)", duration: 34, delay: 7, diagonal: true },
+    { size: 4, top: "92%", color: "rgba(29,78,216,0.08)", duration: 40, delay: 10, diagonal: false },
   ];
 
   return (
@@ -86,28 +88,37 @@ function FloatingDots() {
       {dots.map((dot, i) => (
         <div
           key={i}
+          className="worker-dot"
           style={{
             position: "absolute",
             width: dot.size,
             height: dot.size,
             borderRadius: "50%",
             background: dot.color,
-            opacity: dot.opacity,
             top: dot.top,
-            left: dot.left,
-            animation: `floatDot${i} ${dot.duration}s ease-in-out ${dot.delay}s infinite`,
+            left: 0,
+            animation: `${dot.diagonal ? "workerPathDiag" : "workerPath"} ${dot.duration}s ease-in-out ${dot.delay}s infinite`,
             pointerEvents: "none",
             zIndex: 0,
           }}
         />
       ))}
       <style>{`
-        ${dots.map((_, i) => `
-          @keyframes floatDot${i} {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-${12 + (i % 4) * 5}px); }
-          }
-        `).join("")}
+        @keyframes workerPath {
+          0% { transform: translateX(-100px) translateY(0); opacity: 0; }
+          10% { opacity: 0.08; }
+          90% { opacity: 0.08; }
+          100% { transform: translateX(calc(100vw + 100px)) translateY(-20px); opacity: 0; }
+        }
+        @keyframes workerPathDiag {
+          0% { transform: translate(-80px, 40px); opacity: 0; }
+          10% { opacity: 0.06; }
+          90% { opacity: 0.06; }
+          100% { transform: translate(calc(100vw + 80px), -60px); opacity: 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .worker-dot { animation: none !important; opacity: 0.04; }
+        }
       `}</style>
     </>
   );
@@ -137,7 +148,7 @@ export function ScrollProgressBar() {
         left: 0,
         width: `${progress}%`,
         height: 3,
-        background: `linear-gradient(90deg, ${accent}, #7c3aed)`,
+        background: accent,
         zIndex: 9999,
         transition: "width 0.1s linear",
       }}
@@ -173,7 +184,7 @@ export function HeroSection() {
       icon: Radio,
       title: "Compliance automation",
       desc: "6 built-in frameworks score every site against industry standards.",
-      borderColor: "#7c3aed",
+      borderColor: "#1d4ed8",
       offsetX: 8,
     },
   ] as const;
@@ -334,6 +345,10 @@ export function HeroSection() {
               </div>
             ))}
           </div>
+
+          <p style={{ fontSize: 13, color: ink[300], margin: 0, ...revealStyle(inView, 0.25) }}>
+            Founded by facility management veterans with 40+ combined years in airport and commercial operations.
+          </p>
         </div>
 
         {/* Right: browser-frame mockup + capability badge cards */}
@@ -426,7 +441,7 @@ export function HeroSection() {
                     style={{
                       width: 36,
                       height: 36,
-                      background: i === 0 ? `${accent}15` : i === 1 ? "#05966915" : "#7c3aed15",
+                      background: i === 0 ? `${accent}15` : i === 1 ? "#05966915" : "#1d4ed815",
                       borderRadius: 8,
                       display: "flex",
                       alignItems: "center",
@@ -465,64 +480,33 @@ export function HeroSection() {
 export function SocialProofBar() {
   const { ref, inView } = useInView(0.3);
 
-  const items = [
-    { stat: "4 Portals", label: "Admin, manager, worker, client" },
-    { stat: "6 Frameworks", label: "Compliance standards built in" },
-    { stat: "Real-Time", label: "GPS tracking & live dashboards" },
-    { stat: "AI-Verified", label: "Photo analysis & smart scoring" },
-  ];
-
   return (
     <section
       ref={ref}
       style={{
         background: ink[25],
         borderBottom: `1px solid ${ink[100]}`,
-        padding: "36px 32px",
+        padding: "32px 32px",
       }}
     >
       <div
         style={{
           maxWidth: CONTENT_MAX,
           margin: "0 auto",
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: 32,
+          textAlign: "center",
+          ...revealStyle(inView),
         }}
-        className="proof-grid"
       >
-        {items.map(({ stat, label }, i) => (
-          <div
-            key={label}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 6,
-              ...revealStyle(inView, i * 0.06),
-            }}
-          >
-            <span
-              style={{
-                fontSize: 18,
-                fontWeight: 800,
-                letterSpacing: "-0.3px",
-                color: ink[800],
-                lineHeight: 1,
-              }}
-            >
-              {stat}
-            </span>
-            <span style={{ fontSize: 13, color: ink[400], fontWeight: 500, lineHeight: 1.4 }}>
-              {label}
-            </span>
-          </div>
-        ))}
+        <p style={{ fontSize: "clamp(16px, 2vw, 20px)", color: ink[500], margin: 0, lineHeight: 1.6, fontWeight: 500 }}>
+          <span style={{ fontWeight: 800, color: ink[800] }}>4 portals.</span>{" "}
+          <span style={{ color: ink[300] }}>&middot;</span>{" "}
+          <span style={{ fontWeight: 800, color: ink[800] }}>6 compliance frameworks.</span>{" "}
+          <span style={{ color: ink[300] }}>&middot;</span>{" "}
+          <span style={{ fontWeight: 800, color: ink[800] }}>Real-time GPS tracking.</span>{" "}
+          <span style={{ color: ink[300] }}>&middot;</span>{" "}
+          <span style={{ fontWeight: 800, color: ink[800] }}>AI-verified photos.</span>
+        </p>
       </div>
-      <style>{`
-        @media (max-width: 640px) {
-          .proof-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 24px !important; }
-        }
-      `}</style>
     </section>
   );
 }
@@ -1149,7 +1133,7 @@ export function HowItWorksSection() {
 /* Industry accent colors — each industry gets its own subtle tint */
 const industryAccents: Record<string, string> = {
   airlines: "#3b82f6",  // manager blue
-  airports: "#7c3aed",  // admin violet
+  airports: "#1d4ed8",  // navy blue
   corporate: "#b45309", // client amber
   healthcare: "#059669", // worker green
   maintenance: "#6366f1", // indigo
@@ -1158,7 +1142,7 @@ const industryAccents: Record<string, string> = {
 /* Industry stat block background gradients — subtle overlay per industry */
 const industryStatGradients: Record<string, string> = {
   airlines: "linear-gradient(135deg, rgba(59,130,246,0.04) 0%, rgba(41,128,185,0.03) 100%)",
-  airports: "linear-gradient(135deg, rgba(124,58,237,0.04) 0%, rgba(109,40,217,0.03) 100%)",
+  airports: "linear-gradient(135deg, rgba(29,78,216,0.04) 0%, rgba(30,64,175,0.03) 100%)",
   corporate: "linear-gradient(135deg, rgba(180,83,9,0.04) 0%, rgba(217,119,6,0.03) 100%)",
   healthcare: "linear-gradient(135deg, rgba(5,150,105,0.05) 0%, rgba(16,185,129,0.03) 100%)",
   maintenance: "linear-gradient(135deg, rgba(99,102,241,0.04) 0%, rgba(79,70,229,0.03) 100%)",
@@ -1492,6 +1476,7 @@ export function IndustrySolutionsSection() {
                   lineHeight: 1.65,
                   fontStyle: "italic",
                   margin: "0 0 12px",
+                  fontFamily: "var(--font-serif), Georgia, serif",
                 }}
               >
                 &ldquo;{active.quote}&rdquo;
@@ -1511,6 +1496,78 @@ export function IndustrySolutionsSection() {
         }
         @media (max-width: 767px) {
           .industry-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
+/* ════════════════════════════════════════════════
+   6b. VENICE TESTIMONIAL — photo + large serif quote
+   ════════════════════════════════════════════════ */
+export function VeniceTestimonialSection() {
+  const { ref, inView } = useInView(0.15);
+
+  return (
+    <section
+      ref={ref}
+      style={{
+        padding: `${SECTION_Y}px 32px`,
+        background: "#ffffff",
+        borderBottom: `1px solid ${ink[100]}`,
+      }}
+    >
+      <div
+        style={{
+          maxWidth: CONTENT_MAX,
+          margin: "0 auto",
+          display: "grid",
+          gridTemplateColumns: "200px 1fr",
+          gap: 48,
+          alignItems: "center",
+          ...revealStyle(inView),
+        }}
+        className="venice-testimonial-grid"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/venice-collier.jpg"
+          alt="Venice Collier"
+          style={{
+            width: 200,
+            height: 200,
+            borderRadius: "50%",
+            objectFit: "cover",
+            border: `4px solid ${ink[100]}`,
+            boxShadow: "0 0 0 4px #f8fafc",
+          }}
+        />
+        <div>
+          <blockquote
+            style={{
+              fontSize: "clamp(18px, 2.2vw, 24px)",
+              lineHeight: 1.7,
+              color: ink[700],
+              fontStyle: "italic",
+              margin: "0 0 24px",
+              fontFamily: "var(--font-serif), Georgia, serif",
+            }}
+          >
+            &ldquo;We built IQS Flow because we lived the problem. When you manage cleaning for an airline, you need proof that the work happened &mdash; not a vendor&rsquo;s word for it.&rdquo;
+          </blockquote>
+          <div style={{ fontSize: 14, fontWeight: 700, color: ink[800] }}>Venice Collier</div>
+          <div style={{ fontSize: 13, color: ink[400] }}>Co-Founder &amp; CEO &middot; 20+ years in facility management</div>
+        </div>
+      </div>
+      <style>{`
+        @media (max-width: 640px) {
+          .venice-testimonial-grid {
+            grid-template-columns: 1fr !important;
+            text-align: center;
+          }
+          .venice-testimonial-grid img {
+            margin: 0 auto;
+          }
         }
       `}</style>
     </section>
@@ -1547,7 +1604,7 @@ export function FounderQuoteSection() {
             lineHeight: 1,
             color: ink[200],
             marginBottom: 24,
-            fontFamily: "Georgia, serif",
+            fontFamily: "var(--font-serif), Georgia, serif",
           }}
         >
           &ldquo;
@@ -1560,6 +1617,7 @@ export function FounderQuoteSection() {
             fontStyle: "italic",
             margin: "0 0 32px",
             fontWeight: 400,
+            fontFamily: "var(--font-serif), Georgia, serif",
           }}
         >
           We built IQS Flow because we ran the programs ourselves. After 15+ years

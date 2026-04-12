@@ -14,7 +14,6 @@ const ROWS: { feature: string; values: string[] }[] = [
   { feature: "Compliance Scoring", values: ["—", "Yes", "Yes"] },
   { feature: "Client Portal", values: ["—", "Yes", "Yes"] },
   { feature: "SLA Tracking", values: ["—", "Yes", "Custom SLAs"] },
-  { feature: "Flight Integration", values: ["—", "—", "Coming Soon"] },
   { feature: "API Access", values: ["—", "—", "Yes"] },
   { feature: "SSO / SAML", values: ["—", "—", "Yes"] },
   { feature: "Support", values: ["Email", "Priority", "Dedicated AM"] },

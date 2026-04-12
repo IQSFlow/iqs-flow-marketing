@@ -9,7 +9,6 @@ import {
   Camera,
   Languages,
   Brain,
-  TrendingUp,
   Sparkles,
   Check,
 } from "lucide-react";
@@ -60,7 +59,7 @@ const aiFeatures = [
       "Flags issues before they reach management review",
       "No more staged photos or cherry-picked evidence",
     ],
-    color: "#7c3aed",
+    color: "#1d4ed8",
   },
   {
     icon: Languages,
@@ -91,22 +90,6 @@ const aiFeatures = [
       "Faster response to critical issues",
     ],
     color: "#059669",
-  },
-  {
-    icon: TrendingUp,
-    title: "Predictive Quality",
-    subtitle: "Coming Soon",
-    tagline: "Know before it happens",
-    description:
-      "Historical inspection data will predict which sites are likely to fail next. Anomaly detection flags unusual patterns and trend comparison surfaces insights across sites, vendors, and time periods.",
-    bullets: [
-      "Predict which sites will need attention next",
-      "Anomaly detection flags unusual inspection patterns",
-      "Trend comparison across sites and vendors",
-      "Data-driven preventive quality management",
-    ],
-    color: "#b45309",
-    comingSoon: true,
   },
 ];
 
@@ -161,7 +144,7 @@ export default function AIFeaturesPage() {
               fontWeight: 700,
               letterSpacing: "0.08em",
               textTransform: "uppercase",
-              color: "#7c3aed",
+              color: "#1d4ed8",
               marginBottom: 24,
               ...revealStyle(heroObs.inView, 0),
             }}
@@ -333,7 +316,6 @@ export default function AIFeaturesPage() {
                   description,
                   bullets,
                   color,
-                  comingSoon,
                 },
                 i
               ) => (
@@ -404,23 +386,6 @@ export default function AIFeaturesPage() {
                         >
                           {title}
                         </h3>
-                        {comingSoon && (
-                          <span
-                            style={{
-                              fontSize: 10,
-                              fontWeight: 700,
-                              letterSpacing: "0.06em",
-                              textTransform: "uppercase",
-                              color,
-                              background: `${color}15`,
-                              border: `1px solid ${color}30`,
-                              padding: "2px 8px",
-                              borderRadius: 4,
-                            }}
-                          >
-                            Coming Soon
-                          </span>
-                        )}
                       </div>
                       <div
                         style={{

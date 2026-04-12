@@ -134,13 +134,24 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* ─── Pull Quote ─── */}
+      <section style={{ padding: "72px 32px", background: ink[25], borderTop: `1px solid ${ink[100]}`, borderBottom: `1px solid ${ink[100]}` }}>
+        <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
+          <div style={{ fontSize: 48, lineHeight: 1, color: ink[200], marginBottom: 20, fontFamily: "var(--font-serif), Georgia, serif" }}>&ldquo;</div>
+          <blockquote style={{ fontSize: "clamp(18px, 2.2vw, 24px)", lineHeight: 1.7, color: ink[700], fontStyle: "italic", margin: "0 0 24px", fontFamily: "var(--font-serif), Georgia, serif" }}>
+            Clients deserve the same quality data their vendors keep internally. That&rsquo;s not a feature request &mdash; it&rsquo;s a market gap.
+          </blockquote>
+          <div style={{ fontSize: 13, fontWeight: 700, color: ink[400], letterSpacing: "0.04em" }}>Venice Collier, CEO &amp; Founder</div>
+        </div>
+      </section>
+
       {/* ─── Values ─── */}
       <section style={{ padding: "80px 32px", background: ink[900] }}>
         <div style={{ maxWidth: 1120, margin: "0 auto" }}>
           <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.8px", marginBottom: 48, color: "#f8fafc" }}>
             What Drives Us
           </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }} className="about-values-grid">
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0 }} className="about-values-grid">
             {([
               { icon: Eye, title: "Client Transparency", desc: "The organization paying for cleaning services should have full visibility into the quality of work, not just what the vendor chooses to share." },
               { icon: ShieldCheck, title: "Independent Verification", desc: "Quality data should be collected independently, not self-reported. Our inspection and tracking tools give you verifiable, objective metrics." },
@@ -148,13 +159,17 @@ export default function AboutPage() {
               { icon: Scale, title: "Industry Standards", desc: "Built-in compliance frameworks (APPA, ISSA, Skytrax, Joint Commission) so you can measure every vendor against the same standards." },
               { icon: Globe, title: "Multi-Site Scale", desc: "Whether you manage 5 locations or 500, IQS Flow gives you portfolio-wide visibility with drill-down to every individual site." },
               { icon: Lock, title: "Security First", desc: "Encrypted sessions, role-based access control, and audit logging for every action. Your quality data is secure and yours alone." },
-            ] as const).map(({ icon: Icon, title, desc }) => (
-              <div key={title} style={{ padding: "28px", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, background: "rgba(255,255,255,0.03)" }}>
-                <div style={{ width: 40, height: 40, borderRadius: 10, background: "rgba(37,99,235,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
-                  <Icon size={20} style={{ color: accent }} />
+            ] as const).map(({ icon: Icon, title, desc }, i) => (
+              <div key={title} style={{ padding: "32px 28px", borderBottom: i < 4 ? "1px solid rgba(255,255,255,0.06)" : "none", borderRight: i % 2 === 0 ? "1px solid rgba(255,255,255,0.06)" : "none" }}>
+                <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: 8, background: "rgba(37,99,235,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <Icon size={18} style={{ color: accent }} />
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 6, color: "#f8fafc" }}>{title}</h3>
+                    <p style={{ fontSize: 14, color: ink[300], lineHeight: 1.65, margin: 0 }}>{desc}</p>
+                  </div>
                 </div>
-                <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8, color: "#f8fafc" }}>{title}</h3>
-                <p style={{ fontSize: 14, color: ink[300], lineHeight: 1.65, margin: 0 }}>{desc}</p>
               </div>
             ))}
           </div>

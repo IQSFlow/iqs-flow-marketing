@@ -152,7 +152,7 @@ export default function DashboardPreview() {
                 unit: "",
                 trend: "across 3 sites",
                 trendUp: true,
-                color: "#8b5cf6",
+                color: "#3b82f6",
               },
               {
                 label: "Open Tickets",
@@ -334,7 +334,7 @@ export default function DashboardPreview() {
                 {[
                   { name: "APPA Level 2", score: 94, color: "#22c55e" },
                   { name: "ISSA CIMS", score: 91, color: "#3b82f6" },
-                  { name: "Skytrax 4-Star", score: 88, color: "#8b5cf6" },
+                  { name: "Skytrax 4-Star", score: 88, color: "#3b82f6" },
                   { name: "Joint Commission", score: 96, color: "#22c55e" },
                 ].map(({ name, score, color }) => (
                   <div key={name}>

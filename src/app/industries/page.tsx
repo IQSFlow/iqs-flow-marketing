@@ -32,7 +32,7 @@ const INDUSTRIES = [
     accentBg: "#dbeafe",
     accentText: "#1d4ed8",
     sectionNumber: "01",
-    photo: "/oskar-kadaksoo-DDBDkz0p918-unsplash.jpg",
+    photo: "/airport-gate-lounge.jpg",
     photoAlt: "Airport gate lounge with aircraft visible through terminal window",
     photoCaption: "Aviation",
     painPoints: [
@@ -75,7 +75,7 @@ const INDUSTRIES = [
     accentBg: "#eef2ff",
     accentText: "#3730a3",
     sectionNumber: "02",
-    photo: "/big-dodzy-m5PcPzOIfTw-unsplash.jpg",
+    photo: "/airport-terminal-concourse.jpg",
     photoAlt: "Modern airport terminal interior with wide open concourse",
     photoCaption: "Airports",
     painPoints: [
@@ -118,7 +118,7 @@ const INDUSTRIES = [
     accentBg: "#d1fae5",
     accentText: "#065f46",
     sectionNumber: "03",
-    photo: "/zhang-shuaizhang-P65ogppIhUg-unsplash.jpg",
+    photo: "/hospital-corridor.jpg",
     photoAlt: "Hospital corridor with clean floors and wet floor caution sign",
     photoCaption: "Healthcare",
     painPoints: [
@@ -161,7 +161,7 @@ const INDUSTRIES = [
     accentBg: "#fef3c7",
     accentText: "#92400e",
     sectionNumber: "04",
-    photo: "/ledc-GBlrhQ2l1MM-unsplash.jpg",
+    photo: "/commercial-office-building.jpg",
     photoAlt: "Modern commercial office building with glass facade at dusk",
     photoCaption: "Corporate",
     painPoints: [
@@ -204,7 +204,7 @@ const INDUSTRIES = [
     accentBg: "#eef2ff",
     accentText: "#3730a3",
     sectionNumber: "05",
-    photo: "/verne-ho-MwW-zrkYSIU-unsplash.jpg",
+    photo: "/facility-cleaning-terminal.jpg",
     photoAlt: "Facility maintenance in a modern building",
     photoCaption: "Maintenance",
     painPoints: [
@@ -416,6 +416,7 @@ function TestimonialCard({
           zIndex: 1,
           fontWeight: 400,
           letterSpacing: "-0.01em",
+          fontFamily: "var(--font-serif), Georgia, serif",
         }}
       >
         {quote}
@@ -666,6 +667,7 @@ export default function IndustriesPage() {
                 margin: "16px 0",
                 fontSize: 15,
                 lineHeight: 1.65,
+                fontFamily: "var(--font-serif), Georgia, serif",
               }}
             >
               {industry.pullQuote}

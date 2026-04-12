@@ -17,7 +17,7 @@ export const PRIORITY_COLORS: Record<string, { bg: string; color: string }> = {
 
 export const TASK_TYPE_COLORS: Record<string, { bg: string; color: string }> = {
   TURN_CLEAN: { bg: "#dbeafe", color: "#1d4ed8" },
-  DEEP_CLEAN: { bg: "#ede9fe", color: "#6d28d9" },
+  DEEP_CLEAN: { bg: "#eff6ff", color: "#1e40af" },
   SPILL_RESPONSE: { bg: "#fef3c7", color: "#b45309" },
   RESTOCK: { bg: "#d1fae5", color: "#065f46" },
 };
@@ -34,7 +34,7 @@ export const CHART_COLORS = [
   "#3b82f6", // blue
   "#10b981", // emerald
   "#f59e0b", // amber
-  "#8b5cf6", // violet
+  "#1d4ed8", // navy
   "#ef4444", // red
   "#06b6d4", // cyan
   "#ec4899", // pink

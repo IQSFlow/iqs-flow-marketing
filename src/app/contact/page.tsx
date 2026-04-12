@@ -15,9 +15,11 @@ const accent = "#2563eb";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setSending(true);
     const form = e.currentTarget;
     const data = new FormData(form);
     const firstName = data.get("firstName") as string;
@@ -29,6 +31,7 @@ export default function ContactPage() {
     const body = encodeURIComponent(`Name: ${firstName} ${lastName}\nEmail: ${email}\nCompany: ${company}\n\n${message}`);
     window.location.href = `mailto:info@iqsflow.com?subject=${subject}&body=${body}`;
     setSubmitted(true);
+    setSending(false);
   }
 
   const inputStyle: React.CSSProperties = {
@@ -133,8 +136,8 @@ export default function ContactPage() {
                   <label style={labelStyle}>How can we help?</label>
                   <textarea name="message" rows={4} placeholder="Tell us about your operation, number of sites, and what challenges you are facing..." style={{ ...inputStyle, resize: "vertical", fontFamily: "inherit" }} />
                 </div>
-                <button type="submit" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "13px 24px", background: accent, color: "#fff", border: "none", borderRadius: 8, fontSize: 15, fontWeight: 600, cursor: "pointer" }}>
-                  Send Message <ArrowRight size={15} />
+                <button type="submit" disabled={sending} style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "13px 24px", background: sending ? ink[400] : accent, color: "#fff", border: "none", borderRadius: 8, fontSize: 15, fontWeight: 600, cursor: sending ? "not-allowed" : "pointer", minHeight: 44 }}>
+                  {sending ? "Sending..." : <>Send Message <ArrowRight size={15} /></>}
                 </button>
                 <p style={{ fontSize: 12, color: ink[300], margin: 0 }}>
                   By submitting, you agree to our <Link href="/privacy" style={{ color: ink[500], textDecoration: "underline" }}>privacy policy</Link>. We will never share your information.

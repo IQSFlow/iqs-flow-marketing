@@ -68,7 +68,7 @@ export default function DevelopersPage() {
     <div
       style={{
         minHeight: "100vh",
-        fontFamily: '"IBM Plex Sans", system-ui, -apple-system, sans-serif',
+        fontFamily: 'var(--font-sans), sans-serif',
         background: ink[900],
         color: ink[200],
       }}
