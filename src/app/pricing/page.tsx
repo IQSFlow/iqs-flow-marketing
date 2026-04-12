@@ -199,27 +199,33 @@ export default function PricingPage() {
         </div>
 
         {/* Compare all features toggle */}
-        <div style={{ maxWidth: 1120, margin: "0 auto" }}>
-          <details className="compare-details" style={{ marginTop: 40, marginBottom: 0 }}>
+        <div style={{ maxWidth: 1120, margin: "0 auto", display: "flex", justifyContent: "center", paddingTop: 56 }}>
+          <details className="compare-details" style={{ width: "100%" }}>
             <summary style={{
-              display: "flex",
+              display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
-              gap: 8,
+              gap: 10,
               cursor: "pointer",
               listStyle: "none",
-              padding: "16px 0 0",
+              padding: "14px 28px",
               fontSize: 14,
-              fontWeight: 600,
+              fontWeight: 700,
               color: accent,
+              background: "#ffffff",
+              border: `1.5px solid ${accent}`,
+              borderRadius: 10,
               userSelect: "none",
+              margin: "0 auto",
+              transition: "all 0.2s ease",
+              boxShadow: "0 1px 2px rgba(37,99,235,0.08)",
             }}>
               <span className="compare-label">Compare all features</span>
-              <span className="compare-chevron" style={{ display: "inline-block", fontSize: 12, transition: "transform 0.2s ease" }}>&#9660;</span>
+              <span className="compare-chevron" style={{ display: "inline-block", fontSize: 11, transition: "transform 0.2s ease" }}>&#9660;</span>
             </summary>
 
             {/* Feature Comparison Table (inside details) */}
-            <div style={{ paddingTop: 40, paddingBottom: 72 }}>
+            <div style={{ paddingTop: 48, paddingBottom: 32 }}>
               <div style={{ overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
                   <thead>
@@ -248,7 +254,7 @@ export default function PricingPage() {
       </section>
 
       {/* Every Plan Includes */}
-      <section style={{ padding: "36px 32px", background: "#0a0f1a" }}>
+      <section style={{ padding: "48px 32px", background: "#0a0f1a", marginTop: 40 }}>
         <div style={{ maxWidth: 900, margin: "0 auto", display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 28 }}>
           <span style={{ fontSize: 14, fontWeight: 700, color: "#f8fafc" }}>Every plan includes:</span>
           {everyPlanIncludes.map((item) => (
@@ -261,7 +267,7 @@ export default function PricingPage() {
       </section>
 
       {/* Pull Quote */}
-      <section style={{ padding: "56px 32px", background: "#ffffff", borderBottom: `1px solid ${ink[100]}` }}>
+      <section style={{ padding: "88px 32px", background: "#ffffff", borderBottom: `1px solid ${ink[100]}` }}>
         <div style={{ maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
           <blockquote style={{ fontSize: "clamp(17px, 2vw, 22px)", lineHeight: 1.7, color: ink[600], fontStyle: "italic", margin: 0, fontFamily: "var(--font-serif), Georgia, serif" }}>
             We price for the client, not the cleaning company. Every plan gives you full visibility - no per-vendor add-ons, no hidden fees.
