@@ -175,9 +175,7 @@ export default function MarketingNav() {
         top: 0,
         zIndex: 50,
         borderBottom: "1px solid #e2e8f0",
-        background: "rgba(255,255,255,0.85)",
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
+        background: "#ffffff",
       }}
     >
       {/* Main nav bar */}
