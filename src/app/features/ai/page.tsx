@@ -11,6 +11,7 @@ import {
   Brain,
   Sparkles,
   Check,
+  AlertTriangle,
 } from "lucide-react";
 import { marketing } from "@/lib/design-tokens";
 
@@ -90,6 +91,21 @@ const aiFeatures = [
       "Faster response to critical issues",
     ],
     color: "#059669",
+  },
+  {
+    icon: AlertTriangle,
+    title: "Anomaly Detection",
+    subtitle: "Pattern Recognition",
+    tagline: "Catch problems before they escalate",
+    description:
+      "IQS Flow watches score trends, SLA hit rates, and completion patterns across every site. When something drifts from normal, the system surfaces the anomaly before it becomes an incident.",
+    bullets: [
+      "Baseline learning across sites, vendors, and shifts",
+      "Automatic alerts on score drops and SLA risk",
+      "Detects missing check-ins and route deviations",
+      "Predictive flags before issues become complaints",
+    ],
+    color: "#d97706",
   },
 ];
 

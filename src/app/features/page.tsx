@@ -177,33 +177,26 @@ export default function FeaturesPage() {
         </div>
       </section>
 
-      {/* ── AI Intelligence (top placement) ── */}
+      {/* ── AI Intelligence (top placement, white to alternate with dark feature #1) ── */}
       <section
         id="ai-intelligence"
         style={{
           padding: "96px 32px",
-          background: ink[800],
+          background: "#ffffff",
+          borderBottom: `1px solid ${ink[100]}`,
           position: "relative",
           overflow: "hidden",
         }}
       >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "radial-gradient(ellipse 60% 50% at 50% 30%, rgba(29,78,216,0.1) 0%, transparent 60%)",
-            pointerEvents: "none",
-          }}
-        />
         <div style={{ maxWidth: 1120, margin: "0 auto", position: "relative", zIndex: 1 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "#1d4ed8", marginBottom: 20 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: accent, marginBottom: 20 }}>
             <Sparkles size={14} />
             AI-Powered Intelligence
           </div>
-          <h2 style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, letterSpacing: "-1.5px", lineHeight: 1.1, marginBottom: 16, color: "#f8fafc", maxWidth: 700 }}>
+          <h2 style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, letterSpacing: "-1.5px", lineHeight: 1.1, marginBottom: 16, color: ink[900], maxWidth: 700 }}>
             Four AI capabilities. Zero manual effort.
           </h2>
-          <p style={{ fontSize: 17, color: ink[400], lineHeight: 1.65, marginBottom: 48, maxWidth: 600 }}>
+          <p style={{ fontSize: 17, color: ink[500], lineHeight: 1.65, marginBottom: 48, maxWidth: 600 }}>
             Every photo analyzed, every ticket prioritized, every form translated, every anomaly surfaced. No configuration required.
           </p>
 
@@ -218,24 +211,25 @@ export default function FeaturesPage() {
                 key={title}
                 className="ai-card"
                 style={{
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.06)",
+                  background: "#ffffff",
+                  border: `1px solid ${ink[100]}`,
                   borderRadius: 12,
                   padding: "32px 28px",
                   borderTop: `2px solid ${color}`,
+                  boxShadow: "0 2px 12px rgba(15,23,42,0.04)",
                 }}
               >
                 <div style={{ width: 40, height: 40, borderRadius: 8, background: `${color}15`, border: `1px solid ${color}30`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
                   <Icon size={20} style={{ color }} />
                 </div>
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: "#f1f5f9", margin: "0 0 8px" }}>{title}</h3>
-                <p style={{ fontSize: 13, color: ink[300], lineHeight: 1.6, margin: 0 }}>{desc}</p>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: ink[900], margin: "0 0 8px" }}>{title}</h3>
+                <p style={{ fontSize: 13, color: ink[500], lineHeight: 1.6, margin: 0 }}>{desc}</p>
               </div>
             ))}
           </div>
 
           <div style={{ marginTop: 40 }}>
-            <Link href="/features/ai" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 14, fontWeight: 600, color: "#1d4ed8", textDecoration: "none" }}>
+            <Link href="/features/ai" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 14, fontWeight: 600, color: accent, textDecoration: "none" }}>
               Learn more about AI capabilities <ArrowRight size={14} />
             </Link>
           </div>
