@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import MarketingNav from "@/components/MarketingNav";
 import MarketingFooter from "@/components/MarketingFooter";
-import { ArrowRight, Check, Camera, Languages, Brain, Sparkles } from "lucide-react";
+import { ArrowRight, Check, Camera, Languages, Brain, Sparkles, AlertTriangle } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Platform Features - IQS Flow",
@@ -177,6 +177,80 @@ export default function FeaturesPage() {
         </div>
       </section>
 
+      {/* ── AI Intelligence (top placement) ── */}
+      <section
+        id="ai-intelligence"
+        style={{
+          padding: "96px 32px",
+          background: ink[800],
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "radial-gradient(ellipse 60% 50% at 50% 30%, rgba(29,78,216,0.1) 0%, transparent 60%)",
+            pointerEvents: "none",
+          }}
+        />
+        <div style={{ maxWidth: 1120, margin: "0 auto", position: "relative", zIndex: 1 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "#1d4ed8", marginBottom: 20 }}>
+            <Sparkles size={14} />
+            AI-Powered Intelligence
+          </div>
+          <h2 style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, letterSpacing: "-1.5px", lineHeight: 1.1, marginBottom: 16, color: "#f8fafc", maxWidth: 700 }}>
+            Four AI capabilities. Zero manual effort.
+          </h2>
+          <p style={{ fontSize: 17, color: ink[400], lineHeight: 1.65, marginBottom: 48, maxWidth: 600 }}>
+            Every photo analyzed, every ticket prioritized, every form translated, every anomaly surfaced. No configuration required.
+          </p>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }} className="ai-feature-grid">
+            {([
+              { icon: Camera, title: "Photo Verification", desc: "Vision AI scores every cleaning photo for debris, stains, and quality.", color: "#1d4ed8" },
+              { icon: Languages, title: "Auto-Translation", desc: "Inspection forms translate to Spanish and French automatically.", color: "#3b82f6" },
+              { icon: Brain, title: "Sentiment Analysis", desc: "NLP detects urgency and sentiment, auto-escalating critical tickets.", color: "#059669" },
+              { icon: AlertTriangle, title: "Anomaly Detection", desc: "Pattern recognition flags unusual score drops and SLA risk before incidents.", color: "#d97706" },
+            ] as const).map(({ icon: Icon, title, desc, color }) => (
+              <div
+                key={title}
+                className="ai-card"
+                style={{
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                  borderRadius: 12,
+                  padding: "32px 28px",
+                  borderTop: `2px solid ${color}`,
+                }}
+              >
+                <div style={{ width: 40, height: 40, borderRadius: 8, background: `${color}15`, border: `1px solid ${color}30`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
+                  <Icon size={20} style={{ color }} />
+                </div>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: "#f1f5f9", margin: "0 0 8px" }}>{title}</h3>
+                <p style={{ fontSize: 13, color: ink[300], lineHeight: 1.6, margin: 0 }}>{desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ marginTop: 40 }}>
+            <Link href="/features/ai" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 14, fontWeight: 600, color: "#1d4ed8", textDecoration: "none" }}>
+              Learn more about AI capabilities <ArrowRight size={14} />
+            </Link>
+          </div>
+        </div>
+
+        <style>{`
+          @media (max-width: 1024px) {
+            .ai-feature-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          }
+          @media (max-width: 560px) {
+            .ai-feature-grid { grid-template-columns: 1fr !important; }
+          }
+        `}</style>
+      </section>
+
       {/* ── Feature Sections ── */}
       {FEATURES.map((feature, idx) => {
         const isEven = idx % 2 === 0;
@@ -213,50 +287,21 @@ export default function FeaturesPage() {
 
         const visualContent = (
           <div className={`features-col${!isEven ? " features-reverse" : ""}`}>
-            <div style={{
-              background: "#f8fafc",
-              border: "1px solid #e2e8f0",
-              borderRadius: "12px 12px 8px 8px",
-              overflow: "hidden",
-              boxShadow: feature.dark ? "0 16px 48px rgba(0,0,0,0.4)" : "0 8px 32px rgba(0,0,0,0.08)",
-            }}>
-              {/* Browser chrome bar */}
-              <div style={{
-                background: "#f1f5f9",
-                borderBottom: "1px solid #e2e8f0",
-                padding: "10px 16px",
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-              }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#ef4444" }} />
-                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#f59e0b" }} />
-                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e" }} />
-                </div>
-                <div style={{
-                  flex: 1,
-                  color: "#94a3b8",
-                  fontSize: 12,
-                  fontWeight: 500,
-                  letterSpacing: "0.04em",
-                  background: "rgba(0,0,0,0.04)",
-                  borderRadius: 4,
-                  padding: "3px 10px",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}>
-                  {feature.tag}
-                </div>
-              </div>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={feature.photo}
-                alt={feature.photoAlt}
-                style={{ width: "100%", height: 300, objectFit: "cover", display: "block" }}
-              />
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={feature.photo}
+              alt={feature.photoAlt}
+              style={{
+                width: "100%",
+                height: 340,
+                objectFit: "cover",
+                display: "block",
+                borderRadius: 12,
+                boxShadow: feature.dark
+                  ? "0 16px 48px rgba(0,0,0,0.4)"
+                  : "0 8px 32px rgba(0,0,0,0.08)",
+              }}
+            />
           </div>
         );
 
@@ -308,79 +353,6 @@ export default function FeaturesPage() {
           </blockquote>
           <div style={{ fontSize: 13, fontWeight: 700, color: ink[400], letterSpacing: "0.04em" }}>The IQS Flow platform promise</div>
         </div>
-      </section>
-
-      {/* ── AI Intelligence Section ── */}
-      <section
-        id="ai-intelligence"
-        style={{
-          padding: "96px 32px",
-          background: ink[800],
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "radial-gradient(ellipse 60% 50% at 50% 30%, rgba(29,78,216,0.1) 0%, transparent 60%)",
-            pointerEvents: "none",
-          }}
-        />
-        <div style={{ maxWidth: 1120, margin: "0 auto", position: "relative", zIndex: 1 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "#1d4ed8", marginBottom: 20 }}>
-            <Sparkles size={14} />
-            AI-Powered Intelligence
-          </div>
-          <h2 style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, letterSpacing: "-1.5px", lineHeight: 1.1, marginBottom: 16, color: "#f8fafc", maxWidth: 600 }}>
-            Built-in AI that works automatically.
-          </h2>
-          <p style={{ fontSize: 17, color: ink[400], lineHeight: 1.65, marginBottom: 48, maxWidth: 560 }}>
-            Every photo analyzed, every ticket prioritized, every form translated. No configuration required.
-          </p>
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }} className="ai-feature-grid">
-            {([
-              { icon: Camera, title: "Photo Verification", desc: "Vision AI scores every cleaning photo for debris, stains, and quality.", color: "#1d4ed8" },
-              { icon: Languages, title: "Auto-Translation", desc: "Inspection forms translate to Spanish and French automatically.", color: "#3b82f6" },
-              { icon: Brain, title: "Sentiment Analysis", desc: "NLP detects urgency and sentiment, auto-escalating critical tickets.", color: "#059669" },
-            ] as const).map(({ icon: Icon, title, desc, color }) => (
-              <div
-                key={title}
-                className="ai-card"
-                style={{
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.06)",
-                  borderRadius: 12,
-                  padding: "32px 28px",
-                  borderTop: `2px solid ${color}`,
-                }}
-              >
-                <div style={{ width: 40, height: 40, borderRadius: 8, background: `${color}15`, border: `1px solid ${color}30`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
-                  <Icon size={20} style={{ color }} />
-                </div>
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: "#f1f5f9", margin: "0 0 8px" }}>{title}</h3>
-                <p style={{ fontSize: 13, color: ink[300], lineHeight: 1.6, margin: 0 }}>{desc}</p>
-              </div>
-            ))}
-          </div>
-
-          <div style={{ marginTop: 40 }}>
-            <Link href="/features/ai" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 14, fontWeight: 600, color: "#1d4ed8", textDecoration: "none" }}>
-              Learn more about AI capabilities <ArrowRight size={14} />
-            </Link>
-          </div>
-        </div>
-
-        <style>{`
-          @media (max-width: 767px) {
-            .ai-feature-grid { grid-template-columns: 1fr 1fr !important; }
-          }
-          @media (max-width: 480px) {
-            .ai-feature-grid { grid-template-columns: 1fr !important; }
-          }
-        `}</style>
       </section>
 
       {/* ── CTA ── */}

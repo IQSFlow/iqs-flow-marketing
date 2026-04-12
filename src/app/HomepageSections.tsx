@@ -1553,7 +1553,7 @@ export function VeniceTestimonialSection() {
               fontFamily: "var(--font-serif), Georgia, serif",
             }}
           >
-            &ldquo;We built IQS Flow because we lived the problem. When you manage cleaning for an airline, you need proof that the work happened - not a vendor&rsquo;s word for it.&rdquo;
+            &ldquo;We built IQS Flow because we lived the problem. When you manage cleaning for an airline, you need proof that the work actually happened, not just a vendor&rsquo;s word for it.&rdquo;
           </blockquote>
           <div style={{ fontSize: 14, fontWeight: 700, color: ink[800] }}>Venice Collier</div>
           <div style={{ fontSize: 13, color: ink[400] }}>Co-Founder &amp; CEO &middot; 20+ years in facility management</div>
