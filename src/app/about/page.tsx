@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import MarketingNav from "@/components/MarketingNav";
 import MarketingFooter from "@/components/MarketingFooter";
@@ -113,11 +114,12 @@ export default function AboutPage() {
 
             {/* Joshua Hinton */}
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "48px 36px", border: "1px solid #e2e8f0", boxShadow: "0 4px 24px rgba(0,0,0,0.06)", borderRadius: 16, background: "#ffffff" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src="/joshua-hinton.jpg"
-                alt="Joshua Hinton"
-                style={{ width: 200, height: 200, borderRadius: "50%", objectFit: "cover", border: "4px solid #e2e8f0", boxShadow: "0 0 0 4px #f8fafc", marginBottom: 28, flexShrink: 0 }}
+                alt="Joshua Hinton, Chief Operating Officer of IQS Flow"
+                width={200}
+                height={200}
+                style={{ borderRadius: "50%", objectFit: "cover", border: "4px solid #e2e8f0", boxShadow: "0 0 0 4px #f8fafc", marginBottom: 28, flexShrink: 0 }}
               />
               <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 6, marginTop: 0, color: ink[900] }}>Joshua Hinton</h3>
               <div style={{ fontSize: 13, fontWeight: 600, color: ink[400], marginBottom: 20, letterSpacing: "0.01em" }}>
