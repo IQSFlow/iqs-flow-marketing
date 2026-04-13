@@ -17,21 +17,31 @@ export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSending(true);
     const form = e.currentTarget;
     const data = new FormData(form);
-    const firstName = data.get("firstName") as string;
-    const lastName = data.get("lastName") as string;
-    const email = data.get("email") as string;
-    const company = data.get("company") as string;
-    const message = data.get("message") as string;
-    const subject = encodeURIComponent(`Demo Request from ${firstName} ${lastName} at ${company}`);
-    const body = encodeURIComponent(`Name: ${firstName} ${lastName}\nEmail: ${email}\nCompany: ${company}\n\n${message}`);
-    window.location.href = `mailto:info@iqsflow.com?subject=${subject}&body=${body}`;
-    setSubmitted(true);
-    setSending(false);
+    try {
+      const res = await fetch("https://api.iqsflow.com/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: data.get("firstName"),
+          lastName: data.get("lastName"),
+          email: data.get("email"),
+          company: data.get("company"),
+          message: data.get("message"),
+          website: data.get("website"),
+        }),
+      });
+      if (!res.ok) throw new Error("Failed");
+      setSubmitted(true);
+    } catch {
+      alert("Failed to send. Please email info@iqsflow.com directly.");
+    } finally {
+      setSending(false);
+    }
   }
 
   const inputStyle: React.CSSProperties = {
@@ -108,12 +118,12 @@ export default function ContactPage() {
                 <div style={{ fontSize: 28, marginBottom: 12, color: "#059669" }}>&#10003;</div>
                 <h3 style={{ fontSize: 18, fontWeight: 700, color: "#15803d", marginBottom: 8 }}>Thanks for reaching out!</h3>
                 <p style={{ fontSize: 14, color: ink[500], lineHeight: 1.6 }}>
-                  Your email client should have opened with a pre-filled message.
-                  If it did not, please email us directly at <strong style={{ color: ink[900] }}>info@iqsflow.com</strong>.
+                  We received your message and will get back to you within one business day.
                 </p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+                <input name="website" type="text" style={{ position: "absolute", left: "-9999px" }} tabIndex={-1} autoComplete="off" aria-hidden="true" />
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                   <div>
                     <label style={labelStyle}>First Name</label>
