@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Careers, IQS Flow</title>
+<link rel="icon" type="image/svg+xml" href="assets/iqs-mark.svg"/>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,300;9..144,400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/shared.css?v=6"/>
+<style>
+  /* Principles grid */
+  .cr-principles {
+    max-width: 1280px; margin: 0 auto; padding: 0 32px 72px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--vd-line); border: 1px solid var(--vd-line); border-radius: 14px; overflow: hidden;
+  }
+  @media (max-width: 900px) { .cr-principles { grid-template-columns: repeat(2, 1fr); } }
+  .cr-principle {
+    background: #fff; padding: 32px 24px 28px;
+    display: flex; flex-direction: column; gap: 10px; min-height: 220px;
+  }
+  .cr-principle .num {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em;
+    color: var(--accent); text-transform: uppercase;
+  }
+  .cr-principle h3 {
+    font-family: var(--font-display); font-size: 22px; font-weight: 700;
+    letter-spacing: -0.02em; margin: 0; line-height: 1.15;
+  }
+  .cr-principle h3 em { font-family: var(--font-serif); font-style: italic; font-weight: 300; color: var(--accent); }
+  .cr-principle p { font-size: 13px; line-height: 1.6; color: var(--vd-muted); margin: auto 0 0; }
+
+  /* Openings */
+  .cr-jobs-wrap { max-width: 1280px; margin: 0 auto; padding: 0 32px 96px; }
+  .cr-jobs-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding-bottom: 20px; margin-bottom: 0; border-bottom: 1px solid var(--vd-ink);
+  }
+  .cr-jobs-head h2 {
+    font-family: var(--font-display); font-size: clamp(32px, 3.2vw, 44px);
+    font-weight: 700; letter-spacing: -0.03em; margin: 0;
+  }
+  .cr-jobs-head h2 em { font-family: var(--font-serif); font-style: italic; font-weight: 300; color: var(--accent); }
+  .cr-jobs-head .count {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--vd-muted);
+  }
+  .cr-filter {
+    display: flex; gap: 8px; padding: 18px 0; border-bottom: 1px solid var(--vd-line);
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .cr-filter button {
+    border: 1px solid var(--vd-line); border-radius: 999px; padding: 8px 14px;
+    background: #fff; color: var(--vd-muted); cursor: pointer;
+    font: inherit; letter-spacing: 0.14em;
+  }
+  .cr-filter button.is-active { background: var(--vd-ink); color: #fff; border-color: var(--vd-ink); }
+  .cr-filter button:hover:not(.is-active) { border-color: var(--accent); color: var(--accent); }
+
+  .cr-job {
+    display: grid; grid-template-columns: 80px 2fr 1fr 1fr 1fr 110px;
+    align-items: center; padding: 22px 0;
+    border-bottom: 1px solid var(--vd-line);
+    font-size: 14px; text-decoration: none; color: inherit;
+    transition: background 140ms, padding-left 140ms;
+  }
+  @media (max-width: 900px) {
+    .cr-job { grid-template-columns: 60px 1fr 90px; }
+    .cr-job .dept, .cr-job .loc, .cr-job .type { display: none; }
+  }
+  .cr-job:hover { background: rgba(214,109,60,0.04); padding-left: 12px; }
+  .cr-job .id {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
+    color: var(--vd-muted); text-transform: uppercase;
+  }
+  .cr-job .title {
+    font-family: var(--font-display); font-size: 18px; font-weight: 700;
+    letter-spacing: -0.01em; padding-right: 20px;
+  }
+  .cr-job .title .sub { display: block; font-family: var(--font-body); font-weight: 400; font-size: 13px; color: var(--vd-muted); margin-top: 3px; letter-spacing: 0; }
+  .cr-job .dept, .cr-job .loc, .cr-job .type {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--vd-muted);
+  }
+  .cr-job .apply {
+    justify-self: end; font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);
+  }
+
+  /* Benefits split */
+  .cr-bene {
+    background: var(--vd-truth); color: var(--vd-truth-ink); padding: 80px 32px;
+  }
+  .cr-bene-wrap {
+    max-width: 1280px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1.4fr; gap: 64px;
+  }
+  @media (max-width: 900px) { .cr-bene-wrap { grid-template-columns: 1fr; gap: 32px; } }
+  .cr-bene h2 {
+    font-family: var(--font-serif); font-style: italic; font-weight: 400;
+    font-size: clamp(36px, 4vw, 52px); letter-spacing: -0.02em; margin: 0 0 12px;
+    color: inherit;
+  }
+  .cr-bene h2 em { font-family: var(--font-display); font-style: normal; font-weight: 800; color: var(--accent); }
+  .cr-bene .lede { font-size: 15px; line-height: 1.7; color: rgba(229,242,255,0.78); max-width: 40ch; }
+  .cr-bene-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 32px 40px;
+  }
+  @media (max-width: 600px) { .cr-bene-grid { grid-template-columns: 1fr; } }
+  .cr-bene-item .k {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+  }
+  .cr-bene-item h4 {
+    font-family: var(--font-display); font-size: 17px; font-weight: 700;
+    margin: 0 0 6px; letter-spacing: -0.01em; color: inherit;
+  }
+  .cr-bene-item p { font-size: 13px; line-height: 1.6; color: rgba(229,242,255,0.72); margin: 0; }
+
+  /* Process */
+  .cr-proc {
+    max-width: 1280px; margin: 0 auto; padding: 80px 32px;
+  }
+  .cr-proc h2 {
+    font-family: var(--font-display); font-size: clamp(28px, 3vw, 40px);
+    font-weight: 700; letter-spacing: -0.03em; margin: 0 0 40px;
+  }
+  .cr-proc h2 em { font-family: var(--font-serif); font-style: italic; font-weight: 300; color: var(--accent); }
+  .cr-proc-steps {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 0;
+    border-top: 1px solid var(--vd-line); border-bottom: 1px solid var(--vd-line);
+  }
+  @media (max-width: 900px) { .cr-proc-steps { grid-template-columns: 1fr; } }
+  .cr-step {
+    padding: 24px 24px 28px; border-right: 1px solid var(--vd-line);
+  }
+  .cr-step:last-child { border-right: none; }
+  @media (max-width: 900px) {
+    .cr-step { border-right: none; border-bottom: 1px solid var(--vd-line); }
+    .cr-step:last-child { border-bottom: none; }
+  }
+  .cr-step .n {
+    font-family: var(--font-display); font-weight: 800; font-size: 48px;
+    letter-spacing: -0.04em; color: var(--accent); line-height: 1; margin-bottom: 8px;
+  }
+  .cr-step h4 {
+    font-family: var(--font-display); font-size: 16px; font-weight: 700;
+    letter-spacing: -0.01em; margin: 0 0 6px;
+  }
+  .cr-step p { font-size: 13px; color: var(--vd-muted); margin: 0; line-height: 1.55; }
+  .cr-step .meta {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--vd-muted); margin-top: 10px;
+  }
+</style>
+</head>
+<body data-page="careers">
+<div id="nav-slot"></div>
+
+<header class="ph">
+  <div class="ph-eyebrow">Careers</div>
+  <h1>Build the <em>record.</em></h1>
+  <p class="ph-sub">The work is unglamorous &mdash; rubrics, photo evidence, tenant-scoped schemas, a product three parties have to trust. If that sounds like your kind of problem, keep reading.</p>
+</header>
+
+
+
+<!-- Openings -->
+<div class="cr-jobs-wrap">
+  <div class="cr-jobs-head">
+    <h2>Open <em>roles.</em></h2>
+    <span class="count">Posted Apr 12, 2026 · Rolling</span>
+  </div>
+
+  <a class="cr-job" href="job-sales.html" data-dept="bd">
+    <span class="id">IQSF-A</span>
+    <span class="title">Account Executive<span class="sub">Own the full cycle &mdash; discovery, demos, and pilot scoping into facilities, healthcare, and aviation operators. Comfortable writing rubrics in a room with a VP of Ops.</span></span>
+    <span class="dept">Sales</span>
+    <span class="loc">ATL / Remote US</span>
+    <span class="type">Full-time · Equity</span>
+    <span class="apply">Apply →</span>
+  </a>
+
+  <a class="cr-job" href="job-junior.html" data-dept="eng">
+    <span class="id">IQSF-B</span>
+    <span class="title">Junior Engineer<span class="sub">First or second job. You'll pair with senior engineers across the stack &mdash; capture app, scoring pipeline, vendor portal. Curiosity over credentials.</span></span>
+    <span class="dept">Engineering</span>
+    <span class="loc">ATL / Remote US</span>
+    <span class="type">Full-time · Equity</span>
+    <span class="apply">Apply →</span>
+  </a>
+
+  <a class="cr-job" href="job-intern.html" data-dept="eng">
+    <span class="id">IQSF-C</span>
+    <span class="title">Engineering Intern<span class="sub">Summer or part-time. Ship real features, not a side project. Paid, mentored, and credited on the commit history.</span></span>
+    <span class="dept">Engineering</span>
+    <span class="loc">ATL / Remote US</span>
+    <span class="type">Intern · Paid</span>
+    <span class="apply">Apply →</span>
+  </a>
+
+  <p style="margin:28px 0 0;font-size:13px;color:var(--vd-muted);line-height:1.6;max-width:60ch;">Don't see your role? The contact form below works fine &mdash; we read every note.</p>
+</div>
+
+<!-- Benefits -->
+<section class="cr-bene">
+  <div class="cr-bene-wrap">
+    <div>
+      <h2>What we <em>offer.</em></h2>
+      <p class="lede">A handful of the details our offers tend to spell out in plainer language than most. Full list lives in the candidate packet; ask for it.</p>
+    </div>
+    <div class="cr-bene-grid">
+      <div class="cr-bene-item">
+        <div class="k">01 · Compensation</div>
+        <h4>Transparent bands, published.</h4>
+        <p>Every job posting lists the salary band. No haggling based on prior comp &mdash; we don't ask.</p>
+      </div>
+      <div class="cr-bene-item">
+        <div class="k">02 · Equity</div>
+        <h4>Early-exercise, 10-yr PTE.</h4>
+        <p>ISOs with early-exercise provisions and a 10-year post-termination window. We think vesting cliffs are insulting.</p>
+      </div>
+      <div class="cr-bene-item">
+        <div class="k">03 · Health</div>
+        <h4>100% premiums, dependents too.</h4>
+        <p>Medical, dental, vision. We cover the full premium for you and your dependents on the PPO plan.</p>
+      </div>
+      <div class="cr-bene-item">
+        <div class="k">04 · Time</div>
+        <h4>Four weeks, actually taken.</h4>
+        <p>Four weeks minimum PTO and a company shutdown between Christmas and New Year. We notice when people don't take their days.</p>
+      </div>
+      <div class="cr-bene-item">
+        <div class="k">05 · Parental</div>
+        <h4>16 weeks, any parent.</h4>
+        <p>16 weeks of fully-paid parental leave for any primary or secondary caregiver. Phased return-to-work supported.</p>
+      </div>
+      <div class="cr-bene-item">
+        <div class="k">06 · Travel</div>
+        <h4>Floor visits, two per year.</h4>
+        <p>Every teammate shadows two inspections per year, anywhere in the network, fully expensed. Yes, even if your job is backend.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="cta-band">
+  <div class="cta-band-wrap" style="max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:40px;flex-wrap:wrap;">
+    <h2>Don't see your <em>role?</em></h2>
+    <div class="acts">
+      <a class="b1" href="contact.html">Send a note →</a>
+      <a class="b2" href="mailto:careers@iqsflow.com">careers@iqsflow.com</a>
+    </div>
+  </div>
+</section>
+
+<div id="footer-slot"></div>
+<script src="assets/shared.js?v=6"></script>
+<script>
+  // Filter openings
+  const filterBtns = document.querySelectorAll('.cr-filter button');
+  const jobs = document.querySelectorAll('.cr-job');
+  filterBtns.forEach(b => b.addEventListener('click', () => {
+    filterBtns.forEach(x => x.classList.remove('is-active'));
+    b.classList.add('is-active');
+    const f = b.dataset.filter;
+    jobs.forEach(j => {
+      j.style.display = (f === 'all' || j.dataset.dept === f) ? '' : 'none';
+    });
+  }));
+</script>
+</body>
+</html>

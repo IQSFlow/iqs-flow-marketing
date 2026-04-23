@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Writing a rubric your night shift will actually run — Field Notes</title>
+<link rel="icon" type="image/svg+xml" href="assets/iqs-mark.svg"/>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/shared.css?v=6"/>
+<link rel="stylesheet" href="assets/article.css?v=2"/>
+</head>
+<body data-page="article">
+<div id="nav-slot"></div>
+
+<div class="art-back">
+  <a href="blog.html">← Field Notes</a>
+  <span>Vol. 04 · Issue 007 · Operations</span>
+</div>
+
+<header class="art-header">
+  <div class="art-kicker">Operations · Field craft</div>
+  <h1 class="art-title">Writing a rubric your <em>night shift</em> will actually run.</h1>
+  <p class="art-deck">The difference between a rubric crews use and one they quietly avoid is, on average, eleven items. We went through five years of completion-rate data to figure out what to cut, what to weight, and how to keep the rubric honest without making it hostile.</p>
+  <div class="art-byline">
+    <span>By the <b>IQS Research Team</b></span>
+    <span>Feb 25, 2026</span>
+    <span>5 min read</span>
+  </div>
+</header>
+
+<figure class="art-hero">
+  <div class="art-hero-fig">
+    <svg width="100%" height="100%" viewBox="0 0 1200 675" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Completion rate curve by number of rubric items">
+      <defs>
+        <pattern id="paper-n" x="0" y="0" width="4" height="4" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="0.4" fill="#0b1220" opacity="0.05"/>
+        </pattern>
+      </defs>
+      <rect width="1200" height="675" fill="#f5f1e8"/>
+      <rect width="1200" height="675" fill="url(#paper-n)"/>
+
+      <text x="60" y="60" fill="#0b1220" font-family="JetBrains Mono, monospace" font-size="12" letter-spacing="2" font-weight="600">FIG. 01 — COMPLETION RATE vs RUBRIC LENGTH</text>
+
+      <!-- axes -->
+      <g stroke="#0b1220" stroke-width="1" opacity="0.55">
+        <line x1="120" y1="560" x2="1140" y2="560"/>
+        <line x1="120" y1="140" x2="120" y2="560"/>
+      </g>
+
+      <!-- y ticks -->
+      <g font-family="JetBrains Mono, monospace" font-size="10" fill="#0b1220" opacity="0.6">
+        <text x="110" y="565" text-anchor="end">0%</text>
+        <text x="110" y="475" text-anchor="end">25%</text>
+        <text x="110" y="385" text-anchor="end">50%</text>
+        <text x="110" y="295" text-anchor="end">75%</text>
+        <text x="110" y="205" text-anchor="end">100%</text>
+      </g>
+
+      <!-- curve: high completion at low item count, falls off past ~28 items -->
+      <path d="
+        M 160 210 L 230 212 L 320 218 L 400 225 L 480 240 L 560 268
+        L 640 310 L 720 360 L 800 410 L 880 455 L 960 490 L 1040 515 L 1120 530
+      " stroke="#1d4ed8" stroke-width="3" fill="none"/>
+
+      <!-- threshold marker at 28 items (~x=480, 80% completion) -->
+      <circle cx="480" cy="240" r="7" fill="#b91c1c"/>
+      <line x1="480" y1="240" x2="480" y2="580" stroke="#b91c1c" stroke-width="1" stroke-dasharray="3 3" opacity="0.6"/>
+      <text x="495" y="225" fill="#b91c1c" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" letter-spacing="1">28-ITEM THRESHOLD · 85% COMPLETION</text>
+
+      <!-- cliff annotation at 39 items -->
+      <circle cx="720" cy="360" r="7" fill="#b91c1c"/>
+      <text x="735" y="355" fill="#b91c1c" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" letter-spacing="1">39 ITEMS · COMPLETION COLLAPSES</text>
+
+      <!-- x ticks -->
+      <g font-family="JetBrains Mono, monospace" font-size="10" fill="#0b1220" opacity="0.6">
+        <text x="160" y="580" text-anchor="middle">10</text>
+        <text x="320" y="580" text-anchor="middle">20</text>
+        <text x="480" y="580" text-anchor="middle">28</text>
+        <text x="640" y="580" text-anchor="middle">35</text>
+        <text x="800" y="580" text-anchor="middle">45</text>
+        <text x="960" y="580" text-anchor="middle">55</text>
+        <text x="1120" y="580" text-anchor="middle">65</text>
+        <text x="640" y="605" text-anchor="middle" font-weight="600" letter-spacing="1">RUBRIC ITEMS</text>
+      </g>
+    </svg>
+  </div>
+  <figcaption class="art-hero-cap">
+    <span><span class="lbl">Fig. 01</span> — Nightly inspection completion rate, plotted against total rubric length.</span>
+    <span>Vol. 04 · Iss. 007 · p. 34</span>
+  </figcaption>
+</figure>
+
+<article class="art-body">
+
+<p>If you want to know whether a rubric is going to survive its first six months in the field, count the items on it. That is not the only thing that matters, but it is the first thing, and in our data it is the most predictive single variable. Below about 28 items, most rubrics run at a completion rate north of 85%. Above about 39 items, completion rates collapse. Crews start skipping, backfilling, or simply hitting &ldquo;acceptable&rdquo; on the whole list without visiting the areas. The rubric stops being a measurement and starts being a ritual.</p>
+
+<p>This piece walks through what we have learned from five years of looking at rubric completion data across about 1,100 commercial-cleaning sites. It is a practical piece, not a methodological one. The claim is simple: most rubrics are too long, and the path to a usable rubric runs through cutting, not through adding.</p>
+
+<h2>The 11-item gap.</h2>
+
+<p>The typical rubric we see a customer draft, before we push back, has 39&ndash;45 items. The typical rubric the same customer ends up running after three months is around 28. The gap is, on average, 11 items. What gets cut is consistent enough to list: </p>
+
+<ul>
+  <li><b>Redundant item-pairs.</b> &ldquo;Floor clean&rdquo; and &ldquo;floor free of debris.&rdquo; &ldquo;Dispensers stocked&rdquo; and &ldquo;paper supply full.&rdquo; These are not two items; they are one item with a synonym.</li>
+  <li><b>Evidence-of-work items.</b> &ldquo;Cleaning log signed.&rdquo; &ldquo;Cart checked out.&rdquo; These belong in the evidence layer, not the quality layer. If the work happened, the log signs itself.</li>
+  <li><b>Outcome proxies.</b> &ldquo;Trash receptacles aesthetically placed.&rdquo; Nobody can grade this consistently. Cut it and trust the trash-receptacle item already in the rubric.</li>
+  <li><b>Rare-event items.</b> &ldquo;Exterior windows streak-free.&rdquo; In most buildings this is inspected quarterly, not nightly. It does not belong on the nightly rubric.</li>
+</ul>
+
+<div class="pullnum">
+  <span class="n">11</span>
+  <span class="t">Average items cut between a customer&rsquo;s initial rubric draft and the rubric they end up running after three months.</span>
+</div>
+
+<h2>Weight matters more than count.</h2>
+
+<p>Cutting items is necessary but not sufficient. The second most predictive variable in rubric design is weight distribution. A rubric where every item is weighted equally produces a specific failure mode: crews optimize for item count, not for impact. They complete 28 low-effort items and skip the one high-impact item, because mathematically the skipped item costs them one point and the rubric reads &ldquo;27/28 complete.&rdquo;</p>
+
+<p>The rubrics that run cleanly are the ones where two or three items carry outsized weight. In a healthcare EVS rubric, that is usually the patient-room discharge clean and the restroom disinfection. In aviation cabin, it is the galley and the lavatories. In commercial cleaning, it is the restroom and the entrance. Weight those items at 3&times; or 4&times; the others, and the crew understands, without being told, where to spend their time.</p>
+
+<h2>What your night shift is telling you.</h2>
+
+<p>If you have access to your inspection completion data, run two queries. First, completion rate by item. Which items get skipped? The answers will cluster. Second, grade distribution by item. Which items receive a full &ldquo;acceptable&rdquo; grade more than 97% of the time? Those items are almost always either unobservable, trivially easy, or being graded dishonestly. All three are reasons to cut.</p>
+
+<p>We have, in the past, counseled customers to talk to their crews about rubric length. It is usually a short conversation. The crew will tell you exactly which items are the ones they are checking without visiting. They will be embarrassed about it. They will also be right. Crews know, better than anyone in the building, which lines of a rubric are making the building cleaner and which are making the paperwork longer. The rubric is a contract between you and the crew; if your half of the contract is unreasonable, do not be surprised that their half goes unmet.</p>
+
+<h2>A short checklist, about checklists.</h2>
+
+<p>When we help a customer revise a rubric, we work through four questions. In order:</p>
+
+<ol>
+  <li><b>Is this item observable from the doorway, or does it require entering and touching a surface?</b> The second kind is expensive. Only include it if the item matters.</li>
+  <li><b>Will two inspectors agree on the grade?</b> If not, the item is ambiguous and will be graded inconsistently. Either sharpen it or cut it.</li>
+  <li><b>Does the item appear on the rubric because a customer incident prompted it once, years ago?</b> If yes, and the incident has not recurred, it is a relic. Consider quarterly inclusion instead of nightly.</li>
+  <li><b>If this item scored zero, would a reasonable operations leader care?</b> If the answer is &ldquo;not really,&rdquo; cut it. A rubric with items nobody cares about teaches the crew that items do not matter.</li>
+</ol>
+
+<p>Most rubrics, worked through these four questions, come out shorter and sharper. The customer is usually a little nervous during the process. They feel like they are losing coverage. What they are actually losing is the performance of coverage. The rubric that runs is the rubric that measures.</p>
+
+<div class="art-end">Fin</div>
+</article>
+
+<div class="art-author-box">
+  <div class="av">IQS</div>
+  <div>
+    <h4>IQS Research Team</h4>
+    <div class="role">Methodology · Rubric design</div>
+    <p>Field Notes methodology pieces are written by the IQS Flow research team, with input from practicing inspectors and operations leaders. Corrections and replication requests: research@iqsflow.com.</p>
+  </div>
+</div>
+
+<section class="art-related">
+  <h3>More from this issue.</h3>
+  <div class="rel-grid">
+    <a class="rel-card" href="article-vas-methodology.html">
+      <div class="dept">Methodology</div>
+      <h4>How we weight the VAS.</h4>
+      <p>Five weighted dimensions, two normalization guardrails, one renewal-grade number.</p>
+    </a>
+    <a class="rel-card" href="article-ata103.html">
+      <div class="dept">Compliance</div>
+      <h4>ATA 103 is not a checklist.</h4>
+      <p>How to translate the document&rsquo;s intent into a 22-item rubric that survives an airline audit.</p>
+    </a>
+    <a class="rel-card" href="article-11-3-gap.html">
+      <div class="dept">The Feature</div>
+      <h4>The 11.3-point gap.</h4>
+      <p>Why vendor self-reports run 11.3 points over independent scores.</p>
+    </a>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="cta-band-wrap">
+    <h2>Read the <em>rest</em> of the issue.</h2>
+    <div class="acts">
+      <a class="b1" href="blog.html">Back to Field Notes →</a>
+      <a class="b2" href="contact.html">Request a demo</a>
+    </div>
+  </div>
+</section>
+
+<div id="footer-slot"></div>
+<script src="assets/shared.js?v=6"></script>
+</body>
+</html>

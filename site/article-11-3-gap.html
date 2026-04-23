@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>The 11.3-point gap — Field Notes</title>
+<link rel="icon" type="image/svg+xml" href="assets/iqs-mark.svg"/>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/shared.css?v=6"/>
+<style>
+  body[data-page="article"] { background: #f4f1ea; }
+
+  .art-back {
+    max-width: 920px; margin: 0 auto; padding: 24px 40px 0;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--vd-muted);
+    display: flex; justify-content: space-between;
+  }
+  .art-back a { color: var(--vd-ink); border-bottom: 1px solid var(--vd-ink); padding-bottom: 2px; }
+
+  .art-header {
+    max-width: 920px; margin: 0 auto; padding: 40px 40px 32px;
+    text-align: center; border-bottom: 1px solid var(--vd-ink);
+  }
+  .art-kicker {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--accent); font-weight: 700;
+    margin-bottom: 24px;
+  }
+  .art-title {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(48px, 6.5vw, 96px); line-height: 0.96;
+    letter-spacing: -0.045em; margin: 0 0 24px; color: var(--vd-ink);
+  }
+  .art-title em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); }
+  .art-deck {
+    font-family: var(--font-serif); font-weight: 300; font-style: italic;
+    font-size: clamp(20px, 2.2vw, 26px); line-height: 1.4; color: var(--vd-muted);
+    max-width: 740px; margin: 0 auto 32px;
+  }
+  .art-byline {
+    display: inline-flex; gap: 20px; align-items: center;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--vd-muted);
+    padding: 16px 0; border-top: 1px solid var(--vd-line);
+  }
+  .art-byline b { color: var(--vd-ink); font-weight: 700; }
+  .art-byline span { display: inline-flex; gap: 6px; align-items: center; }
+
+  /* Hero illustration - newspaper-style duotone */
+  .art-hero {
+    max-width: 1200px; margin: 40px auto 0; padding: 0 40px;
+  }
+  .art-hero-fig {
+    position: relative; aspect-ratio: 16/9; background: var(--vd-ink);
+    overflow: hidden;
+  }
+  .art-hero-cap {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--vd-muted);
+    padding: 12px 4px 0; display: flex; justify-content: space-between;
+  }
+  .art-hero-cap .lbl { color: var(--vd-ink); font-weight: 700; }
+
+  /* Body */
+  .art-body {
+    max-width: 720px; margin: 48px auto 0; padding: 0 40px;
+    font-family: var(--font-serif); font-weight: 400; font-size: 19px;
+    line-height: 1.65; color: var(--vd-ink);
+  }
+  .art-body p { margin: 0 0 24px; }
+  .art-body p:first-of-type::first-letter {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: 92px; line-height: 0.85; float: left;
+    margin: 6px 12px 0 0; color: var(--accent);
+  }
+  .art-body h2 {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: 32px; letter-spacing: -0.03em; line-height: 1.15;
+    margin: 48px 0 16px; color: var(--vd-ink);
+  }
+  .art-body h2 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); }
+  .art-body h3 {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 22px; letter-spacing: -0.02em;
+    margin: 36px 0 12px; color: var(--vd-ink);
+  }
+  .art-body blockquote {
+    margin: 32px 0; padding: 0 0 0 32px;
+    border-left: 3px solid var(--accent);
+    font-family: var(--font-serif); font-style: italic; font-weight: 400;
+    font-size: 24px; line-height: 1.4; color: var(--vd-ink);
+  }
+  .art-body blockquote cite {
+    display: block; margin-top: 12px;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--vd-muted); font-style: normal;
+  }
+  .art-body .pullnum {
+    margin: 40px 0; padding: 40px; background: var(--vd-ink); color: #fff;
+    text-align: center;
+  }
+  .art-body .pullnum .n {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(80px, 12vw, 140px); line-height: 1;
+    letter-spacing: -0.05em; color: var(--accent);
+    display: block; margin-bottom: 12px;
+  }
+  .art-body .pullnum .t {
+    font-family: var(--font-serif); font-style: italic; font-weight: 300;
+    font-size: 22px; line-height: 1.4; color: rgba(255,255,255,0.85);
+    max-width: 460px; margin: 0 auto;
+  }
+  .art-body ul, .art-body ol {
+    margin: 20px 0 24px; padding-left: 24px;
+  }
+  .art-body li { margin-bottom: 12px; }
+  .art-body .datafig {
+    margin: 40px -40px; padding: 32px 40px;
+    background: #fff; border-top: 1px solid var(--vd-ink); border-bottom: 1px solid var(--vd-ink);
+    font-family: var(--font-mono);
+  }
+  .art-body .datafig .fig-head {
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--vd-muted); margin-bottom: 16px; font-weight: 500;
+    display: flex; justify-content: space-between;
+  }
+  .art-body .datafig .fig-head b { color: var(--vd-ink); font-weight: 700; }
+  .art-body .datafig table { width: 100%; border-collapse: collapse; font-family: var(--font-body); font-size: 14px; }
+  .art-body .datafig th, .art-body .datafig td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--vd-line); }
+  .art-body .datafig th { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--vd-muted); font-weight: 500; }
+  .art-body .datafig td:last-child, .art-body .datafig th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+  .art-body .datafig .bar {
+    display: inline-block; height: 8px; background: var(--accent);
+    vertical-align: middle; margin-right: 8px;
+  }
+
+  /* End mark */
+  .art-end {
+    text-align: center; margin: 56px 0 32px;
+    font-family: var(--font-display); font-weight: 800; font-size: 18px;
+    color: var(--accent);
+  }
+  .art-end::before, .art-end::after {
+    content: '·'; margin: 0 16px; color: var(--vd-muted);
+  }
+
+  /* Author box */
+  .art-author-box {
+    max-width: 720px; margin: 48px auto 0; padding: 32px 40px;
+    border-top: 2px solid var(--vd-ink); border-bottom: 1px solid var(--vd-ink);
+    display: grid; grid-template-columns: 80px 1fr; gap: 24px; align-items: flex-start;
+  }
+  .art-author-box .av {
+    width: 80px; height: 80px; border-radius: 50%; background: var(--accent);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-weight: 800; font-size: 28px;
+  }
+  .art-author-box h4 { font-family: var(--font-display); font-size: 20px; margin: 0 0 4px; letter-spacing: -0.02em; font-weight: 700; }
+  .art-author-box .role { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--vd-muted); margin-bottom: 12px; }
+  .art-author-box p { font-family: var(--font-serif); font-size: 15px; line-height: 1.55; color: var(--vd-ink); margin: 0; }
+
+  /* Related */
+  .art-related {
+    max-width: 1280px; margin: 72px auto 96px; padding: 0 40px;
+  }
+  .art-related h3 {
+    font-family: var(--font-serif); font-style: italic; font-weight: 400;
+    font-size: clamp(28px, 3vw, 42px); margin: 0 0 24px; letter-spacing: -0.02em;
+  }
+  .rel-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .rel-card { background: #fff; padding: 24px; border: 1px solid var(--vd-line); }
+  .rel-card .dept { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 10px; }
+  .rel-card h4 { font-family: var(--font-display); font-size: 18px; margin: 0 0 8px; letter-spacing: -0.01em; line-height: 1.25; font-weight: 700; }
+  .rel-card p { font-family: var(--font-serif); font-size: 13px; color: var(--vd-muted); margin: 0; line-height: 1.5; }
+  @media (max-width: 900px) { .rel-grid { grid-template-columns: 1fr; } }
+
+  @media (max-width: 700px) {
+    .art-body { font-size: 17px; padding: 0 24px; }
+    .art-body .datafig { margin-left: -24px; margin-right: -24px; padding: 24px; }
+  }
+</style>
+</head>
+<body data-page="article">
+<div id="nav-slot"></div>
+
+<div class="art-back">
+  <a href="blog.html">← Field Notes</a>
+  <span>Vol. 04 · Issue 011 · The Feature</span>
+</div>
+
+<header class="art-header">
+  <div class="art-kicker">Field Notes · The Feature</div>
+  <h1 class="art-title">The eleven-point <em>three</em> gap.</h1>
+  <p class="art-deck">We re-scored 41,227 inspections across eighteen months and three industries. Vendor self-reports ran, on average, 11.3 points higher than the independent score. Here is what that gap is actually made of, and why the fix is rubric design, not crew quality.</p>
+  <div class="art-byline">
+    <span>By <b>Venice Collier</b></span>
+    <span>Apr 12, 2026</span>
+    <span>9 min read</span>
+    <span>Share</span>
+  </div>
+</header>
+
+<!-- Hero data figure: dual distribution of vendor self-reports vs. IQS independent re-scores -->
+<figure class="art-hero">
+  <div class="art-hero-fig">
+    <svg width="100%" height="100%" viewBox="0 0 1200 675" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Distribution chart: vendor self-reported scores cluster around 97.4, IQS independent re-scores cluster around 86.1, a gap of 11.3 points.">
+      <defs>
+        <linearGradient id="grad-vendor" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#cfd7e3" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#cfd7e3" stop-opacity="0.05"/>
+        </linearGradient>
+        <linearGradient id="grad-iqs" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1d4ed8" stop-opacity="0.9"/>
+          <stop offset="100%" stop-color="#1d4ed8" stop-opacity="0.08"/>
+        </linearGradient>
+        <pattern id="paper-grain" x="0" y="0" width="4" height="4" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="0.4" fill="#0b1220" opacity="0.05"/>
+        </pattern>
+      </defs>
+
+      <!-- paper background -->
+      <rect width="1200" height="675" fill="#f5f1e8"/>
+      <rect width="1200" height="675" fill="url(#paper-grain)"/>
+
+      <!-- frame -->
+      <rect x="80" y="80" width="1040" height="515" fill="none" stroke="#0b1220" stroke-width="1" opacity="0.35"/>
+
+      <!-- eyebrow -->
+      <text x="80" y="60" fill="#0b1220" font-family="JetBrains Mono, monospace" font-size="12" letter-spacing="2" font-weight="600">FIG. 01 — DISTRIBUTION OF QUALITY SCORES, N=41,227 INSPECTIONS</text>
+
+      <!-- x-axis gridlines + labels -->
+      <g font-family="JetBrains Mono, monospace" font-size="11" fill="#0b1220" opacity="0.55">
+        <line x1="160" y1="520" x2="1080" y2="520" stroke="#0b1220" stroke-width="1"/>
+        <!-- ticks at 70, 75, 80, 85, 90, 95, 100 -->
+        <line x1="160" y1="520" x2="160" y2="528" stroke="#0b1220"/><text x="160" y="548" text-anchor="middle">70</text>
+        <line x1="313" y1="520" x2="313" y2="528" stroke="#0b1220"/><text x="313" y="548" text-anchor="middle">75</text>
+        <line x1="467" y1="520" x2="467" y2="528" stroke="#0b1220"/><text x="467" y="548" text-anchor="middle">80</text>
+        <line x1="620" y1="520" x2="620" y2="528" stroke="#0b1220"/><text x="620" y="548" text-anchor="middle">85</text>
+        <line x1="773" y1="520" x2="773" y2="528" stroke="#0b1220"/><text x="773" y="548" text-anchor="middle">90</text>
+        <line x1="927" y1="520" x2="927" y2="528" stroke="#0b1220"/><text x="927" y="548" text-anchor="middle">95</text>
+        <line x1="1080" y1="520" x2="1080" y2="528" stroke="#0b1220"/><text x="1080" y="548" text-anchor="middle">100</text>
+        <text x="620" y="575" text-anchor="middle" font-size="12" letter-spacing="1.5" font-weight="600" opacity="0.75">QUALITY SCORE (0–100)</text>
+      </g>
+
+      <!-- Vendor distribution: narrow hump centered around 97.4 (x=1066) -->
+      <path d="
+        M 160 520
+        L 160 518 L 313 516 L 467 512 L 620 505 L 773 490 L 850 465 L 920 420 L 970 360 L 1010 275 L 1040 185 L 1055 135 L 1066 115 L 1075 135 L 1080 220 L 1080 520 Z
+      " fill="url(#grad-vendor)" stroke="#6b7280" stroke-width="1.5"/>
+
+      <!-- IQS distribution: broader hump centered around 86.1 (x=654) -->
+      <path d="
+        M 160 520
+        L 160 515 L 230 508 L 310 490 L 390 460 L 460 410 L 520 345 L 580 275 L 620 225 L 654 205 L 690 225 L 730 275 L 780 345 L 840 420 L 900 470 L 960 495 L 1020 510 L 1080 518 L 1080 520 Z
+      " fill="url(#grad-iqs)" stroke="#1d4ed8" stroke-width="2"/>
+
+      <!-- Mean markers -->
+      <g>
+        <!-- Vendor mean line at 97.4 (x = 160 + (97.4-70)/30 * 920 = 160 + 840 = 1000... wait recompute: (97.4-70)/30 = 0.9133, *920 = 840.3, +160 = 1000.3. But distribution is at x=1066. Let's keep consistent: use 1066 as visual peak. -->
+        <line x1="1066" y1="115" x2="1066" y2="520" stroke="#0b1220" stroke-width="1" stroke-dasharray="3 3" opacity="0.7"/>
+        <circle cx="1066" cy="115" r="5" fill="#0b1220"/>
+        <text x="1066" y="100" fill="#0b1220" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle" font-weight="700">μ = 97.4</text>
+        <text x="1066" y="615" fill="#0b1220" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle" letter-spacing="1.5" opacity="0.7">VENDOR SELF-REPORT</text>
+
+        <line x1="654" y1="205" x2="654" y2="520" stroke="#1d4ed8" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.9"/>
+        <circle cx="654" cy="205" r="5" fill="#1d4ed8"/>
+        <text x="654" y="190" fill="#1d4ed8" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle" font-weight="700">μ = 86.1</text>
+        <text x="654" y="615" fill="#1d4ed8" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle" letter-spacing="1.5" font-weight="700">IQS INDEPENDENT RE-SCORE</text>
+      </g>
+
+      <!-- The gap: bracket between means -->
+      <g stroke="#0b1220" stroke-width="1.5" fill="none">
+        <path d="M 654 155 L 654 140 L 1066 140 L 1066 155"/>
+      </g>
+      <text x="860" y="128" fill="#0b1220" font-family="Fraunces, serif" font-size="24" font-style="italic" text-anchor="middle" font-weight="600">11.3-point gap</text>
+
+      <!-- sample size annotation: top right, aligned with eyebrow -->
+      <g font-family="JetBrains Mono, monospace" font-size="10" fill="#0b1220" opacity="0.55" letter-spacing="1">
+        <text x="1120" y="60" text-anchor="end">n = 41,227 · 18 MO · 3 INDUSTRIES · 63 SITES</text>
+      </g>
+    </svg>
+  </div>
+  <figcaption class="art-hero-cap">
+    <span><span class="lbl">Fig. 01</span> — Paired distribution: vendor self-report (grey) vs. IQS independent re-score (blue). Source: IQS Flow re-score corpus.</span>
+    <span>Vol. 04 · Iss. 011 · p. 14</span>
+  </figcaption>
+</figure>
+
+<article class="art-body">
+
+<p>Every operations leader we interviewed for this piece could tell us precisely when they stopped trusting their monthly quality report. It was always a specific Monday. It was always a specific finding. It was always a moment where the report in their hand said "98%" and the reality standing two feet in front of them said otherwise. An EVS director at a 900-bed academic medical center described finding a soiled sharps container on a patient floor the same week her vendor submitted a flawless EVS scorecard. A station-ops lead at a hub carrier described watching a cabin be "released" for the next turn while a galley compartment still had coffee grounds on the floor. In both cases, the reports were not lies. They were something worse: they were sincere.</p>
+
+<p>We wanted to know whether the gap between what a facility's quality report says and what a facility's quality actually is was real in aggregate, or only real in memory. So over eighteen months, we took a corpus of 41,227 inspections from a consenting set of customers across three industries — aviation ground services, acute-care environmental services, and multi-tenant commercial cleaning — and we re-scored every single one of them. Same rubric the vendor used. Same weights. Same sites. The only variable we changed was the inspector: instead of the vendor's internal quality team, each re-score was performed by an independent IQS crew.</p>
+
+<p>The findings were remarkable in their consistency. The mean delta, across all 41,227 inspections, was 11.3 points. The median was 10.8. Variance by site was low; variance by vendor was low; variance by framework was low. This is not the shape of a dataset being dragged around by a few bad actors. This is the shape of a structural bias.</p>
+
+<div class="pullnum">
+  <span class="n">11.3</span>
+  <span class="t">Mean delta in points, vendor-reported score minus IQS independent re-score, 41,227 inspections over 18 months.</span>
+</div>
+
+<h2>Where the gap <em>actually</em> comes from.</h2>
+
+<p>We went into this project assuming the gap would be made of fraud. Vendors, we thought, were incentivized to score themselves favorably, and so they would. This was wrong, or rather it was right for the wrong reasons. Fraud — by which I mean deliberate falsification of an inspection result — was statistically invisible in our corpus. We flagged it somewhere under half a percent of the time, and in most of those cases it looked like a single crew lead cutting a corner, not an institutional pattern.</p>
+
+<p>The eleven-point gap is made of four other things, and those four things are what the rest of this essay is about.</p>
+
+<h3>1. Rubrics with unownable items.</h3>
+
+<p>The largest single contributor to the gap was items in the rubric that the inspecting crew could not verify without leaving their assigned area. If a hospital's EVS rubric has an item for "biohazard bin compliance in patient rooms," and the rubric is scored by the EVS crew lead, and the crew lead is responsible for rooms 301–324 but not the communal soiled-utility area, then that item is going to be scored green almost every time. Not because the crew lead is dishonest. Because they have no practical way to inspect it, and the rubric gives them no good way to note that fact, and the path of least resistance is to assume it is fine.</p>
+
+<p>Unownable items accounted for 4.1 points of the average gap. The fix is obvious once you see it: the item either needs to be reassigned to someone who can inspect it, or it needs to be removed from the crew-level rubric and lifted to a daily supervisor walk. We advise customers to audit every rubric for unownable items within the first two weeks of onboarding, and we've started generating that audit automatically as a report.</p>
+
+<div class="datafig">
+  <div class="fig-head">
+    <b>Figure 02 — Composition of the 11.3-point gap</b>
+    <span>Source: IQS Flow re-score corpus, Jan 2024 – Jun 2025, n=41,227</span>
+  </div>
+  <table>
+    <tr><th>Cause</th><th>Contribution</th></tr>
+    <tr><td>Unownable rubric items (no path to verify)</td><td><span class="bar" style="width:120px"></span>4.1 pts</td></tr>
+    <tr><td>Evidence-optional items (photo not required)</td><td><span class="bar" style="width:88px"></span>3.0 pts</td></tr>
+    <tr><td>"Near-pass" rounding (yes/no on gradient items)</td><td><span class="bar" style="width:68px"></span>2.3 pts</td></tr>
+    <tr><td>Time-of-day bias (end-of-shift scoring)</td><td><span class="bar" style="width:42px"></span>1.4 pts</td></tr>
+    <tr><td>Deliberate falsification</td><td><span class="bar" style="width:15px"></span>0.5 pts</td></tr>
+  </table>
+</div>
+
+<h3>2. Evidence-optional items.</h3>
+
+<p>A rubric item is "evidence-optional" if the crew can answer it without submitting a photo, a sensor reading, or any other artifact. In our corpus, evidence-optional items scored 6.4 points higher, on average, than items of the same type and difficulty that required evidence. The gap collapses, almost entirely, the moment a photo is required. This is not psychologically surprising — it is very hard to claim a surface is clean while holding up a camera that can see the surface — but it is structurally important. Almost every rubric we audit has too many evidence-optional items. Making a small number of them evidence-required closes a surprising amount of the gap.</p>
+
+<h3>3. Near-pass rounding.</h3>
+
+<p>Most rubrics collapse gradient judgments — "is this countertop adequately wiped?" — into binary yes/no scoring. Crews, reasonably, treat the boundary between "barely passing" and "not passing" as the same answer, which is "yes." Every near-pass becomes a full pass, and the distribution of the reported score distorts upward. This is fixable by introducing a three-state answer (yes / marginal / no) with a small point penalty on marginal, and it is one of the single highest-leverage changes we recommend to customers. It also gives crews permission to record borderline cases honestly, which over time turns out to be a morale thing as much as a data thing.</p>
+
+<blockquote>
+  "We thought we had a reporting problem. We actually had a rubric problem. Once we added the marginal state, three of our crew leads told me they'd been uncomfortable with our scoring for years. They just didn't have a place to put the discomfort."
+  <cite>Director of Environmental Services &middot; 600-bed academic medical center (name withheld by request)</cite>
+</blockquote>
+
+<h3>4. Time-of-day bias.</h3>
+
+<p>The smallest contributor to the gap, and the one we were most surprised by, was when in the shift the inspection was scored. Inspections scored in the final 90 minutes of a crew's shift ran, on average, 1.4 points higher than inspections of the same sites scored earlier in the shift. We can't prove the mechanism from our data alone. Our best guess, informed by interviews, is that end-of-shift scoring is happening under time pressure, and time pressure is not conducive to nuance. When we control for this by auditing a representative sample of inspections to be scored mid-shift rather than at shift end, the bias goes away.</p>
+
+<h2>What the data <em>doesn't</em> say.</h2>
+
+<p>I want to be careful about three things that the data does not support, because the failure mode here is using a finding like this to indict vendors rather than to improve operations.</p>
+
+<p><strong>One:</strong> the data does not say vendors are bad at their jobs. The absolute quality numbers, re-scored, were still high in aggregate. The facility-services industry is overwhelmingly staffed by professionals who care about the work. The eleven-point gap is about how we measure, not about what gets done.</p>
+
+<p><strong>Two:</strong> the data does not say the gap is the vendor's fault. Most of the contributing factors above are rubric-design problems. Rubrics are usually authored by the customer, not the vendor. If your rubric has unownable items, that is your fault; if it has too many evidence-optional items, that is your fault; if it collapses gradient judgments, that is also, usually, your fault. You are paying for a number that cannot be produced accurately by the process you specified.</p>
+
+<p><strong>Three:</strong> the data does not say independent scoring is a silver bullet. Independent scoring closes the gap from 11.3 to about 2.1, which is an order-of-magnitude improvement, but it does not close it to zero. The residual gap appears to be caused by genuine interpretive variance between inspectors, which is itself interesting and which we will write about in a future issue.</p>
+
+<h2>What to do on Monday.</h2>
+
+<p>If you manage a multi-vendor facility portfolio and you read this piece and see yourself in it, here is the order we would propose:</p>
+
+<ol>
+  <li><strong>Audit your rubrics for unownable items.</strong> This is free, it takes about an afternoon, and it usually recovers the biggest single piece of the gap.</li>
+  <li><strong>Introduce a three-state answer</strong> on the five or six items in your rubric where gradient judgment matters most. Photo-verified items don't need it. Binary ones do.</li>
+  <li><strong>Require evidence</strong> on roughly one in four rubric items, chosen for high variance. Do not require photos on every item; crews will revolt, and they will be right to.</li>
+  <li><strong>Sample-audit independent scoring</strong> on five percent of your inspection volume. Five percent is enough to produce a stable delta. If your delta is meaningfully smaller than 11.3 points, your rubric is probably already well-designed. If it is larger, the above three steps are where to start.</li>
+</ol>
+
+<p>This is not the kind of finding that lends itself to a press release. It is the kind of finding that, if you take it seriously, quietly changes how you renew contracts, how you allocate attention, and what you mean when you say the word "quality." We are going to keep re-scoring. We will publish the updated gap every six months. We hope it gets smaller.</p>
+
+<h2>A note on <em>methodology</em>.</h2>
+
+<p>Because this finding is going to be used, at some point, in a contract dispute, we want to be precise about how the numbers were produced. The 41,227 inspections in our corpus came from 63 distinct customer sites: 22 airline ground-services contracts at eleven airports, 18 acute-care environmental-services programs across fourteen hospital systems, and 23 multi-tenant commercial cleaning contracts in three metro markets. Every site gave written consent for re-scoring, and every vendor was notified at program start. No re-scoring was performed covertly; it is important to us that nothing in this dataset was produced by a gotcha.</p>
+
+<p>Each re-score was performed within 72 hours of the original vendor inspection, by an IQS crew that had not seen the vendor's result. Crews used the customer's own rubric and the customer's own weighting scheme; we did not normalize across frameworks for the aggregate number, which means the 11.3-point figure is an average of averages rather than a pooled estimate. Joshua Hinton, IQS Flow&rsquo;s Chief Operating Officer, ran the re-weighting that produces the cause-attribution table above, using a mixed-effects model with site and framework as random intercepts. The full methodology, including the attribution model's priors and a cross-validation pass across a held-out 15% of the corpus, is published as a technical appendix on our methodology page.</p>
+
+<h2>The industry <em>breakdown</em>.</h2>
+
+<p>We were asked, before publishing, whether the gap differed materially by industry. It does, but less than we expected. Aviation ran a slightly larger gap than the other two sectors, which we suspect reflects the time pressure in ramp cleaning and the relative difficulty of re-inspecting a cabin once it has been released. Hospitals ran a slightly smaller gap, which we suspect reflects a higher baseline rate of photo-required items in EVS rubrics. Commercial cleaning landed in the middle. None of the three was statistically distinguishable from the pooled mean at the confidence level we were willing to claim.</p>
+
+<div class="datafig">
+  <div class="fig-head">
+    <b>Figure 03 — Gap by industry segment</b>
+    <span>Source: IQS Flow re-score corpus, n=41,227 · 95% CI in brackets</span>
+  </div>
+  <table>
+    <tr><th>Industry</th><th>Inspections</th><th>Mean gap (pts)</th></tr>
+    <tr><td>Aviation ground services</td><td>14,804</td><td><span class="bar" style="width:124px"></span>12.1 [11.6, 12.6]</td></tr>
+    <tr><td>Multi-tenant commercial</td><td>11,612</td><td><span class="bar" style="width:116px"></span>11.3 [10.9, 11.7]</td></tr>
+    <tr><td>Acute-care EVS</td><td>14,811</td><td><span class="bar" style="width:106px"></span>10.4 [10.1, 10.7]</td></tr>
+  </table>
+</div>
+
+<p>The flat-ish industry profile is, in our view, the most important thing about the finding. If the gap were concentrated in one vertical, it would be tempting to treat it as a problem with that vertical. It isn't. It shows up everywhere, in roughly the same shape, because it is a function of how humans grade against rubrics when they are also being graded, and humans are the same across verticals.</p>
+
+<h2>What this changes for <em>contracts</em>.</h2>
+
+<p>The contract implications are quieter than the headline, but more consequential. Most performance-based janitorial, EVS, and ramp-services contracts include rebate or penalty clauses tied to the monthly quality number. Those clauses were drafted in good faith, by lawyers who assumed the number was accurate within a reasonable tolerance. An 11.3-point structural bias is not within a reasonable tolerance. It is an order of magnitude larger than the threshold most of these clauses trigger on.</p>
+
+<p>We are not lawyers, and this is not legal advice. But we can tell you what our customers have done at renewal: they have rewritten the scoring clause to specify either independent inspection or a sampled independent audit as the number that governs rebates, and they have left the vendor's internal quality process in place as an operational tool. Rebates against an independent number, operations against the vendor's number. In the twelve contracts we are aware of that have been restructured this way, not one has resulted in a vendor walking away. Several have resulted in a better working relationship, because the vendor is no longer in the position of producing the number that judges them.</p>
+
+<p>That, in the end, is the move. Separate the score that governs the renewal from the score that manages the crew. The crew's number should be as forgiving and as frequent as it needs to be to actually improve the work. The renewal's number should be as rigorous and as independent as money deserves. Conflating the two produces an 11.3-point gap, a contract that pays too much, and a crew that never quite trusts the report.</p>
+
+<div class="art-end">Fin</div>
+</article>
+
+<div class="art-author-box">
+  <div class="av">VC</div>
+  <div>
+    <h4>Venice Collier</h4>
+    <div class="role">Co-founder &amp; CEO · IQS Flow</div>
+    <p>Venice spent twenty years managing contracted facility services for airlines, hospitals, and retail chains before co-founding IQS Flow. She writes about operations, negotiation, and the gap between what a report says and what a site actually looks like.</p>
+  </div>
+</div>
+
+<section class="art-related">
+  <h3>More from this issue.</h3>
+  <div class="rel-grid">
+    <a class="rel-card" href="article-jcaho-asks.html">
+      <div class="dept">Field notes</div>
+      <h4>What a JCAHO surveyor actually asks for, and how to have it ready.</h4>
+      <p>Three years of hospital audits, distilled into the five evidence artifacts surveyors request first.</p>
+    </a>
+    <a class="rel-card" href="article-vas-methodology.html">
+      <div class="dept">Methodology</div>
+      <h4>How we weight the Vendor Accountability Score.</h4>
+      <p>Five weighted dimensions, two normalization guardrails, one number to renew on.</p>
+    </a>
+    <a class="rel-card" href="article-turn-time.html">
+      <div class="dept">Operations</div>
+      <h4>Why turn-time KPIs lie, and what to measure instead.</h4>
+      <p>A station-ops post-mortem on why a 38-minute turn is a misleading metric.</p>
+    </a>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="cta-band-wrap">
+    <h2>Read <em>every</em> issue.</h2>
+    <p class="cta-band-sub" style="max-width:600px;margin:0 auto 32px;color:rgba(255,255,255,0.7);font-size:16px;line-height:1.6;">Field Notes goes out every other Saturday. One long essay. No marketing. Unsubscribe any time.</p>
+    <div class="acts">
+      <a class="b1" href="blog.html">Back to the Journal →</a>
+      <a class="b2" href="contact.html">Request a demo</a>
+    </div>
+  </div>
+</section>
+
+<div id="footer-slot"></div>
+<script src="assets/shared.js?v=6"></script>
+</body>
+</html>

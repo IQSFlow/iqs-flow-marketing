@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>How we weight the Vendor Accountability Score — Field Notes</title>
+<link rel="icon" type="image/svg+xml" href="assets/iqs-mark.svg"/>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/shared.css?v=6"/>
+<link rel="stylesheet" href="assets/article.css?v=2"/>
+</head>
+<body data-page="article">
+<div id="nav-slot"></div>
+
+<div class="art-back">
+  <a href="blog.html">← Field Notes</a>
+  <span>Vol. 04 · Issue 009 · Methodology</span>
+</div>
+
+<header class="art-header">
+  <div class="art-kicker">Methodology · The Method</div>
+  <h1 class="art-title">How we weight the <em>Vendor Accountability Score.</em></h1>
+  <p class="art-deck">A walk-through of the VAS: five weighted dimensions, two statistical guardrails, and the one number a customer and a vendor can argue a contract renewal on. Written so the reader can reproduce it, disagree with it, or improve it.</p>
+  <div class="art-byline">
+    <span>By the <b>IQS Research Team</b></span>
+    <span>Mar 02, 2026</span>
+    <span>10 min read</span>
+  </div>
+</header>
+
+<figure class="art-hero">
+  <div class="art-hero-fig">
+    <svg width="100%" height="100%" viewBox="0 0 1200 675" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Five-dimension weighting diagram for the Vendor Accountability Score">
+      <defs>
+        <pattern id="paper-v" x="0" y="0" width="4" height="4" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="0.4" fill="#0b1220" opacity="0.05"/>
+        </pattern>
+      </defs>
+      <rect width="1200" height="675" fill="#f5f1e8"/>
+      <rect width="1200" height="675" fill="url(#paper-v)"/>
+
+      <text x="60" y="60" fill="#0b1220" font-family="JetBrains Mono, monospace" font-size="12" letter-spacing="2" font-weight="600">FIG. 01 — THE FIVE WEIGHTED DIMENSIONS OF THE VAS</text>
+
+      <!-- Five vertical bars representing weights -->
+      <g font-family="JetBrains Mono, monospace">
+        <!-- axis -->
+        <line x1="140" y1="560" x2="1120" y2="560" stroke="#0b1220" stroke-width="1" opacity="0.55"/>
+        <line x1="140" y1="140" x2="140" y2="560" stroke="#0b1220" stroke-width="1" opacity="0.55"/>
+
+        <!-- y ticks -->
+        <text x="130" y="565" text-anchor="end" font-size="10" fill="#0b1220" opacity="0.6">0%</text>
+        <text x="130" y="475" text-anchor="end" font-size="10" fill="#0b1220" opacity="0.6">10%</text>
+        <text x="130" y="385" text-anchor="end" font-size="10" fill="#0b1220" opacity="0.6">20%</text>
+        <text x="130" y="295" text-anchor="end" font-size="10" fill="#0b1220" opacity="0.6">30%</text>
+        <text x="130" y="205" text-anchor="end" font-size="10" fill="#0b1220" opacity="0.6">40%</text>
+
+        <!-- bar: Score quality (35%) = height 315 -->
+        <rect x="200" y="245" width="140" height="315" fill="#1d4ed8"/>
+        <text x="270" y="590" text-anchor="middle" font-size="11" fill="#0b1220" font-weight="700" letter-spacing="1">SCORE QUALITY</text>
+        <text x="270" y="607" text-anchor="middle" font-size="10" fill="#0b1220" opacity="0.6" letter-spacing="1">35%</text>
+        <text x="270" y="232" text-anchor="middle" font-size="13" fill="#0b1220" font-weight="700">0.35</text>
+
+        <!-- bar: Evidence grade (25%) = 225 -->
+        <rect x="380" y="335" width="140" height="225" fill="#1d4ed8" opacity="0.85"/>
+        <text x="450" y="590" text-anchor="middle" font-size="11" fill="#0b1220" font-weight="700" letter-spacing="1">EVIDENCE GRADE</text>
+        <text x="450" y="607" text-anchor="middle" font-size="10" fill="#0b1220" opacity="0.6" letter-spacing="1">25%</text>
+        <text x="450" y="322" text-anchor="middle" font-size="13" fill="#0b1220" font-weight="700">0.25</text>
+
+        <!-- bar: Consistency (20%) = 180 -->
+        <rect x="560" y="380" width="140" height="180" fill="#1d4ed8" opacity="0.7"/>
+        <text x="630" y="590" text-anchor="middle" font-size="11" fill="#0b1220" font-weight="700" letter-spacing="1">CONSISTENCY</text>
+        <text x="630" y="607" text-anchor="middle" font-size="10" fill="#0b1220" opacity="0.6" letter-spacing="1">20%</text>
+        <text x="630" y="367" text-anchor="middle" font-size="13" fill="#0b1220" font-weight="700">0.20</text>
+
+        <!-- bar: Response time (12%) = 108 -->
+        <rect x="740" y="452" width="140" height="108" fill="#1d4ed8" opacity="0.55"/>
+        <text x="810" y="590" text-anchor="middle" font-size="11" fill="#0b1220" font-weight="700" letter-spacing="1">RESPONSE TIME</text>
+        <text x="810" y="607" text-anchor="middle" font-size="10" fill="#0b1220" opacity="0.6" letter-spacing="1">12%</text>
+        <text x="810" y="439" text-anchor="middle" font-size="13" fill="#0b1220" font-weight="700">0.12</text>
+
+        <!-- bar: Coverage (8%) = 72 -->
+        <rect x="920" y="488" width="140" height="72" fill="#1d4ed8" opacity="0.4"/>
+        <text x="990" y="590" text-anchor="middle" font-size="11" fill="#0b1220" font-weight="700" letter-spacing="1">COVERAGE</text>
+        <text x="990" y="607" text-anchor="middle" font-size="10" fill="#0b1220" opacity="0.6" letter-spacing="1">8%</text>
+        <text x="990" y="475" text-anchor="middle" font-size="13" fill="#0b1220" font-weight="700">0.08</text>
+      </g>
+
+      <!-- Total annotation -->
+      <text x="1140" y="140" text-anchor="end" fill="#0b1220" font-family="Fraunces, serif" font-style="italic" font-size="22" font-weight="600">&Sigma; = 1.00</text>
+
+      <!-- sample size -->
+      <g font-family="JetBrains Mono, monospace" font-size="10" fill="#0b1220" opacity="0.55" letter-spacing="1">
+        <text x="1140" y="100" text-anchor="end">WEIGHTS DERIVED FROM N=41,227 RE-SCORED INSPECTIONS</text>
+      </g>
+    </svg>
+  </div>
+  <figcaption class="art-hero-cap">
+    <span><span class="lbl">Fig. 01</span> — The five weighted dimensions that compose a Vendor Accountability Score.</span>
+    <span>Vol. 04 · Iss. 009 · p. 56</span>
+  </figcaption>
+</figure>
+
+<article class="art-body">
+
+<p>The Vendor Accountability Score, or VAS, is the number that goes on the monthly customer report. It sits at the top of the page. It is the number a procurement director carries into a renewal meeting. It is the number a vendor&rsquo;s regional VP argues about. We are publishing the methodology in full, because if the number is going to carry weight in a commercial negotiation, the parties on both sides have the right to understand how it is produced. This piece is long. We would rather it be long and reproducible than short and unfalsifiable.</p>
+
+<h2>What a VAS is <em>not</em>.</h2>
+
+<p>It is tempting to read the VAS as a cleaning-quality score. It is not. The VAS is a measure of whether a vendor is delivering a contracted service in a way that a reasonable customer can trust and audit. Cleaning quality is one input, and the largest one, but it is not the only input. A vendor can have excellent cleaning scores and a poor VAS. A vendor with mediocre cleaning scores and exceptional documentation discipline can, surprisingly, land ahead.</p>
+
+<p>This will feel wrong to readers who want the VAS to be a pure quality metric. It was wrong to us, too, the first few times we ran the numbers. But what we found, repeatedly, in customer incident reviews was that the vendors who generated the most commercial trouble were not the vendors with the lowest cleaning scores. They were the vendors whose cleaning scores could not be independently verified. The VAS is designed to reflect that: quality <em>and</em> the legibility of quality.</p>
+
+<h2>The five dimensions.</h2>
+
+<p>The VAS decomposes into five weighted components, published on every monthly report. The weights were derived from a mixed-effects regression on eighteen months of re-scored inspections against observed customer renewal outcomes. The weights are revisited every six months and have been stable for four cycles.</p>
+
+<h3>1. Score quality &mdash; 35%.</h3>
+
+<p>The largest component, and the most straightforward. This is the customer&rsquo;s rubric score, normalized 0&ndash;100, averaged across the reporting period. We use the independent inspector score, not the vendor self-report, for reasons we&rsquo;ve covered in a prior issue. Normalization is a straight min-max within the rubric&rsquo;s possible range; we do not re-scale across frameworks. A Grade B cleanroom score of 96 and a commercial-cleaning score of 96 are both 96; they are not the same difficulty, but they are the same percentile within their respective rubrics.</p>
+
+<h3>2. Evidence grade &mdash; 25%.</h3>
+
+<p>The second-largest component. This measures the proportion of inspection findings that are backed by retrievable, timestamped, GPS-located evidence (typically photo evidence). A score of 100 means every item in the rubric that requires evidence has evidence attached, and the evidence passes our five-point freshness check. A score of 0 means no evidence is attached or retrievable. In practice we rarely see either extreme; the typical range is 70&ndash;95. Evidence grade has the largest delta between vendors with similar cleaning scores, which is why it carries a quarter of the weight on its own.</p>
+
+<h3>3. Consistency &mdash; 20%.</h3>
+
+<p>This is the coefficient of variation of the vendor&rsquo;s monthly score, inverted and normalized. A vendor who scores 86, 87, 88, 86, 87 over five months earns a high consistency mark. A vendor who scores 95, 72, 91, 78, 94 earns a low one, even though their mean is higher. Consistency matters for two reasons. First, because operationally a customer would rather run a 86 every month than a 95-then-72. Second, because the inconsistent score tends to predict a rubric-compliance problem (the vendor is cleaning to the calendar, not to the rubric), which is where contract disputes start.</p>
+
+<h3>4. Response time &mdash; 12%.</h3>
+
+<p>This measures the median time between a flagged deficiency and a closed corrective action. We cap the measurement at seven calendar days; anything longer contributes the same penalty. Response time is the smallest of the three customer-facing dimensions because in most contracts it is a service-level commitment rather than a quality signal. Still, it matters: a vendor who closes corrective actions in under 24 hours on median is a materially different vendor from one who closes them in five days, and both customers and the vendors themselves tell us this is one of the metrics they actually manage to.</p>
+
+<h3>5. Coverage &mdash; 8%.</h3>
+
+<p>This measures what fraction of the contracted rubric was actually inspected in the reporting period. A rubric with 40 scored items where only 28 were inspected produces a coverage score of 70. Coverage is small because most well-run contracts hit near-100 on this dimension; the variance is low. We include it because the low-coverage cases are diagnostically important. A vendor whose coverage drops below 85 is almost always a vendor in operational trouble.</p>
+
+<div class="pullnum">
+  <span class="n">0.65</span>
+  <span class="t">Correlation between VAS and customer-renewal probability at 18-month contract horizon. The single largest correlate we&rsquo;ve found.</span>
+</div>
+
+<h2>The two guardrails.</h2>
+
+<p>Two statistical corrections are applied after the weighted sum. Both exist because naive arithmetic produces results that are unfair to specific classes of vendor in specific situations. Both corrections are published in the monthly report, so a vendor can see what was applied and why.</p>
+
+<h3>Guardrail 1: site-size normalization.</h3>
+
+<p>A vendor running a two-building contract is measured across fewer inspections than a vendor running a thirty-building contract. The smaller sample has more variance. Without correction, a small-portfolio vendor can post a spectacular score in month one and a catastrophic score in month two simply due to sample size. We apply a variance shrinkage to sites with fewer than twelve inspections in the period, pulling scores toward the portfolio mean in proportion to the sample-size deficit. This is a standard Bayesian partial-pooling step.</p>
+
+<p>The effect is small in most cases (within a point of raw VAS) but meaningful in small-contract cases. A two-building portfolio with three bad inspections in a month might otherwise post a VAS in the 60s. After shrinkage it typically lands in the 70s, which is a fairer reflection of the vendor&rsquo;s actual portfolio-wide performance.</p>
+
+<h3>Guardrail 2: framework-adjusted difficulty.</h3>
+
+<p>A Grade A cleanroom rubric has a 14% failure rate at the item level, benchmarked across our entire corpus. A commercial-cleaning rubric has a 4% failure rate. A vendor scoring 86 against a cleanroom rubric is operationally stronger than a vendor scoring 86 against a commercial-cleaning rubric, because the former is playing a harder game.</p>
+
+<p>We apply a framework-difficulty adjustment of up to &plusmn;4 points to the final VAS based on the rubric&rsquo;s corpus-wide failure rate. This guardrail is controversial with some customers, who want a raw score. We publish both: the adjusted VAS is the headline, the raw score is one click away, and the report notes the adjustment magnitude in the audit trail. The adjustment has a material impact at contract renewal for cleanroom, pharma, and aviation vendors, who would otherwise be systematically disadvantaged against vendors working easier rubrics.</p>
+
+<h2>What the VAS <em>correlates with</em>.</h2>
+
+<p>The design goal of the VAS was to produce a number that predicts commercial outcome: renewal, rebate, dispute. The correlations we observe in the corpus:</p>
+
+<div class="datafig">
+  <div class="fig-head">
+    <b>Figure 02 &mdash; VAS correlation with commercial outcomes</b>
+    <span>Source: IQS Flow corpus, 63 sites, 18 months &middot; Pearson r</span>
+  </div>
+  <table>
+    <tr><th>Outcome</th><th>Horizon</th><th>Correlation</th></tr>
+    <tr><td>Contract renewal</td><td>18 mo</td><td><span class="bar" style="width:130px"></span>+0.65</td></tr>
+    <tr><td>Scope expansion</td><td>12 mo</td><td><span class="bar" style="width:94px"></span>+0.47</td></tr>
+    <tr><td>Rebate triggered</td><td>12 mo</td><td><span class="bar" style="width:108px"></span>&minus;0.54</td></tr>
+    <tr><td>Formal dispute</td><td>12 mo</td><td><span class="bar" style="width:88px"></span>&minus;0.44</td></tr>
+  </table>
+</div>
+
+<p>These are not causal claims. A high VAS does not <em>cause</em> a renewal. But a VAS of 88 at month eighteen predicts, in our corpus, a renewal probability of about 86% against a base rate of 61%. A VAS below 70 at the same horizon predicts a renewal probability of about 22%. This is the operative use of the score: not as a quality measurement in the abstract, but as a leading indicator of what the commercial relationship is going to look like at the next renewal.</p>
+
+<h2>What we&rsquo;ve <em>changed</em>.</h2>
+
+<p>The methodology has changed four times since we introduced the VAS in 2023. Each change was motivated by a specific failure mode we observed in customer or vendor incident reviews, and each change was announced in the newsletter two issues before it took effect. The changes:</p>
+
+<ul>
+  <li><b>v1.1 (Jun 2023).</b> Added the site-size shrinkage guardrail after a small-portfolio vendor complained that a single bad inspection had destroyed their quarterly VAS. They were right; the original formula was over-sensitive to sample size.</li>
+  <li><b>v1.2 (Dec 2023).</b> Split evidence-grade into its own dimension, previously bundled with score quality. The split was motivated by finding that evidence-grade was a better predictor of renewal than score quality alone.</li>
+  <li><b>v2.0 (Aug 2024).</b> Added the framework-difficulty adjustment. Cleanroom and pharma vendors had been systematically under-scoring on the headline VAS.</li>
+  <li><b>v2.1 (Mar 2025).</b> Capped response-time at seven days. The uncapped formula was generating tiny differences between vendors responding in, say, 14 vs 18 days, when the operationally relevant question was whether they had responded at all.</li>
+</ul>
+
+<p>We expect to version again in late 2026. The candidate change is a modest up-weighting of evidence-grade based on updated correlation data. We will publish the diff before the change ships.</p>
+
+<h2>Where the VAS <em>shouldn&rsquo;t</em> be used.</h2>
+
+<p>One honest caveat. The VAS is a comparative score. It is useful when a customer is comparing a vendor to themselves over time, or to other vendors in the same customer&rsquo;s portfolio. It is less useful as an absolute standard across customers. A VAS of 85 at customer A and a VAS of 85 at customer B are not directly comparable, because the two customers may be running different rubrics against different difficulty profiles. We do not recommend using the VAS to benchmark one organization&rsquo;s vendors against another organization&rsquo;s vendors. We have received requests to publish industry-wide VAS benchmarks. We have declined.</p>
+
+<p>Internally, the VAS is what we call the <em>renewal number</em>. It is built to carry weight in one specific conversation: the one where a customer and a vendor are deciding whether to continue working together. It was not built for other conversations and should not be used in them.</p>
+
+<div class="art-end">Fin</div>
+</article>
+
+<div class="art-author-box">
+  <div class="av">IQS</div>
+  <div>
+    <h4>IQS Research Team</h4>
+    <div class="role">Methodology · Data science</div>
+    <p>Field Notes methodology pieces are written by the IQS Flow research team. This piece was drafted by the research team and reviewed by Joshua Hinton (COO) and Venice Collier (CEO) before publication. Questions, corrections, or replication requests: research@iqsflow.com.</p>
+  </div>
+</div>
+
+<section class="art-related">
+  <h3>More from this issue.</h3>
+  <div class="rel-grid">
+    <a class="rel-card" href="article-11-3-gap.html">
+      <div class="dept">The Feature</div>
+      <h4>The 11.3-point gap.</h4>
+      <p>Why vendor self-reports run 11.3 points over independent scores, from 41,227 re-scored inspections.</p>
+    </a>
+    <a class="rel-card" href="article-rebates.html">
+      <div class="dept">Field notes</div>
+      <h4>The crew that saved $1.4M in rebates.</h4>
+      <p>A portfolio restructured twelve contracts around independent scoring. Nobody argued.</p>
+    </a>
+    <a class="rel-card" href="article-night-shift.html">
+      <div class="dept">Operations</div>
+      <h4>Writing a rubric your night shift will actually run.</h4>
+      <p>The difference between a rubric crews use and one they avoid is eleven items.</p>
+    </a>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="cta-band-wrap">
+    <h2>Read the <em>rest</em> of the issue.</h2>
+    <div class="acts">
+      <a class="b1" href="blog.html">Back to Field Notes →</a>
+      <a class="b2" href="contact.html">Request a demo</a>
+    </div>
+  </div>
+</section>
+
+<div id="footer-slot"></div>
+<script src="assets/shared.js?v=6"></script>
+</body>
+</html>

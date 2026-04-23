@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Junior Engineer · IQS Flow</title>
+<link rel="icon" type="image/svg+xml" href="assets/iqs-mark.svg"/>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,300;9..144,400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/shared.css?v=6"/>
+<style>
+  .job-wrap { max-width: 960px; margin: 0 auto; padding: 40px 32px 96px; display: grid; grid-template-columns: 1fr 280px; gap: 56px; align-items: start; }
+  @media (max-width: 900px) { .job-wrap { grid-template-columns: 1fr; gap: 32px; } }
+  .job-meta-rail { position: sticky; top: 84px; align-self: start; display: flex; flex-direction: column; gap: 18px; }
+  .job-meta-card { border: 1px solid var(--vd-line); border-radius: 12px; padding: 20px; background: #fff; }
+  .job-meta-card .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed var(--vd-line); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--vd-muted); }
+  .job-meta-card .row:last-child { border-bottom: none; }
+  .job-meta-card .row b { color: var(--vd-ink); font-family: var(--font-body); font-weight: 600; letter-spacing: 0; text-transform: none; font-size: 13px; }
+  .job-apply-btn { display: block; background: var(--accent); color: #fff; padding: 14px 20px; border-radius: 999px; font-family: var(--font-display); font-weight: 700; font-size: 14px; letter-spacing: -0.01em; text-align: center; text-decoration: none; }
+  .job-apply-btn:hover { background: #c25a2c; }
+  .job-back { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--vd-muted); text-decoration: none; display: inline-block; margin-bottom: 28px; }
+  .job-back:hover { color: var(--accent); }
+  .job-body h2 { font-family: var(--font-display); font-size: 24px; font-weight: 700; letter-spacing: -0.02em; margin: 36px 0 12px; }
+  .job-body h2:first-child { margin-top: 0; }
+  .job-body p, .job-body li { font-size: 15px; line-height: 1.7; color: var(--vd-ink); text-wrap: pretty; }
+  .job-body p { margin: 0 0 14px; }
+  .job-body ul { padding-left: 20px; margin: 0 0 18px; }
+  .job-body li + li { margin-top: 6px; }
+  .job-body code { font-family: var(--font-mono); font-size: 13px; background: var(--vd-vendor); padding: 1px 6px; border-radius: 4px; }
+  .apply-form { background: #fff; border: 1px solid var(--vd-line); border-radius: 18px; padding: 36px; margin-top: 48px; }
+  .apply-form h2 { font-family: var(--font-display); font-size: 24px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 6px; }
+  .apply-form .sub { font-size: 13px; color: var(--vd-muted); margin: 0 0 24px; }
+  .af-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .af-fields .full { grid-column: 1 / -1; }
+  .af-field label { display: block; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--vd-muted); margin-bottom: 6px; }
+  .af-field input, .af-field textarea { width: 100%; border: 1px solid var(--vd-line); border-radius: 8px; padding: 12px 14px; font-family: var(--font-body); font-size: 14px; background: #fff; color: var(--vd-ink); box-sizing: border-box; }
+  .af-field textarea { min-height: 120px; resize: vertical; }
+  .af-field input:focus, .af-field textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(214,109,60,0.15); }
+  .af-submit { margin-top: 20px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .af-submit .note { font-size: 12px; color: var(--vd-muted); }
+  .af-submit button { background: var(--accent); color: #fff; border: none; padding: 14px 28px; border-radius: 999px; font-family: var(--font-display); font-weight: 700; font-size: 14px; cursor: pointer; }
+  .af-submit button:hover { background: #c25a2c; }
+  .af-sent { display:none; margin-top:16px; padding:12px 16px; background:rgba(22,163,74,0.08); color:#166534; border-radius:8px; font-size:13px; }
+</style>
+</head>
+<body data-page="careers">
+<div id="nav-slot"></div>
+
+<header class="ph">
+  <div class="ph-eyebrow">IQSF-B · Engineering · Full-time</div>
+  <h1>Junior <em>Engineer.</em></h1>
+  <p class="ph-sub">First or second job out of school, bootcamp, or a self-taught path. You'll pair with senior engineers across the whole stack and ship to real customers inside your first month.</p>
+</header>
+
+<div class="job-wrap">
+  <div class="job-body">
+    <a class="job-back" href="careers.html">← All roles</a>
+
+    <h2>The role.</h2>
+    <p>We build an inspection and scoring platform used by facilities, healthcare, and aviation operators. The stack is Swift/Kotlin on the capture app, TypeScript + Postgres on the backend, React on the portals. You do not need to know all of it. You need to want to learn all of it.</p>
+    <p>You'll pair daily with senior engineers. There is no rotation program, no six-month ramp, no "you're not ready for production." Your first merged PR should land in the first week. Your first feature should ship to a customer inside a month.</p>
+
+    <h2>What you'll do.</h2>
+    <ul>
+      <li>Pair-program on features across the capture app, scoring backend, and portals.</li>
+      <li>Own small features end-to-end: you spec it, you build it, you ship it, you watch the logs.</li>
+      <li>Shadow at least one real inspection in your first 60 days. Yes, with a clipboard.</li>
+      <li>Write customer-facing release notes. Plain writing is part of the role.</li>
+      <li>Join every customer call you can, silently, to hear what real users say.</li>
+    </ul>
+
+    <h2>What we're looking for.</h2>
+    <ul>
+      <li>Some real code you can show us. A CS degree is not required; a GitHub we can open is.</li>
+      <li>Comfortable with at least one of: TypeScript, Swift, Kotlin, Python. You'll learn the others.</li>
+      <li>Can debug. Will not just copy-paste the top Stack Overflow answer without reading it.</li>
+      <li>Writes clearly. Async-first teammates need this more than tenured teams do.</li>
+      <li>Curious about the domain. You don't need to love inspections. You do need to want to understand why they exist.</li>
+    </ul>
+
+    <h2>Compensation.</h2>
+    <p><b>0.5% equity</b> + modest base. We'll talk openly about the full package on the first call. Full-time, remote US or in-office in Atlanta.</p>
+
+    <h2>Process.</h2>
+    <p>Intro call (30 min) &rarr; 90-minute pair-programming session on a small real bug from our tracker &rarr; conversation with the founder about the domain &rarr; offer. If you already have public code, we may skip the pair session.</p>
+
+    <div class="apply-form">
+      <h2>Apply.</h2>
+      <p class="sub">We read every application. Don't overthink it.</p>
+      <form onsubmit="event.preventDefault(); this.querySelector('.af-sent').style.display='block'; this.reset();">
+        <div class="af-fields">
+          <div class="af-field"><label>First name</label><input type="text" required/></div>
+          <div class="af-field"><label>Last name</label><input type="text" required/></div>
+          <div class="af-field"><label>Email</label><input type="email" required/></div>
+          <div class="af-field"><label>GitHub / portfolio URL</label><input type="url" placeholder="https://github.com/..." required/></div>
+          <div class="af-field full"><label>Something you built that you're proud of</label><textarea placeholder="Doesn't have to be professional. A side project, a fix, a tool you wrote for yourself." required></textarea></div>
+          <div class="af-field full"><label>Why engineering, and why here?</label><textarea placeholder="Short and honest beats polished."></textarea></div>
+        </div>
+        <div class="af-submit">
+          <span class="note">Your application is reviewed within 3 business days.</span>
+          <button type="submit">Submit application →</button>
+        </div>
+        <p class="af-sent">Got it &mdash; we'll be in touch within 3 business days.</p>
+      </form>
+    </div>
+  </div>
+
+  <aside class="job-meta-rail">
+    <div class="job-meta-card">
+      <div class="row"><span>Role ID</span><b>IQSF-B</b></div>
+      <div class="row"><span>Team</span><b>Engineering</b></div>
+      <div class="row"><span>Reports to</span><b>Engineering Lead</b></div>
+      <div class="row"><span>Location</span><b>ATL / Remote US</b></div>
+      <div class="row"><span>Type</span><b>Full-time</b></div>
+      <div class="row"><span>Equity</span><b>0.5%</b></div>
+      <div class="row"><span>Experience</span><b>0–2 yrs</b></div>
+    </div>
+    <a class="job-apply-btn" href="#apply" onclick="document.querySelector('.apply-form input').focus()">Apply now →</a>
+  </aside>
+</div>
+
+<div id="footer-slot"></div>
+<script src="assets/shared.js?v=6"></script>
+</body>
+</html>

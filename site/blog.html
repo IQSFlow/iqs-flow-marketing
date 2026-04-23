@@ -1,0 +1,871 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Field Notes — The IQS Flow Journal</title>
+<link rel="icon" type="image/svg+xml" href="assets/iqs-mark.svg"/>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/shared.css?v=6"/>
+<style>
+  body[data-page="blog"] { background: #f4f1ea; }
+
+  /* ============ MASTHEAD ============ */
+  .masthead {
+    max-width: 1360px; margin: 0 auto; padding: 48px 40px 20px;
+    border-bottom: 2px solid var(--vd-ink);
+  }
+  .mast-top {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--vd-ink); padding-bottom: 16px;
+    border-bottom: 1px solid var(--vd-ink);
+  }
+  .mast-top .left, .mast-top .right { display: flex; gap: 20px; }
+  .mast-title {
+    font-family: var(--font-serif); font-weight: 400; font-style: italic;
+    font-size: clamp(64px, 13vw, 180px); line-height: 0.88;
+    letter-spacing: -0.04em; color: var(--vd-ink); margin: 16px 0 8px;
+    text-align: center;
+  }
+  .mast-title .bold { font-style: normal; font-weight: 700; font-family: var(--font-display); letter-spacing: -0.06em; }
+  .mast-sub {
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid var(--vd-ink);
+    padding-top: 12px;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .mast-sub .middle {
+    font-family: var(--font-serif); font-style: italic; font-weight: 400;
+    letter-spacing: 0; text-transform: none; font-size: 14px; color: var(--vd-muted);
+  }
+
+  /* ============ TICKER ============ */
+  .ticker {
+    background: var(--vd-ink); color: var(--vd-bg);
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em;
+    padding: 12px 0; overflow: hidden; white-space: nowrap; position: relative;
+  }
+  .ticker-track { display: inline-flex; gap: 60px; animation: tick 60s linear infinite; padding-left: 100%; }
+  .ticker span { display: inline-flex; gap: 12px; align-items: center; }
+  .ticker span b { color: var(--accent); font-weight: 700; }
+  @keyframes tick { to { transform: translateX(-100%); } }
+
+  /* ============ LEAD WELL ============ */
+  .lead {
+    max-width: 1360px; margin: 0 auto; padding: 48px 40px;
+    display: grid; grid-template-columns: 280px 1fr 280px;
+    gap: 48px; border-bottom: 1px solid var(--vd-ink);
+  }
+  .lead-left, .lead-right { display: flex; flex-direction: column; gap: 24px; }
+  .rail-head {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--vd-ink); padding-bottom: 8px;
+    border-bottom: 1px solid var(--vd-ink);
+  }
+  .rail-item { border-bottom: 1px dotted var(--vd-muted); padding-bottom: 14px; }
+  .rail-item:last-child { border-bottom: none; }
+  .rail-item .kicker {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 6px; font-weight: 700;
+  }
+  .rail-item h4 {
+    font-family: var(--font-display); font-size: 15px; font-weight: 700;
+    letter-spacing: -0.01em; line-height: 1.25; margin: 0 0 6px;
+  }
+  .rail-item p { font-size: 12px; color: var(--vd-muted); line-height: 1.45; margin: 0; }
+  .rail-item .byline {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--vd-muted); margin-top: 6px; display: block;
+  }
+
+  /* Center column - lead story */
+  .lead-center { padding: 0 16px; border-left: 1px solid var(--vd-muted); border-right: 1px solid var(--vd-muted); }
+  .lead-dept {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--accent); font-weight: 700;
+    padding-bottom: 10px; margin-bottom: 24px; border-bottom: 1px solid var(--accent);
+  }
+  .lead-deck {
+    font-family: var(--font-serif); font-weight: 300; font-style: italic;
+    font-size: 22px; line-height: 1.35; color: var(--vd-muted); margin-bottom: 16px;
+  }
+  .lead-headline {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(44px, 5.5vw, 76px); line-height: 0.96;
+    letter-spacing: -0.045em; margin: 0 0 24px; color: var(--vd-ink);
+  }
+  .lead-headline em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); font-size: 0.95em; }
+  .lead-art {
+    margin: 16px 0 20px; aspect-ratio: 16/9;
+    background: var(--vd-ink); color: var(--vd-bg);
+    display: flex; align-items: center; justify-content: center; position: relative;
+    overflow: hidden;
+  }
+  .lead-art .fig {
+    font-family: var(--font-serif); font-style: italic; font-weight: 300;
+    font-size: clamp(140px, 18vw, 260px); line-height: 1; color: var(--accent);
+  }
+  .lead-art .cap {
+    position: absolute; bottom: 12px; left: 16px; right: 16px;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: rgba(255,255,255,0.65); line-height: 1.5;
+    display: flex; justify-content: space-between;
+  }
+  .lead-body {
+    column-count: 2; column-gap: 32px;
+    font-family: var(--font-serif); font-weight: 400; font-size: 15px; line-height: 1.65;
+    color: var(--vd-ink); text-align: justify; hyphens: auto;
+  }
+  .lead-body p { margin: 0 0 14px; break-inside: avoid; }
+  .lead-body p:first-child::first-letter {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: 72px; line-height: 0.85; float: left;
+    margin: 4px 8px 0 0; color: var(--accent);
+  }
+  .lead-meta {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--vd-ink);
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--vd-muted);
+  }
+  .lead-meta .byline-name { color: var(--vd-ink); font-weight: 700; }
+  .read-more {
+    display: inline-flex; align-items: center; gap: 6px; color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* Volume chip */
+  .vol-chip {
+    display: inline-block; padding: 4px 10px; background: var(--vd-ink);
+    color: var(--accent); font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.2em; font-weight: 700;
+  }
+
+  @media (max-width: 1100px) {
+    .lead { grid-template-columns: 1fr; }
+    .lead-center { border: none; padding: 0; border-top: 1px solid var(--vd-ink); padding-top: 32px; }
+    .lead-body { column-count: 1; }
+  }
+
+  /* ============ DEPARTMENTS STRIP ============ */
+  .depts {
+    max-width: 1360px; margin: 0 auto; padding: 28px 40px;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 32px; border-bottom: 2px solid var(--vd-ink);
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .depts .lbl { color: var(--vd-muted); }
+  .depts-list { display: flex; gap: 4px; flex-wrap: wrap; }
+  .depts-list button {
+    background: none; border: 1px solid var(--vd-ink); padding: 8px 14px;
+    font: inherit; letter-spacing: 0.16em; cursor: pointer; color: var(--vd-ink);
+    text-transform: uppercase; transition: all .15s;
+  }
+  .depts-list button:hover { background: var(--vd-ink); color: var(--vd-bg); }
+  .depts-list button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* ============ INDEX (Post grid) ============ */
+  .index {
+    max-width: 1360px; margin: 0 auto; padding: 48px 40px 32px;
+  }
+  .index-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 32px;
+  }
+  .index-head h2 {
+    font-family: var(--font-display); font-size: clamp(36px, 4.5vw, 60px);
+    font-weight: 800; letter-spacing: -0.035em; margin: 0;
+  }
+  .index-head h2 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); }
+  .index-head .count {
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--vd-muted);
+  }
+
+  .index-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1px; background: var(--vd-ink); border: 1px solid var(--vd-ink); }
+  .article-card {
+    background: #f4f1ea; padding: 28px; display: flex; flex-direction: column;
+    min-height: 360px; position: relative; overflow: hidden;
+    transition: background .2s;
+    text-decoration: none; color: inherit;
+  }
+  a.article-card { cursor: pointer; }
+  a.article-card:hover h3 { color: var(--accent); }
+  a.article-card.visual:hover h3, a.article-card.note:hover h3 { color: #fff; }
+  .article-card:hover { background: #fff; }
+  .article-card.col-4 { grid-column: span 4; }
+  .article-card.col-6 { grid-column: span 6; }
+  .article-card.col-8 { grid-column: span 8; }
+  .article-card.col-12 { grid-column: span 12; }
+
+  .ac-dept {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em;
+    text-transform: uppercase; font-weight: 700; margin-bottom: 12px;
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 10px; border-bottom: 1px solid var(--vd-ink);
+  }
+  .ac-dept .label { color: var(--accent); }
+  .ac-dept .date { color: var(--vd-muted); }
+  .ac-card h3 {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 22px; line-height: 1.2; letter-spacing: -0.02em;
+    margin: 0 0 12px; color: var(--vd-ink);
+  }
+  .ac-card h3 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); }
+  .ac-card.large h3 { font-size: clamp(28px, 3vw, 42px); letter-spacing: -0.035em; }
+  .ac-card p {
+    font-family: var(--font-serif); font-weight: 400; font-size: 14px; line-height: 1.55;
+    color: var(--vd-ink); margin: 0 0 16px; flex: 1;
+  }
+  .ac-card.large p { font-size: 16px; }
+  .ac-card .foot {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--vd-muted);
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 12px; border-top: 1px dotted var(--vd-muted);
+  }
+  .ac-card .foot .read { color: var(--vd-ink); font-weight: 700; }
+
+  /* Visual cards */
+  .ac-card.visual { padding: 0; color: #fff; background: var(--vd-ink); }
+  .ac-card.visual:hover { background: #000; }
+  .ac-card.visual .visual-top {
+    aspect-ratio: 16/10; display: flex; align-items: flex-end;
+    position: relative; overflow: hidden;
+    background: var(--vd-ink);
+  }
+  .ac-card.visual .visual-top img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    filter: grayscale(0.15) contrast(1.02);
+  }
+  .ac-card.visual .visual-top::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(11,18,32,0.15) 0%, rgba(11,18,32,0.05) 50%, rgba(11,18,32,0.85) 100%);
+  }
+  .ac-card.visual .vt-cap {
+    position: relative; z-index: 1; padding: 14px 20px;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: rgba(255,255,255,0.8);
+    display: flex; justify-content: space-between; width: 100%;
+  }
+  .ac-card.visual .vt-cap .tag { color: var(--accent); font-weight: 700; }
+
+  /* Photo-hero cards (regular cards with a small image strip on top) */
+  .ac-card.photo { padding: 0; display: flex; flex-direction: column; }
+  .ac-card.photo .ph-img {
+    aspect-ratio: 16/9; position: relative; overflow: hidden; background: var(--vd-ink);
+  }
+  .ac-card.photo .ph-img img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform .5s ease;
+  }
+  .ac-card.photo:hover .ph-img img { transform: scale(1.03); }
+  .ac-card.photo .ph-body {
+    padding: 22px 24px 24px; display: flex; flex-direction: column; flex: 1;
+  }
+  .ac-card.photo .ac-dept { margin-bottom: 10px; }
+  .ac-card.photo h3 { margin-bottom: 10px; }
+  .ac-card.photo p { font-size: 14px; margin-bottom: 14px; }
+  .ac-card.visual .visual-body {
+    padding: 24px 28px 28px; color: #fff;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+  .ac-card.visual .ac-dept { color: rgba(255,255,255,0.6); border-bottom-color: rgba(255,255,255,0.15); }
+  .ac-card.visual .ac-dept .label { color: var(--accent); }
+  .ac-card.visual h3 { color: #fff; }
+  .ac-card.visual h3 em { color: var(--accent); }
+  .ac-card.visual p { color: rgba(255,255,255,0.75); }
+  .ac-card.visual .foot { color: rgba(255,255,255,0.5); border-top-color: rgba(255,255,255,0.12); }
+  .ac-card.visual .foot .read { color: #fff; }
+
+  /* Editor's note card */
+  .ac-card.note {
+    background: var(--accent); color: #fff;
+  }
+  .ac-card.note:hover { background: #1538a8; }
+  .ac-card.note .ac-dept { color: rgba(255,255,255,0.7); border-bottom-color: rgba(255,255,255,0.25); }
+  .ac-card.note .ac-dept .label { color: #fff; }
+  .ac-card.note h3 { color: #fff; font-family: var(--font-serif); font-weight: 400; font-style: italic; font-size: clamp(26px, 2.6vw, 34px); line-height: 1.25; }
+  .ac-card.note p { color: rgba(255,255,255,0.9); font-style: italic; }
+  .ac-card.note .foot { color: rgba(255,255,255,0.65); border-top-color: rgba(255,255,255,0.25); }
+  .ac-card.note .foot .read { color: #fff; }
+
+  @media (max-width: 1000px) {
+    .article-card.col-4, .article-card.col-6, .article-card.col-8 { grid-column: span 12; }
+  }
+
+  /* ============ NEWSLETTER PANEL ============ */
+  .nl-panel {
+    max-width: 1360px; margin: 0 auto; padding: 48px 40px;
+    border-top: 2px solid var(--vd-ink);
+  }
+  .nl-grid {
+    display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px; align-items: center;
+    padding: 56px 48px; background: var(--vd-ink); color: var(--vd-bg);
+    position: relative; overflow: hidden;
+  }
+  .nl-grid::before {
+    content: ''; position: absolute; right: -80px; bottom: -80px;
+    width: 400px; height: 400px; border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 40%, transparent) 0%, transparent 70%);
+  }
+  .nl-grid > div { position: relative; z-index: 1; }
+  .nl-grid .eyebrow {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 16px;
+  }
+  .nl-grid h2 {
+    font-family: var(--font-display); font-size: clamp(36px, 4vw, 54px);
+    font-weight: 800; letter-spacing: -0.03em; line-height: 1.02;
+    margin: 0 0 16px; color: #fff;
+  }
+  .nl-grid h2 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); }
+  .nl-grid p { color: rgba(255,255,255,0.75); font-size: 15px; line-height: 1.6; margin: 0; }
+  .nl-form { display: flex; flex-direction: column; gap: 12px; }
+  .nl-form input {
+    padding: 18px 22px; font: inherit;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); border-radius: 0;
+    color: #fff; font-size: 15px; outline: none;
+  }
+  .nl-form input::placeholder { color: rgba(255,255,255,0.45); }
+  .nl-form input:focus { border-color: var(--accent); background: rgba(255,255,255,0.12); }
+  .nl-form button {
+    padding: 18px 22px; background: var(--accent); color: #fff;
+    border: none; font: inherit; font-weight: 700; font-size: 14px;
+    letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+  }
+  .nl-form .micro {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.5); margin-top: 4px;
+  }
+  .nl-stats { display: flex; gap: 32px; margin-top: 28px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.15); }
+  .nl-stats div b {
+    display: block; font-family: var(--font-display); font-weight: 800; font-size: 32px;
+    color: #fff; letter-spacing: -0.02em;
+  }
+  .nl-stats div span {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: rgba(255,255,255,0.55);
+  }
+  @media (max-width: 900px) { .nl-grid { grid-template-columns: 1fr; padding: 32px; } }
+
+  /* ============ ARCHIVE LIST ============ */
+  .archive {
+    max-width: 1360px; margin: 0 auto; padding: 48px 40px 96px;
+  }
+  .arch-head {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    padding-bottom: 20px; border-bottom: 2px solid var(--vd-ink); margin-bottom: 4px;
+  }
+  .arch-head h2 {
+    font-family: var(--font-display); font-size: clamp(28px, 3vw, 42px);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0;
+  }
+  .arch-head .sub {
+    font-family: var(--font-serif); font-style: italic; font-weight: 400;
+    color: var(--vd-muted); font-size: 16px;
+  }
+  .arch-list { display: flex; flex-direction: column; }
+  .arch-row {
+    display: grid; grid-template-columns: 80px 140px 1fr 200px 120px 100px;
+    gap: 24px; align-items: center; padding: 20px 0;
+    border-bottom: 1px solid var(--vd-line);
+    font-size: 14px; transition: background .15s;
+    text-decoration: none; color: inherit;
+  }
+  .arch-row:hover { background: #fff; padding-left: 12px; padding-right: 12px; }
+  .arch-row .num {
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em;
+    color: var(--vd-muted);
+  }
+  .arch-row .dept-tag {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--accent); font-weight: 700;
+  }
+  .arch-row .title {
+    font-family: var(--font-display); font-weight: 700; font-size: 16px;
+    letter-spacing: -0.01em; color: var(--vd-ink);
+  }
+  .arch-row .author {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--vd-muted);
+  }
+  .arch-row .date {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
+    color: var(--vd-muted);
+  }
+  .arch-row .read-min {
+    font-family: var(--font-mono); font-size: 11px; text-align: right; color: var(--vd-muted);
+  }
+  @media (max-width: 900px) {
+    .arch-row { grid-template-columns: auto 1fr; grid-auto-rows: auto; gap: 8px; }
+    .arch-row .author, .arch-row .read-min, .arch-row .dept-tag { display: none; }
+  }
+
+  /* ============ CONTRIBUTORS ============ */
+  .contrib {
+    max-width: 1360px; margin: 0 auto; padding: 48px 40px 72px;
+    border-top: 1px solid var(--vd-ink);
+  }
+  .contrib h2 {
+    font-family: var(--font-serif); font-style: italic; font-weight: 400;
+    font-size: clamp(36px, 4vw, 56px); letter-spacing: -0.02em; margin: 0 0 8px;
+  }
+  .contrib .sub { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--vd-muted); margin-bottom: 40px; }
+  .contrib-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; }
+  .contrib-card { border-top: 1px solid var(--vd-ink); padding-top: 20px; }
+  .contrib-avatar {
+    width: 56px; height: 56px; border-radius: 50%; background: var(--vd-ink);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-weight: 800; font-size: 18px;
+    margin-bottom: 14px;
+  }
+  .contrib-card:nth-child(1) .contrib-avatar { background: var(--accent); }
+  .contrib-card:nth-child(3) .contrib-avatar { background: var(--accent); }
+  .contrib-card:nth-child(5) .contrib-avatar { background: var(--accent); }
+  .contrib-card h4 { font-family: var(--font-display); font-weight: 700; font-size: 15px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .contrib-card .role {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--vd-muted); margin-bottom: 8px;
+  }
+  .contrib-card p { font-family: var(--font-serif); font-size: 13px; line-height: 1.5; color: var(--vd-ink); margin: 0; }
+  @media (max-width: 900px) { .contrib-grid { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body data-page="blog">
+<div id="nav-slot"></div>
+
+<!-- ============ MASTHEAD ============ -->
+<header class="masthead">
+  <div class="mast-top">
+    <div class="left">
+      <span>Vol. 04 · Issue 11</span>
+      <span>Apr 12, 2026</span>
+    </div>
+    <div class="right">
+      <span>Published monthly</span>
+      <span>Est. 2022</span>
+    </div>
+  </div>
+  <h1 class="mast-title">Field <span class="bold">Notes.</span></h1>
+  <div class="mast-sub">
+    <span>The IQS Flow Journal</span>
+    <span class="middle">Writing about the ground truth of facility quality, by the people standing on it.</span>
+    <span>48 Issues · 314 Essays</span>
+  </div>
+</header>
+
+<!-- ============ TICKER ============ -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>THIS ISSUE <b>011</b></span>
+    <span>VENDOR-REPORTED AVG <b>+11.3 PTS</b> OVER IQS SCORE</span>
+    <span>INSPECTIONS AUDITED <b>41,227</b></span>
+    <span>NEXT ISSUE <b>MAY 12</b></span>
+    <span>NEW FRAMEWORK <b>ISO 14644 v2026</b></span>
+    <span>THIS ISSUE <b>011</b></span>
+    <span>VENDOR-REPORTED AVG <b>+11.3 PTS</b> OVER IQS SCORE</span>
+    <span>INSPECTIONS AUDITED <b>41,227</b></span>
+    <span>NEXT ISSUE <b>MAY 12</b></span>
+    <span>NEW FRAMEWORK <b>ISO 14644 v2026</b></span>
+  </div>
+</div>
+
+<!-- ============ LEAD WELL ============ -->
+<section class="lead">
+  <!-- LEFT RAIL -->
+  <aside class="lead-left">
+    <div class="rail-head">In this issue</div>
+    <div class="rail-item">
+      <div class="kicker">01 · The Feature</div>
+      <h4>The 11.3-point gap</h4>
+      <p>Why vendor-reported scores run hot, from 18 months of audit data.</p>
+      <span class="byline">Venice Collier</span>
+    </div>
+    <div class="rail-item">
+      <div class="kicker">02 · Reported Essay</div>
+      <h4>What a JCAHO surveyor actually asks for</h4>
+      <p>Five evidence artifacts surveyors request first. None are spreadsheets.</p>
+      <span class="byline">IQS Research</span>
+    </div>
+    <div class="rail-item">
+      <div class="kicker">03 · Methodology</div>
+      <h4>How we weight the VAS</h4>
+      <p>Five dimensions, two normalization guardrails, one renewal conversation.</p>
+      <span class="byline">IQS Research</span>
+    </div>
+    <div class="rail-item">
+      <div class="kicker">04 · Letter</div>
+      <h4>On rubric cruelty</h4>
+      <p>A night-shift lead writes back. We published the letter in full.</p>
+      <span class="byline">Correspondence</span>
+    </div>
+  </aside>
+
+  <!-- CENTER LEAD -->
+  <article class="lead-center">
+    <div class="lead-dept">The Feature · Vol 04 Issue 11</div>
+    <div class="lead-deck">A study of 41,227 re-scored inspections found vendor-reported quality runs 11.3 points over independently measured quality. We looked at where the gap comes from.</div>
+    <h1 class="lead-headline">The eleven-point <em>three</em> gap.</h1>
+    <div class="lead-art">
+      <div class="fig">11.3</div>
+      <div class="cap">
+        <span>Fig. 01 — Mean delta, vendor score vs IQS score, n=41,227</span>
+        <span>Illustration: N. Eshun</span>
+      </div>
+    </div>
+    <div class="lead-body">
+      <p>Every operations leader we interviewed could tell us exactly when they stopped trusting their monthly quality report. It was always a specific Monday, always a specific finding, always a moment where the report said 98% and the reality said otherwise. We wanted to know if that gap was real in aggregate, or just in memory.</p>
+      <p>So over eighteen months we re-scored 41,227 inspections across three industries — aviation ground services, acute-care environmental services, and multi-tenant commercial cleaning — using the same rubric the vendor had used, run by an independent inspector. The deltas were remarkably stable. In every industry, across every framework we tested, the vendor's self-reported score ran hot by a similar amount.</p>
+      <p>The mean was 11.3 points. The median was 10.8. And critically: the variance by site was low. This isn't a story about a handful of bad vendors dragging an average around. It's structural. It reflects how inspection rubrics interact with the humans who have to grade against them when those humans are also the ones being graded.</p>
+      <p>The interesting question isn't how big the gap is. It's what the gap is made of, and why rubric design matters more than crew quality for closing it.</p>
+    </div>
+    <div class="lead-meta">
+      <span>By <span class="byline-name">Venice Collier</span> · Founder &amp; CEO</span>
+      <a class="read-more" href="article-11-3-gap.html">Read the full piece, 9 min →</a>
+    </div>
+  </article>
+
+  <!-- RIGHT RAIL -->
+  <aside class="lead-right">
+    <div class="rail-head">Most discussed</div>
+    <div class="rail-item">
+      <div class="kicker">Operations</div>
+      <h4>Why turn-time KPIs lie</h4>
+      <p>A ramp ops post-mortem on why "38-minute turn" is a misleading metric.</p>
+      <span class="byline">IQS Research · 5 min</span>
+    </div>
+    <div class="rail-item">
+      <div class="kicker">Field Notes</div>
+      <h4>The crew that saved $1.4M in rebates</h4>
+      <p>A REIT restructured janitorial contracts around independent scoring.</p>
+      <span class="byline">Venice Collier · 6 min</span>
+    </div>
+    <div class="rail-item">
+      <div class="kicker">Compliance</div>
+      <h4>ATA 103 is not a checklist</h4>
+      <p>How to translate the document's intent into a 22-item rubric.</p>
+      <span class="byline">IQS Research · 6 min</span>
+    </div>
+    <div class="rail-item">
+      <div class="kicker">Product</div>
+      <h4>The API we didn't want to ship</h4>
+      <p>What the REST/webhooks v2 spec ended up looking like, and what we cut.</p>
+      <span class="byline">Joshua Hinton · 3 min</span>
+    </div>
+  </aside>
+</section>
+
+<!-- ============ DEPARTMENTS ============ -->
+<nav class="depts">
+  <span class="lbl">Departments</span>
+  <div class="depts-list">
+    <button class="active" data-tag="all">All · 314</button>
+    <button data-tag="field">Field Notes · 112</button>
+    <button data-tag="compliance">Compliance · 47</button>
+    <button data-tag="operations">Operations · 68</button>
+    <button data-tag="methodology">Methodology · 31</button>
+    <button data-tag="product">Product · 29</button>
+    <button data-tag="correspondence">Correspondence · 27</button>
+  </div>
+</nav>
+
+<!-- ============ INDEX ============ -->
+<section class="index">
+  <div class="index-head">
+    <h2>The <em>Index.</em></h2>
+    <div class="count">Vol 04 · Recent writing · 9 pieces</div>
+  </div>
+
+  <div class="index-grid">
+    <!-- Row 1: editor's note + big visual -->
+    <a class="article-card col-4 ac-card note" data-tags="correspondence" href="article-editors-note.html">
+      <div class="ac-dept">
+        <span class="label">Editor's note</span>
+        <span class="date">Apr 12</span>
+      </div>
+      <h3>We don't publish vendor press releases. Not even our own.</h3>
+      <p>What "field notes" means, why every essay is by-lined by the person who actually stood in the room, and the three things our editorial board rejects on sight.</p>
+      <div class="foot">
+        <span>By Joshua Hinton</span>
+        <span class="read">Read →</span>
+      </div>
+    </a>
+
+    <a class="article-card col-8 ac-card visual large" data-tags="field compliance" href="article-jcaho-asks.html">
+      <div class="visual-top">
+        <img src="assets/blog/jcaho-corridor.jpg" alt="Hospital corridor mid-shift with wet-floor sign and crew"/>
+        <div class="vt-cap">
+          <span class="tag">Fig. 02 — Field photograph</span>
+          <span>Mercy Regional · Evening shift</span>
+        </div>
+      </div>
+      <div class="visual-body">
+        <div class="ac-dept">
+          <span class="label">Reported essay · Field notes</span>
+          <span class="date">Apr 09 · 7 min</span>
+        </div>
+        <h3>What a JCAHO surveyor <em>actually</em> asks for, and how to have it ready.</h3>
+        <p>Three years of hospital audits, distilled into the five evidence artifacts surveyors request first. Spoiler: none of them are spreadsheets, and two of them need to be produced in under four minutes or you will lose the room.</p>
+        <div class="foot">
+          <span>By the IQS Research Team</span>
+          <span class="read">Read the essay →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Row 2: three equal, photo hero -->
+    <a class="article-card col-4 ac-card photo" data-tags="operations methodology" href="article-turn-time.html">
+      <div class="ph-img"><img src="assets/blog/terminal-hygiene.jpg" alt="Air Canada 777 on approach"/></div>
+      <div class="ph-body">
+        <div class="ac-dept">
+          <span class="label">Operations</span>
+          <span class="date">Apr 02 · 5 min</span>
+        </div>
+        <h3>Why turn-time KPIs <em>lie</em> (and what to measure instead).</h3>
+        <p>A station ops post-mortem on why "38-minute turn" is a misleading metric. We rebuild the turn into nine discrete cleanable moments, with evidence windows for each.</p>
+        <div class="foot">
+          <span>By the IQS Research Team</span>
+          <span class="read">Read →</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="article-card col-4 ac-card photo" data-tags="product" href="article-four-portals.html">
+      <div class="ph-img"><img src="assets/blog/data-framework.jpg" alt="Two laptops through glass"/></div>
+      <div class="ph-body">
+        <div class="ac-dept">
+          <span class="label">Product</span>
+          <span class="date">Mar 26 · 4 min</span>
+        </div>
+        <h3>Four portals, one data model, the design principle behind our rebuild.</h3>
+        <p>We rebuilt our four role portals on a single normalized data schema. Here's why that matters to ops leaders negotiating vendor contracts, and how it prevents "version drift" in reporting.</p>
+        <div class="foot">
+          <span>By Joshua Hinton</span>
+          <span class="read">Read →</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="article-card col-4 ac-card photo" data-tags="compliance methodology" href="article-iso-14644.html">
+      <div class="ph-img"><img src="assets/blog/janitor-corridor.jpg" alt="Cleaner in a curved white corridor"/></div>
+      <div class="ph-body">
+        <div class="ac-dept">
+          <span class="label">Compliance</span>
+          <span class="date">Mar 21 · 8 min</span>
+        </div>
+        <h3>ISO 14644 drift: from sensor alert to batch disposition in 47 minutes.</h3>
+        <p>An anatomy of how a cleanroom client's particulate event moved from alert to QA sign-off using evidence captured by a janitorial crew they thought couldn't document.</p>
+        <div class="foot">
+          <span>By Joshua Hinton</span>
+          <span class="read">Read →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Row 3: wide photo + narrow -->
+    <a class="article-card col-8 ac-card photo" data-tags="field operations" href="article-rebates.html">
+      <div class="ph-img" style="aspect-ratio: 21/9;"><img src="assets/blog/global-facilities.jpg" alt="Commercial towers from below"/></div>
+      <div class="ph-body">
+        <div class="ac-dept">
+          <span class="label">Field notes</span>
+          <span class="date">Mar 13 · 6 min</span>
+        </div>
+        <h3 style="font-size: clamp(28px,3vw,40px); letter-spacing: -0.035em; line-height: 1.1;">The crew that quietly saved $1.4M in contract <em>rebates.</em></h3>
+        <p>A real-estate portfolio restructured 12 janitorial contracts around independent ISSA scoring. Rebates were re-priced at renewal. Not one vendor disputed a number. The crews, surprisingly, didn't change. The accountability did.</p>
+        <div class="foot">
+          <span>By Venice Collier</span>
+          <span class="read">Read →</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="article-card col-4 ac-card" data-tags="methodology product" href="article-vas-methodology.html">
+      <div class="ac-dept">
+        <span class="label">Methodology</span>
+        <span class="date">Mar 02 · 10 min</span>
+      </div>
+      <h3>How we weight the <em>Vendor Accountability Score.</em></h3>
+      <p>A walk-through of the VAS: five weighted dimensions, how we normalize across frameworks, and the statistical guardrails we use so site-size doesn't punish small operators.</p>
+      <div class="foot">
+        <span>By IQS Research</span>
+        <span class="read">Read →</span>
+      </div>
+    </a>
+
+    <!-- Row 4: three equal, photo hero -->
+    <a class="article-card col-4 ac-card photo" data-tags="operations" href="article-night-shift.html">
+      <div class="ph-img"><img src="assets/blog/unverified-cost.jpg" alt="Crew on a jobsite at work"/></div>
+      <div class="ph-body">
+        <div class="ac-dept">
+          <span class="label">Operations</span>
+          <span class="date">Feb 25 · 5 min</span>
+        </div>
+        <h3>Writing a rubric your night shift will actually run.</h3>
+        <p>The difference between a rubric crews use and one they avoid is eleven checklist items. We show what to cut, what to weight, and what the data says about completion rates.</p>
+        <div class="foot">
+          <span>By the IQS Research Team</span>
+          <span class="read">Read →</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="article-card col-4 ac-card photo" data-tags="compliance field" href="article-ata103.html">
+      <div class="ph-img"><img src="assets/blog/airport-sunset.jpg" alt="Airport terminal at sunset"/></div>
+      <div class="ph-body">
+        <div class="ac-dept">
+          <span class="label">Compliance</span>
+          <span class="date">Feb 16 · 6 min</span>
+        </div>
+        <h3>ATA 103 is <em>not</em> a checklist. It is a cabin standard.</h3>
+        <p>Why reading ATA 103 literally produces bad inspections, and how to translate the document's intent into a 22-item rubric that will hold up in an airline audit.</p>
+        <div class="foot">
+          <span>By the IQS Research Team</span>
+          <span class="read">Read →</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="article-card col-4 ac-card" data-tags="product" href="article-api.html">
+      <div class="ac-dept">
+        <span class="label">Product</span>
+        <span class="date">Feb 07 · 3 min</span>
+      </div>
+      <h3>The API we didn't want to ship, and why we shipped it anyway.</h3>
+      <p>Customer operations platforms were asking for event streams. We had reservations. Here's what the REST/webhooks v2 spec ended up looking like, and what we cut.</p>
+      <div class="foot">
+        <span>By Joshua Hinton</span>
+        <span class="read">Read →</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ============ NEWSLETTER ============ -->
+<section class="nl-panel">
+  <div class="nl-grid">
+    <div>
+      <div class="eyebrow">The Journal, by email</div>
+      <h2>One long essay. <em>Once</em> a month.</h2>
+      <p>Fourteen minutes of reading, once a month. One long-form piece by an operations practitioner. The month's benchmark movement. A short briefing on upcoming framework changes. No marketing. One-click unsubscribe, as always.</p>
+      <div class="nl-stats">
+        <div><b>14,200</b><span>Subscribers</span></div>
+        <div><b>67%</b><span>Open rate</span></div>
+        <div><b>0</b><span>Promo emails</span></div>
+      </div>
+    </div>
+    <form class="nl-form" onsubmit="event.preventDefault(); this.reset(); alert('Subscribed. Check your inbox.');">
+      <input type="email" placeholder="you@company.com" required/>
+      <button type="submit">Subscribe to Field Notes</button>
+      <div class="micro">Published from New Orleans. Edited in-house by the IQS Flow team.</div>
+    </form>
+  </div>
+</section>
+
+<!-- ============ ARCHIVE ============ -->
+<section class="archive">
+  <div class="arch-head">
+    <h2>Back issues.</h2>
+    <span class="sub">Every essay we've published, in reverse order.</span>
+  </div>
+  <div class="arch-list" id="archiveList">
+    <a class="arch-row" href="article-11-3-gap.html"><span class="num">#314</span><span class="dept-tag">Field Notes</span><span class="title">The 11.3-point gap: why vendor-reported scores run hot</span><span class="author">Venice Collier</span><span class="date">Apr 12, 2026</span><span class="read-min">9 min →</span></a>
+    <a class="arch-row" href="article-jcaho-asks.html"><span class="num">#313</span><span class="dept-tag">Field Notes</span><span class="title">What a JCAHO surveyor actually asks for</span><span class="author">IQS Research</span><span class="date">Apr 09, 2026</span><span class="read-min">7 min →</span></a>
+    <a class="arch-row" href="article-turn-time.html"><span class="num">#312</span><span class="dept-tag">Operations</span><span class="title">Why turn-time KPIs lie (and what to measure instead)</span><span class="author">IQS Research</span><span class="date">Apr 02, 2026</span><span class="read-min">5 min →</span></a>
+    <a class="arch-row" href="article-four-portals.html"><span class="num">#311</span><span class="dept-tag">Product</span><span class="title">Four portals, one data model, the design principle behind our rebuild</span><span class="author">Joshua Hinton</span><span class="date">Mar 26, 2026</span><span class="read-min">4 min →</span></a>
+    <a class="arch-row" href="article-iso-14644.html"><span class="num">#310</span><span class="dept-tag">Compliance</span><span class="title">ISO 14644 drift: from sensor alert to batch disposition in 47 minutes</span><span class="author">Joshua Hinton</span><span class="date">Mar 21, 2026</span><span class="read-min">8 min →</span></a>
+    <a class="arch-row" href="article-rebates.html"><span class="num">#309</span><span class="dept-tag">Field Notes</span><span class="title">The crew that quietly saved $1.4M in contract rebates</span><span class="author">Venice Collier</span><span class="date">Mar 13, 2026</span><span class="read-min">6 min →</span></a>
+    <a class="arch-row" href="#"><span class="num">#308</span><span class="dept-tag">Correspondence</span><span class="title">On rubric cruelty: a letter from a night-shift lead</span><span class="author">Correspondence</span><span class="date">Mar 08, 2026</span><span class="read-min">4 min →</span></a>
+    <a class="arch-row" href="article-vas-methodology.html"><span class="num">#307</span><span class="dept-tag">Methodology</span><span class="title">How we weight the Vendor Accountability Score</span><span class="author">IQS Research</span><span class="date">Mar 02, 2026</span><span class="read-min">10 min →</span></a>
+    <a class="arch-row" href="article-night-shift.html"><span class="num">#306</span><span class="dept-tag">Operations</span><span class="title">Writing a rubric your night shift will actually run</span><span class="author">IQS Research</span><span class="date">Feb 25, 2026</span><span class="read-min">5 min →</span></a>
+    <a class="arch-row" href="article-ata103.html"><span class="num">#305</span><span class="dept-tag">Compliance</span><span class="title">ATA 103 is not a checklist. It is a cabin standard.</span><span class="author">IQS Research</span><span class="date">Feb 16, 2026</span><span class="read-min">6 min →</span></a>
+    <a class="arch-row" href="article-api.html"><span class="num">#304</span><span class="dept-tag">Product</span><span class="title">The API we didn't want to ship, and why we shipped it anyway</span><span class="author">Joshua Hinton</span><span class="date">Feb 07, 2026</span><span class="read-min">3 min →</span></a>
+    <a class="arch-row" href="#"><span class="num">#303</span><span class="dept-tag">Field Notes</span><span class="title">Two vendors, one concourse, a natural experiment in scoring</span><span class="author">IQS Research</span><span class="date">Jan 17, 2026</span><span class="read-min">7 min →</span></a>
+    <a class="arch-row" href="#"><span class="num">#302</span><span class="dept-tag">Methodology</span><span class="title">What we mean by "evidence-grade" — and the three tests we run</span><span class="author">IQS Research</span><span class="date">Feb 07, 2026</span><span class="read-min">8 min →</span></a>
+    <a class="arch-row" href="#"><span class="num">#301</span><span class="dept-tag">Operations</span><span class="title">The 38-cent case for photo-verified quality</span><span class="author">Venice Collier</span><span class="date">Jan 03, 2026</span><span class="read-min">5 min →</span></a>
+    </div>
+</section>
+
+<!-- ============ CONTRIBUTORS ============ -->
+<section class="contrib">
+  <h2>Our contributors.</h2>
+  <div class="sub">Practitioners who write here</div>
+  <div class="contrib-grid">
+    <div class="contrib-card">
+      <div class="contrib-avatar">VC</div>
+      <h4>Venice Collier</h4>
+      <div class="role">CEO · 20 yrs FM</div>
+      <p>Twenty years managing facility services for airlines, hospitals, and retail chains. Writes on founder topics and negotiation.</p>
+    </div>
+    <div class="contrib-card">
+      <div class="contrib-avatar">MH</div>
+      <h4>Marta Halverson</h4>
+      <div class="role">Infection prevention</div>
+      <p>Former IP director at a 900-bed academic medical system. Writes on JCAHO, healthcare EVS, and rubric design.</p>
+    </div>
+    <div class="contrib-card">
+      <div class="contrib-avatar">DA</div>
+      <h4>Diego Araujo</h4>
+      <div class="role">Station operations</div>
+      <p>Fifteen years in aviation ground-service ops at three hub carriers. Writes on turn-time, ATA 103, and field discipline.</p>
+    </div>
+    <div class="contrib-card">
+      <div class="contrib-avatar">RP</div>
+      <h4>Ravi Patel</h4>
+      <div class="role">Cleanroom &amp; life sci</div>
+      <p>QA engineer turned inspector. Writes on ISO 14644, FDA sanitation records, and why science labs need different rubrics.</p>
+    </div>
+    <div class="contrib-card">
+      <div class="contrib-avatar">EL</div>
+      <h4>Eleanor Lloyd</h4>
+      <div class="role">Editor · Head of product</div>
+      <p>Edits the journal. Writes on product, API, and how the four role portals stay honest with one another.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="cta-band-wrap">
+    <h2>Want to <em>write</em> with us?</h2>
+    <p class="cta-band-sub" style="max-width:680px;margin:0 auto 32px;color:rgba(255,255,255,0.7);font-size:16px;line-height:1.6;">We pay $1,500 per accepted piece. 1,200–2,500 words. Practitioner voice only, no vendor PR. If you manage cleaning, inspections, or quality in the field, we want your pitch.</p>
+    <div class="acts">
+      <a class="b1" href="#">Pitch a post →</a>
+      <a class="b2" href="index.html">Request a demo</a>
+    </div>
+  </div>
+</section>
+
+<div id="footer-slot"></div>
+<script src="assets/shared.js?v=6"></script>
+<script>
+  // Department filtering: operates on both the index cards and the archive list
+  document.querySelectorAll('.depts-list button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tag = btn.dataset.tag;
+      document.querySelectorAll('.depts-list button').forEach(b => b.classList.toggle('active', b === btn));
+      // Index
+      document.querySelectorAll('.article-card').forEach(p => {
+        const tags = (p.dataset.tags || '').split(' ');
+        p.style.display = (tag === 'all' || tags.includes(tag)) ? '' : 'none';
+      });
+      // Archive
+      const map = { field: 'Field Notes', compliance: 'Compliance', operations: 'Operations', product: 'Product', methodology: 'Methodology', correspondence: 'Correspondence' };
+      const want = map[tag];
+      document.querySelectorAll('.arch-row').forEach(r => {
+        if (tag === 'all') { r.style.display = ''; return; }
+        const d = r.querySelector('.dept-tag')?.textContent?.trim();
+        r.style.display = (d === want) ? '' : 'none';
+      });
+    });
+  });
+</script>
+</body>
+</html>

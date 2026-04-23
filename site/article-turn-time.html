@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Why turn-time KPIs lie — Field Notes</title>
+<link rel="icon" type="image/svg+xml" href="assets/iqs-mark.svg"/>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/shared.css?v=6"/>
+<link rel="stylesheet" href="assets/article.css?v=2"/>
+</head>
+<body data-page="article">
+<div id="nav-slot"></div>
+
+<div class="art-back">
+  <a href="blog.html">← Field Notes</a>
+  <span>Vol. 04 · Issue 011 · Operations</span>
+</div>
+
+<header class="art-header">
+  <div class="art-kicker">Field Notes · Operations</div>
+  <h1 class="art-title">Why turn-time KPIs <em>lie.</em></h1>
+  <p class="art-deck">A ramp-ops post-mortem on why "38-minute turn" is the wrong number. We rebuild the turn into nine discrete cleanable moments with evidence windows for each.</p>
+  <div class="art-byline">
+    <span>By the <b>IQS Research Team</b></span>
+    <span>Apr 02, 2026</span>
+    <span>5 min read</span>
+  </div>
+</header>
+
+<figure class="art-hero">
+  <div class="art-hero-fig">
+    <svg width="100%" height="100%" viewBox="0 0 1200 675" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="rg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1d4ed8" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#0b1220" stop-opacity="1"/>
+        </linearGradient>
+      </defs>
+      <rect width="1200" height="675" fill="url(#rg)"/>
+      <!-- tarmac horizon -->
+      <rect x="0" y="430" width="1200" height="245" fill="#0a0f1a"/>
+      <g stroke="#1d4ed8" stroke-width="2" opacity="0.6">
+        <line x1="0" y1="500" x2="1200" y2="500" stroke-dasharray="30 20"/>
+        <line x1="0" y1="580" x2="1200" y2="580" stroke-dasharray="30 20"/>
+      </g>
+      <!-- aircraft side profile -->
+      <g transform="translate(150, 200)">
+        <ellipse cx="450" cy="150" rx="460" ry="55" fill="#e5f2ff" opacity="0.95"/>
+        <polygon points="860,150 920,100 920,200" fill="#e5f2ff" opacity="0.95"/>
+        <polygon points="200,140 100,90 260,140" fill="#e5f2ff" opacity="0.95"/>
+        <polygon points="620,140 720,80 700,140" fill="#e5f2ff" opacity="0.95"/>
+        <!-- windows -->
+        <g fill="#0b1220">
+          <circle cx="140" cy="150" r="4"/><circle cx="170" cy="150" r="4"/><circle cx="200" cy="150" r="4"/><circle cx="230" cy="150" r="4"/>
+          <circle cx="270" cy="150" r="4"/><circle cx="300" cy="150" r="4"/><circle cx="330" cy="150" r="4"/><circle cx="360" cy="150" r="4"/>
+          <circle cx="400" cy="150" r="4"/><circle cx="430" cy="150" r="4"/><circle cx="460" cy="150" r="4"/><circle cx="490" cy="150" r="4"/>
+          <circle cx="530" cy="150" r="4"/><circle cx="560" cy="150" r="4"/><circle cx="590" cy="150" r="4"/>
+        </g>
+        <!-- door + jetway -->
+        <rect x="120" y="130" width="14" height="40" fill="#1d4ed8"/>
+        <rect x="50" y="155" width="70" height="15" fill="#6b7280"/>
+      </g>
+      <!-- ground service vehicles -->
+      <g transform="translate(820, 470)">
+        <rect x="0" y="0" width="60" height="24" fill="#1d4ed8"/>
+        <circle cx="10" cy="30" r="6" fill="#e5f2ff"/><circle cx="50" cy="30" r="6" fill="#e5f2ff"/>
+      </g>
+      <g transform="translate(620, 490)">
+        <rect x="0" y="0" width="80" height="20" fill="#e5f2ff" opacity="0.8"/>
+        <circle cx="12" cy="24" r="5" fill="#0b1220"/><circle cx="68" cy="24" r="5" fill="#0b1220"/>
+      </g>
+      <!-- stopwatch overlay -->
+      <g transform="translate(60, 80)">
+        <circle cx="60" cy="60" r="56" fill="none" stroke="#e5f2ff" stroke-width="3" opacity="0.85"/>
+        <circle cx="60" cy="60" r="56" fill="none" stroke="#1d4ed8" stroke-width="3" stroke-dasharray="230 350" transform="rotate(-90 60 60)"/>
+        <text x="60" y="72" text-anchor="middle" fill="#e5f2ff" font-family="Inter Tight, sans-serif" font-size="32" font-weight="800">38:00</text>
+        <text x="60" y="144" text-anchor="middle" fill="#e5f2ff" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2">SCHEDULED TURN</text>
+      </g>
+      <text x="60" y="640" fill="#e5f2ff" font-family="Fraunces, serif" font-style="italic" font-size="18" opacity="0.7">Fig. 01 — Gate C-12, 19:44 local. The turn, as reported, and the turn, as lived.</text>
+    </svg>
+  </div>
+  <figcaption class="art-hero-cap">
+    <span><span class="lbl">Fig. 01</span> — Illustration by N. Eshun</span>
+    <span>Vol. 04 · Iss. 011 · p. 38</span>
+  </figcaption>
+</figure>
+
+<article class="art-body">
+
+<p>Fifteen years of station-ops work has taught me one very specific lesson about how airlines measure aircraft turns: the 38-minute turn is not a measurement of quality. It is a measurement of scheduling. When the published turn time is hit, which it is about 72% of the time at a well-run hub, nobody asks whether the cabin was actually clean. When the published turn time is missed, which it is about 28% of the time, the delay investigation focuses on the hardware: fueling, catering, pushback. Cleaning is rarely interrogated because cleaning is rarely on the critical path.</p>
+
+<p>This is wrong, and it is wrong in a way that costs airlines a measurable amount of money and an immeasurable amount of customer goodwill. A turn time of 38 minutes does not mean the cabin was cleaned for 38 minutes. It means the cleaner had roughly 14 minutes between deplaning completion and boarding commence, during which they were meant to complete nine distinct work packages in one human-body's worth of physical presence. The metric reported upward to the airline's operations team is binary: did we hit 38 minutes or not? The metric reported by the cleaner's contracted vendor is narrative: the cabin is clean. Neither one is evidence of what actually happened inside those 14 minutes.</p>
+
+<h2>The nine <em>moments</em> inside a turn.</h2>
+
+<p>When we started instrumenting cleaning work on the ramp at a hub we won't name here, we stopped measuring the turn as a single number and started measuring it as nine discrete cleanable moments, each with a defined evidence window. The moments are:</p>
+
+<ol>
+  <li><strong>Cabin dress refresh</strong> — seatback pockets, tray tables wiped, seat belts stowed.</li>
+  <li><strong>Galley reset</strong> — trolley swap, coffee machine clean, surface wipe.</li>
+  <li><strong>Lav cycle</strong> — toilet seat, sink, floor, consumables.</li>
+  <li><strong>Floor debris pass</strong> — visible debris removed, runner inspected.</li>
+  <li><strong>Cockpit wipe</strong> — yoke, MCP, seat cushions, crew floor.</li>
+  <li><strong>Overhead bin check</strong> — items removed, bins closed, latches verified.</li>
+  <li><strong>Crew-rest swap</strong> (wide-body only) — linen, pillow covers, floor.</li>
+  <li><strong>Exterior wipe</strong> — door sills, handrails, boarding-bridge interface.</li>
+  <li><strong>Air refresh</strong> — cabin airflow confirmed, pack status verified with FO.</li>
+</ol>
+
+<p>Each moment gets one evidence artifact. Usually a photo, sometimes a sensor read, sometimes a crew-member signature against a timestamped event. What we found was not surprising in direction but was surprising in magnitude: between 30% and 45% of these moments were scored as complete, at well-performing stations, with no actual evidence that the moment occurred. Not because crews were skipping work — they were not — but because the system for capturing evidence was structured around the turn, not around the moment, and the turn was reported whole.</p>
+
+<div class="pullnum">
+  <span class="n">9</span>
+  <span class="t">Cleanable moments inside a routine single-aisle turn. None of them, individually, has an evidence requirement in the standard ATA 103 rubric. All of them, together, are "the cabin is clean."</span>
+</div>
+
+<h2>What changed when we measured moments.</h2>
+
+<p>Three things, fairly quickly.</p>
+
+<p>First, the distribution of where crews spent their time rebalanced. Lav cycle, which is the single most visible moment to a boarding passenger, was getting about 90 seconds on average. After we started capturing it as a separate evidence event, it moved to about 140 seconds. No crew lead told a cleaner to spend more time there. The attention just followed the evidence requirement.</p>
+
+<p>Second, the gate holds for cleaning dropped by roughly a third. This is counterintuitive. Why would more evidence capture reduce delay time? Because the old system gave crew leads no way to escalate "this cabin actually needs more time" without looking like they had failed. Once the moment-level rubric existed, a crew lead could say, "galley reset incomplete, need four minutes," and the ops desk could decide whether to push or hold with an actual, specific reason. Vague "cleaning not ready" escalations fell away.</p>
+
+<p>Third, and most important, the cabin crew's perception of cleanliness caught up to the passenger's. On the old metric, cabin crew reported cleanliness issues on about one in eleven turns. Passengers, via post-flight survey, reported cleanliness issues on about one in six. On the moment-based metric, after three months, both numbers converged at around one in twenty. The old metric was letting us look away from what passengers were seeing.</p>
+
+<blockquote>
+  "We stopped getting into fights with the contractor about whether the cabin was clean. We started having conversations about which specific moment had been short, and what we were going to do about it. I cannot overstate how much easier my week got."
+  <cite>Station ops manager, North American hub carrier</cite>
+</blockquote>
+
+<h2>Why it is hard to adopt.</h2>
+
+<p>The reason airlines have not done this already, and the reason ATA 103 itself is quiet on this question, is that moment-level measurement requires per-moment evidence capture, and per-moment evidence capture is a technology problem the industry has not quite solved. Most vendor systems do not support it. Most handhelds do not support it. Most airline operations platforms consume turn-time as a scalar, not as nine serialized events.</p>
+
+<p>It is possible now. It requires some discipline from the operations team and a willingness to ask the cleaning vendor to change their system. Every station we have worked with that has made this change has told us a version of the same sentence: we cannot go back to measuring it the old way. The old way was not a measurement. It was a score kept by the people being scored.</p>
+
+<div class="art-end">Fin</div>
+</article>
+
+<div class="art-author-box">
+  <div class="av">IQS</div>
+  <div>
+    <h4>IQS Research Team</h4>
+    <div class="role">Field research &middot; aviation ground services</div>
+    <p>Field Notes is written by the IQS Flow research team, working alongside station operations leads and cabin-services supervisors at three hub carriers. This piece draws on eighteen months of instrumented ramp work at one narrowbody hub. Questions or corrections: research@iqsflow.com.</p>
+  </div>
+</div>
+
+<section class="cta-band">
+  <div class="cta-band-wrap">
+    <h2>Read the <em>rest</em> of the issue.</h2>
+    <div class="acts">
+      <a class="b1" href="blog.html">Back to Field Notes →</a>
+      <a class="b2" href="contact.html">Request a demo</a>
+    </div>
+  </div>
+</section>
+
+<div id="footer-slot"></div>
+<script src="assets/shared.js?v=6"></script>
+</body>
+</html>

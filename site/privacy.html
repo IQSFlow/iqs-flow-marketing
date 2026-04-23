@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Privacy Policy, IQS Flow</title>
+<link rel="icon" type="image/svg+xml" href="assets/iqs-mark.svg"/>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,300;9..144,400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/shared.css?v=6"/>
+<style>
+  .legal-wrap {
+    max-width: 880px; margin: 0 auto; padding: 40px 32px 96px;
+    display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start;
+  }
+  @media (max-width: 900px) { .legal-wrap { grid-template-columns: 1fr; gap: 32px; } }
+  .legal-toc {
+    position: sticky; top: 84px; align-self: start;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .legal-toc .label { color: var(--vd-muted); margin-bottom: 12px; }
+  .legal-toc a { display: block; padding: 6px 0; color: var(--vd-ink); border-left: 2px solid var(--vd-line); padding-left: 12px; }
+  .legal-toc a + a { margin-top: 2px; }
+  .legal-toc a:hover { border-color: var(--accent); color: var(--accent); }
+  .legal-body h2 {
+    font-family: var(--font-display); font-size: 26px; font-weight: 700;
+    letter-spacing: -0.02em; margin: 40px 0 12px; scroll-margin-top: 96px;
+  }
+  .legal-body h2:first-child { margin-top: 0; }
+  .legal-body p, .legal-body li {
+    font-size: 15px; line-height: 1.7; color: var(--vd-ink); text-wrap: pretty;
+  }
+  .legal-body p { margin: 0 0 14px; }
+  .legal-body ul { padding-left: 20px; margin: 0 0 18px; }
+  .legal-body li + li { margin-top: 6px; }
+  .legal-body code {
+    font-family: var(--font-mono); font-size: 13px; background: var(--vd-vendor);
+    padding: 1px 6px; border-radius: 4px;
+  }
+  .legal-meta {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--vd-muted); margin-bottom: 32px;
+    display: flex; gap: 20px; border-bottom: 1px solid var(--vd-line); padding-bottom: 16px;
+  }
+  .legal-meta b { color: var(--vd-ink); letter-spacing: 0; text-transform: none; font-family: var(--font-body); font-weight: 500; }
+</style>
+</head>
+<body data-page="privacy">
+<div id="nav-slot"></div>
+
+<header class="ph">
+  <div class="ph-eyebrow">Legal · Policy 01</div>
+  <h1>Privacy <em>policy.</em></h1>
+  <p class="ph-sub">How IQS Flow collects, uses, and protects the data our customers, vendors, and inspectors generate in the course of doing the work.</p>
+</header>
+
+<div class="legal-wrap">
+  <aside class="legal-toc">
+    <div class="label">On this page</div>
+    <a href="#intro">01 · Summary</a>
+    <a href="#what">02 · What we collect</a>
+    <a href="#why">03 · Why we collect it</a>
+    <a href="#share">04 · What we share</a>
+    <a href="#retain">05 · Retention</a>
+    <a href="#rights">06 · Your rights</a>
+    <a href="#contact">07 · Contact</a>
+  </aside>
+
+  <article class="legal-body">
+    <div class="legal-meta">
+      <span>Effective <b>Apr 12, 2026</b></span>
+      <span>Version <b>3.2</b></span>
+      <span>Previous version on file</span>
+    </div>
+
+    <h2 id="intro">01 &middot; Summary, in plain language.</h2>
+    <p>IQS Flow is an independent inspection and scoring platform. The short version of this policy is that we collect the data we need to produce a reliable, auditable inspection record, we do not sell it, we do not use it to train general-purpose models, and we do not share it across customer tenants. This page spells out the longer version.</p>
+    <p>If you are reading this because you are about to sign a master services agreement, the clauses in the MSA govern. This policy is the consumer-facing summary of the same commitments.</p>
+
+    <h2 id="what">02 &middot; What we collect.</h2>
+    <p>We collect three categories of information.</p>
+    <ul>
+      <li><b>Account information</b> about the organizations and users who log in to IQS Flow: organization name, user name and role, email address, hashed password, and authentication events (login time, IP address, device fingerprint).</li>
+      <li><b>Operational data</b> generated in the course of inspections: scored rubric items, photo and GPS evidence, timestamps, operator identity, and the configuration of the rubrics themselves. This is the product&rsquo;s core data.</li>
+      <li><b>Diagnostic data</b> about how the product is used: page views, feature usage, error logs. This is aggregated and used to improve the product; it is not sold and is not linked to operational data in any external system.</li>
+    </ul>
+
+    <h2 id="why">03 &middot; Why we collect it.</h2>
+    <p>Operational data exists because the product exists. An inspection score without evidence, timestamp, and operator identity is not a useful score. Account information exists to authenticate the three commercial parties (customer, vendor, inspector) who need to agree that the record is the record. Diagnostic data exists to make the product better; we look at it, we cannot share it, and nobody outside IQS Flow ever sees it at a user-identified level.</p>
+
+    <h2 id="share">04 &middot; What we share, and with whom.</h2>
+    <p>Operational data is shared across the three commercial parties in a contract, scoped by role. Customer users see their inspections; vendor users see the inspections scored against their work; inspector users see the inspections they performed. This cross-sharing is the product; it is not an exception. Data is not shared across customer tenants. A vendor working for two different customers sees two different slices of data, not one combined view.</p>
+    <p>We use a small number of subprocessors for infrastructure (AWS for hosting, Stripe for billing, Twilio for SMS notifications, Sentry for error logging). A current list of subprocessors is maintained at <code>iqsflow.com/subprocessors</code> and customers are notified by email before any new subprocessor is added.</p>
+    <p>We respond to lawful requests for data from regulatory or law-enforcement bodies. When we do, we notify the affected customer unless legally prohibited from doing so, and we have a standing policy of requesting the narrowest possible scope on any such request.</p>
+
+    <h2 id="retain">05 &middot; Retention.</h2>
+    <p>Inspection records are retained for the life of the customer&rsquo;s account and for seven years after account termination, which matches the retention expected of facility-quality records under most customer audit regimes. Account and diagnostic data are retained for thirty months. Customers on enterprise contracts may negotiate longer or shorter retention windows.</p>
+
+    <h2 id="rights">06 &middot; Your rights.</h2>
+    <p>If you are a user of IQS Flow, you have the right to see the data we hold about you, to correct inaccuracies, and to export your data. If your jurisdiction grants additional rights (GDPR, CCPA, PIPEDA, and similar), those rights apply. Requests are routed through <code>privacy@iqsflow.com</code> and are acknowledged within five business days.</p>
+
+    <h2 id="contact">07 &middot; Contact.</h2>
+    <p>Our Data Protection Officer is Marta Halverson, reachable at <code>privacy@iqsflow.com</code>. Mail: IQS Flow, Inc., Attn: DPO, Atlanta, GA.</p>
+  </article>
+</div>
+
+<section class="cta-band">
+  <div class="cta-band-wrap" style="max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:40px;flex-wrap:wrap;">
+    <h2>Questions about your <em>data?</em></h2>
+    <div class="acts">
+      <a class="b1" href="contact.html">Contact us →</a>
+      <a class="b2" href="terms.html">Terms of service</a>
+    </div>
+  </div>
+</section>
+
+<div id="footer-slot"></div>
+<script src="assets/shared.js?v=6"></script>
+</body>
+</html>

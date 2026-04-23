@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 72" width="400" height="72">
+  <g>
+    <circle cx="36" cy="36" r="30" fill="#111111"></circle>
+    <circle cx="48" cy="24" r="5.5" fill="#ffffff"></circle>
+  </g>
+  <text x="86" y="49" font-family="&#39;Inter Tight&#39;, &#39;Inter&#39;, system-ui, -apple-system, sans-serif" font-weight="800" font-size="32" letter-spacing="-0.02em" fill="#111111">IQS FLOW</text>
+</svg>

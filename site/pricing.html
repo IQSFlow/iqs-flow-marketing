@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Pricing, IQS Flow</title>
+<link rel="icon" type="image/svg+xml" href="assets/iqs-mark.svg"/>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,300;9..144,400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/shared.css?v=6"/>
+<style>
+  .pricing-intro {
+    max-width: 1280px; margin: 0 auto; padding: 0 32px 32px;
+    display: grid; grid-template-columns: 2fr 1fr; gap: 48px; align-items: end;
+  }
+  .bill-toggle {
+    align-self: end; justify-self: end;
+    display: inline-grid; grid-auto-flow: column;
+    border-top: 1px solid var(--vd-ink);
+    border-bottom: 1px solid var(--vd-ink);
+  }
+  .bill-toggle button {
+    position: relative;
+    display: grid; row-gap: 3px;
+    padding: 11px 24px 13px;
+    background: none; border: none; cursor: pointer;
+    text-align: left; font: inherit;
+    color: var(--vd-muted);
+    transition: color 160ms ease;
+  }
+  .bill-toggle button + button { border-left: 1px solid var(--vd-line); }
+  .bill-toggle .k {
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--vd-muted);
+  }
+  .bill-toggle .v {
+    font-family: var(--font-serif); font-style: italic; font-weight: 400;
+    font-size: 24px; line-height: 1; color: var(--vd-ink);
+    letter-spacing: -0.015em;
+  }
+  .bill-toggle .save {
+    display: inline-block; margin-left: 8px;
+    font-family: var(--font-mono); font-style: normal;
+    font-size: 10.5px; letter-spacing: 0.08em; font-weight: 500;
+    color: var(--accent);
+    vertical-align: 4px;
+  }
+  .bill-toggle button.active { color: var(--vd-ink); }
+  .bill-toggle button.active .k { color: var(--vd-ink); }
+  .bill-toggle button::after {
+    content: ""; position: absolute; left: 12px; right: 12px; bottom: -1px;
+    height: 2px; background: var(--vd-ink);
+    transform: scaleX(0); transform-origin: left center;
+    transition: transform 220ms cubic-bezier(.2,.7,.2,1);
+  }
+  .bill-toggle button.active::after { transform: scaleX(1); }
+  .bill-toggle button:hover:not(.active) { color: var(--vd-ink); }
+  .bill-toggle button:hover:not(.active) .k { color: var(--vd-muted); }
+  @media (max-width: 800px) { .bill-toggle { justify-self: start; } }
+  @media (max-width: 800px) { .pricing-intro { grid-template-columns: 1fr; align-items: start; } }
+
+  /* Plan cards */
+  .plans {
+    max-width: 1280px; margin: 0 auto; padding: 32px 32px 32px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+  }
+  .plan {
+    background: #fff; border: 1px solid var(--vd-line); border-radius: 16px;
+    padding: 36px 32px; display: flex; flex-direction: column;
+    position: relative;
+  }
+  .plan.featured {
+    background: var(--vd-ink); color: var(--vd-bg); border-color: var(--vd-ink);
+  }
+  .plan .rib {
+    position: absolute; top: -12px; right: 24px;
+    background: var(--accent); color: #fff;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 5px 10px; border-radius: 4px; font-weight: 700;
+  }
+  .plan .pk {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--vd-muted); margin-bottom: 16px;
+  }
+  .plan.featured .pk { color: rgba(255,255,255,0.55); }
+  .plan h3 {
+    font-family: var(--font-display); font-size: 32px; font-weight: 700;
+    letter-spacing: -0.03em; margin: 0 0 6px; line-height: 1.02;
+  }
+  .plan .tag { font-size: 14px; color: var(--vd-muted); margin: 0 0 28px; line-height: 1.5; }
+  .plan.featured .tag { color: rgba(255,255,255,0.65); }
+  .plan .price {
+    display: flex; align-items: baseline; gap: 6px; padding-bottom: 28px; margin-bottom: 24px;
+    border-bottom: 1px solid var(--vd-line);
+  }
+  .plan.featured .price { border-bottom-color: rgba(255,255,255,0.15); }
+  .plan .price .n {
+    font-family: var(--font-display); font-size: 56px; font-weight: 700;
+    letter-spacing: -0.04em; line-height: 1;
+  }
+  .plan .price .u {
+    font-family: var(--font-mono); font-size: 12px; color: var(--vd-muted); letter-spacing: 0.08em;
+  }
+  .plan.featured .price .u { color: rgba(255,255,255,0.55); }
+  .plan .price.custom .n { font-size: 36px; }
+
+  .plan ul { list-style: none; padding: 0; margin: 0 0 32px; flex: 1; }
+  .plan li {
+    padding: 9px 0; font-size: 14px; line-height: 1.45;
+    display: grid; grid-template-columns: 18px 1fr; gap: 10px;
+  }
+  .plan li::before { content: '✓'; color: var(--accent); font-weight: 700; }
+  .plan.featured li { color: rgba(255,255,255,0.85); }
+  .plan.featured li::before { color: var(--accent); }
+  .plan li .lbl { font-weight: 600; color: var(--vd-ink); }
+  .plan.featured li .lbl { color: #fff; }
+
+  .plan .cta {
+    padding: 14px 20px; border-radius: 999px; text-align: center;
+    font-weight: 700; font-size: 14px; border: 1px solid var(--vd-ink);
+    background: var(--vd-ink); color: var(--vd-bg);
+  }
+  .plan.featured .cta { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .plan.featured .cta:hover { background: color-mix(in srgb, var(--accent) 85%, white); }
+
+  @media (max-width: 900px) {
+    .plans { grid-template-columns: 1fr; }
+  }
+
+  /* Add-ons */
+  .addons {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    margin-top: 16px;
+  }
+  .addon {
+    background: #fff; border: 1px solid var(--vd-line); border-radius: 12px; padding: 24px;
+  }
+  .addon .ak { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; color: var(--vd-muted); margin-bottom: 10px; }
+  .addon h4 { font-family: var(--font-display); font-size: 18px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 6px; }
+  .addon p { font-size: 13px; color: var(--vd-muted); line-height: 1.55; margin: 0 0 12px; }
+  .addon .pp { font-family: var(--font-mono); font-size: 13px; color: var(--vd-ink); font-weight: 600; letter-spacing: 0.04em; }
+  @media (max-width: 900px) { .addons { grid-template-columns: 1fr; } }
+
+  /* Compare table */
+  .cmp-table {
+    background: #fff; border: 1px solid var(--vd-line); border-radius: 14px;
+    overflow: hidden; margin-top: 32px;
+  }
+  .cmp-table table { width: 100%; border-collapse: collapse; }
+  .cmp-table thead th {
+    padding: 20px 22px; text-align: left; background: var(--vd-vendor);
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; font-weight: 600; color: var(--vd-ink);
+    border-bottom: 1px solid var(--vd-line);
+  }
+  .cmp-table thead th:first-child { background: #fff; }
+  .cmp-table tbody td {
+    padding: 16px 22px; font-size: 14px; border-bottom: 1px solid var(--vd-line);
+    color: var(--vd-ink);
+  }
+  .cmp-table tbody tr:last-child td { border-bottom: none; }
+  .cmp-table tbody td:first-child { color: var(--vd-muted); font-weight: 500; }
+  .cmp-table .ck { color: var(--accent); font-weight: 700; }
+  .cmp-table .dash { color: var(--vd-line); font-weight: 700; }
+  .cmp-table .section-row td { background: var(--vd-bg); font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--vd-muted); font-weight: 600; }
+
+  /* FAQ */
+  .faq { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .faq details {
+    background: #fff; border: 1px solid var(--vd-line); border-radius: 12px;
+    padding: 20px 24px; transition: background .15s;
+  }
+  .faq details[open] { background: #fff; }
+  .faq summary {
+    font-family: var(--font-display); font-weight: 600; font-size: 16px;
+    cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    color: var(--vd-ink);
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: '+'; font-family: var(--font-mono); font-size: 18px; color: var(--vd-muted); transition: transform .2s; }
+  .faq details[open] summary::after { content: '−'; }
+  .faq p { font-size: 14px; line-height: 1.6; color: var(--vd-muted); margin: 12px 0 0; }
+  @media (max-width: 800px) { .faq { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body data-page="pricing">
+<div id="nav-slot"></div>
+
+<section class="ph">
+  <div class="ph-eyebrow">Pricing</div>
+  <h1>Priced per <em>site.</em> Not per <em>seat.</em></h1>
+  <p class="ph-sub">Because quality data belongs to the operation, not to a license count. Every plan includes unlimited users, unlimited inspections, and all six compliance frameworks.</p>
+</section>
+
+<div class="pricing-intro">
+  <div style="font-family: var(--font-mono); font-size: 13px; color: var(--vd-muted); letter-spacing: 0.04em; line-height: 1.6;">
+    All prices USD. Sites mean active locations under inspection. Implementation and framework configuration included on every plan. Annual agreements only.
+  </div>
+  <div class="bill-toggle" role="tablist" aria-label="Billing cadence">
+    <button class="active" data-bill="annual" role="tab" aria-selected="true">
+      <span class="k">Billed</span>
+      <span class="v">Annually<span class="save">−15%</span></span>
+    </button>
+    <button data-bill="monthly" role="tab" aria-selected="false">
+      <span class="k">Billed</span>
+      <span class="v">Monthly</span>
+    </button>
+  </div>
+</div>
+
+<div class="plans">
+  <div class="plan">
+    <div class="pk">01 · Operator</div>
+    <h3>Operator</h3>
+    <p class="tag">For teams running 1-5 sites under a single vendor.</p>
+    <div class="price"><span class="n" data-price data-annual="$490" data-monthly="$580">$490</span><span class="u">/site/month</span></div>
+    <ul>
+      <li><span>Up to <span class="lbl">5 sites</span>, unlimited users</span></li>
+      <li><span>All <span class="lbl">6 compliance frameworks</span> included</span></li>
+      <li><span>Mobile inspector apps (iOS + Android)</span></li>
+      <li><span>Real-time dashboards &amp; alerts</span></li>
+      <li><span>Email + SMS alert channels</span></li>
+      <li><span>Business-hours support</span></li>
+    </ul>
+    <a class="cta" href="index.html">Start onboarding →</a>
+  </div>
+
+  <div class="plan featured">
+    <div class="rib">Most common</div>
+    <div class="pk">02 · Portfolio</div>
+    <h3>Portfolio</h3>
+    <p class="tag">For operations directors running 6-50 sites across multiple vendors.</p>
+    <div class="price"><span class="n" data-price data-annual="$390" data-monthly="$460">$390</span><span class="u">/site/month</span></div>
+    <ul>
+      <li><span><span class="lbl">Everything in Operator</span></span></li>
+      <li><span><span class="lbl">Multi-vendor</span> comparison &amp; scoring</span></li>
+      <li><span><span class="lbl">Vendor Accountability Score</span>, monthly</span></li>
+      <li><span>SSO (SAML), SCIM provisioning</span></li>
+      <li><span>Slack / Teams / webhook integrations</span></li>
+      <li><span>Framework customization (weights + items)</span></li>
+      <li><span>Dedicated CSM, quarterly reviews</span></li>
+      <li><span>24/7 operational support</span></li>
+    </ul>
+    <a class="cta" href="contact.html">Request a Demo →</a>
+  </div>
+
+  <div class="plan">
+    <div class="pk">03 · Enterprise</div>
+    <h3>Enterprise</h3>
+    <p class="tag">For 50+ sites, regulated industries, or anyone with a procurement team.</p>
+    <div class="price custom"><span class="n">Custom</span><span class="u">, annual contract</span></div>
+    <ul>
+      <li><span><span class="lbl">Everything in Portfolio</span></span></li>
+      <li><span><span class="lbl">Private deployment</span> option (VPC / on-prem)</span></li>
+      <li><span>Custom compliance framework authoring</span></li>
+      <li><span>Independent 3rd-party inspector crews (via IQS)</span></li>
+      <li><span>Data residency: US, EU, APAC</span></li>
+      <li><span>Named security &amp; procurement contact</span></li>
+      <li><span>SLA: 99.95% uptime, 15-min P1 response</span></li>
+    </ul>
+    <a class="cta" href="index.html">Contact sales →</a>
+  </div>
+</div>
+
+<section class="section">
+  <div class="section-eyebrow">— Optional add-ons</div>
+  <h2>Add what you <em>actually</em> need.</h2>
+  <p class="section-sub">Priced transparently. Available on any plan. No bundled minimums.</p>
+
+  <div class="addons">
+    <div class="addon">
+      <div class="ak">A01 · INSPECTORS</div>
+      <h4>3rd-party inspector crews</h4>
+      <p>IQS-operated inspectors deployed on your schedule. Truly independent evidence capture at your sites, starting at a site-visit cadence of weekly.</p>
+      <div class="pp">From $1,200 / site / month</div>
+    </div>
+    <div class="addon">
+      <div class="ak">A02 · AUDIT PACK</div>
+      <h4>Regulator evidence pack</h4>
+      <p>Pre-assembled evidence bundle for JCAHO, FDA, OSHA, or airline quality audits. Delivered within 24 hours of request.</p>
+      <div class="pp">$2,500 / pack</div>
+    </div>
+    <div class="addon">
+      <div class="ak">A03 · API VOLUME</div>
+      <h4>Extended API throughput</h4>
+      <p>Higher rate limits and guaranteed webhook delivery for teams integrating IQS Flow into operational data platforms.</p>
+      <div class="pp">From $600 / month</div>
+    </div>
+    <div class="addon">
+      <div class="ak">A04 · TRAINING</div>
+      <h4>Inspector training program</h4>
+      <p>On-site or remote certification for your crews or contractor crews. 8-hour standard, custom curriculum available.</p>
+      <div class="pp">$1,800 / cohort (≤12)</div>
+    </div>
+    <div class="addon">
+      <div class="ak">A05 · WHITE LABEL</div>
+      <h4>Client-facing portal branding</h4>
+      <p>Your brand on the client portal so tenants, airlines, or hospital partners see your quality program, not ours.</p>
+      <div class="pp">$400 / month</div>
+    </div>
+    <div class="addon">
+      <div class="ak">A06 · HIST IMPORT</div>
+      <h4>Historical data migration</h4>
+      <p>Bring in 12-36 months of prior inspections from your legacy system. Normalized, re-scored, ready to benchmark against.</p>
+      <div class="pp">Scoped per portfolio</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 0">
+  <div class="section-eyebrow">— Side-by-side</div>
+  <h2>The full <em>compare.</em></h2>
+  <p class="section-sub">Everything that's in each plan, without the marketing gloss.</p>
+
+  <div class="cmp-table">
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>Operator</th>
+          <th>Portfolio</th>
+          <th>Enterprise</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="section-row"><td colspan="4">Core platform</td></tr>
+        <tr><td>Sites included</td><td>Up to 5</td><td>6-50</td><td>Unlimited</td></tr>
+        <tr><td>Users</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
+        <tr><td>Compliance frameworks</td><td>6 standard</td><td>6 + customization</td><td>6 + custom authoring</td></tr>
+        <tr><td>Mobile inspector apps</td><td class="ck">✓</td><td class="ck">✓</td><td class="ck">✓</td></tr>
+        <tr><td>Photo evidence, GPS, timestamp</td><td class="ck">✓</td><td class="ck">✓</td><td class="ck">✓</td></tr>
+
+        <tr class="section-row"><td colspan="4">Portfolio &amp; scoring</td></tr>
+        <tr><td>Multi-vendor comparison</td><td class="dash">, </td><td class="ck">✓</td><td class="ck">✓</td></tr>
+        <tr><td>Vendor Accountability Score</td><td class="dash">, </td><td class="ck">Monthly</td><td class="ck">Real-time</td></tr>
+        <tr><td>Portfolio rollups (region / brand)</td><td class="dash">, </td><td class="ck">✓</td><td class="ck">✓</td></tr>
+
+        <tr class="section-row"><td colspan="4">Integrations &amp; identity</td></tr>
+        <tr><td>Email + SMS alerts</td><td class="ck">✓</td><td class="ck">✓</td><td class="ck">✓</td></tr>
+        <tr><td>Slack / Teams / webhook</td><td class="dash">, </td><td class="ck">✓</td><td class="ck">✓</td></tr>
+        <tr><td>SAML SSO + SCIM</td><td class="dash">, </td><td class="ck">✓</td><td class="ck">✓</td></tr>
+        <tr><td>Private deployment (VPC / on-prem)</td><td class="dash">, </td><td class="dash">, </td><td class="ck">✓</td></tr>
+
+        <tr class="section-row"><td colspan="4">Security &amp; operations</td></tr>
+        <tr><td>SSO (SAML) + SCIM</td><td class="dash">—</td><td class="ck">✓</td><td class="ck">✓</td></tr>
+        <tr><td>Audit logs &amp; evidence export</td><td class="ck">✓</td><td class="ck">✓</td><td class="ck">✓</td></tr>
+        <tr><td>Data residency (US / EU / APAC)</td><td>US</td><td>US / EU</td><td>US / EU / APAC</td></tr>
+
+        <tr class="section-row"><td colspan="4">Support</td></tr>
+        <tr><td>Response SLA</td><td>Business hours</td><td>24/7 ops</td><td>15-min P1</td></tr>
+        <tr><td>Dedicated CSM</td><td class="dash">, </td><td class="ck">✓</td><td class="ck">✓</td></tr>
+        <tr><td>Quarterly business review</td><td class="dash">, </td><td class="ck">✓</td><td class="ck">Monthly</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 0">
+  <div class="section-eyebrow">— Pricing questions</div>
+  <h2>Honest answers.</h2>
+  <p class="section-sub">If there's something else you want straight from us before procurement, just ask.</p>
+
+  <div class="faq">
+    <details open>
+      <summary>Why per-site and not per-user?</summary>
+      <p>Because quality data is an operational concern, not a seat count. Your night-shift supervisor should see exactly what your ops director sees. We don't want pricing to make that harder.</p>
+    </details>
+    <details>
+      <summary>What counts as a &ldquo;site&rdquo;?</summary>
+      <p>A distinct physical location with its own operational rubric, an airport terminal, a hospital building, a retail location, a cleanroom suite. Ask us about edge cases; we've probably seen yours.</p>
+    </details>
+    <details>
+      <summary>Can we run this with our own inspectors?</summary>
+      <p>Yes. The platform is designed for your staff, a contractor's staff, or IQS-operated inspector crews. The independence happens in the data model, not only in the inspector's org chart.</p>
+    </details>
+    <details>
+      <summary>Is there a free trial?</summary>
+      <p>We run a paid 30-day pilot on 2-3 representative sites. That's how we make sure everyone is serious and that we learn your rubric properly. The pilot cost rolls into your first annual agreement.</p>
+    </details>
+    <details>
+      <summary>Do you have a procurement-friendly agreement?</summary>
+      <p>Yes. Enterprise plans come with a pre-negotiated MSA, DPA, and security addendum. We'll work through your vendor-onboarding process with a named contact on our side, and we can turn around most redlines in under a week.</p>
+    </details>
+    <details>
+      <summary>What does implementation look like?</summary>
+      <p>2-4 weeks for Operator and Portfolio. 6-10 weeks for Enterprise with private deployment. A named implementation engineer runs framework configuration, integrations, and inspector training.</p>
+    </details>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="cta-band-wrap">
+    <h2>Let's price <em>your</em> portfolio.</h2>
+    <div class="acts">
+      <a class="b1" href="contact.html">Request a Demo →</a>
+      <a class="b2" href="features.html">See features</a>
+    </div>
+  </div>
+</section>
+
+<div id="footer-slot"></div>
+<script src="assets/shared.js?v=6"></script>
+<script>
+  document.querySelectorAll('.bill-toggle button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const bill = btn.dataset.bill;
+      document.querySelectorAll('.bill-toggle button').forEach(b => {
+        b.classList.toggle('active', b === btn);
+        b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
+      });
+      document.querySelectorAll('[data-price]').forEach(el => {
+        el.textContent = el.dataset[bill];
+      });
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,1479 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>IQS Flow, Independent Quality Intelligence</title>
+<link rel="icon" type="image/svg+xml" href="assets/iqs-mark.svg"/>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png"/>
+<link rel="stylesheet" href="assets/shared.css?v=6"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --accent: #1d4ed8;
+    --accent-dark: #0f2b4a;
+    --accent-soft: #dbeafe;
+    --bg: #ffffff;
+    --bg-alt: #f6f7f9;
+    --ink-900: #0a0f1a;
+    --ink-800: #0f172a;
+    --ink-700: #1e293b;
+    --ink-600: #334155;
+    --ink-500: #475569;
+    --ink-400: #64748b;
+    --ink-300: #94a3b8;
+    --ink-200: #cbd5e1;
+    --ink-100: #e2e8f0;
+    --ink-50:  #f1f5f9;
+    --ink-25:  #f8fafc;
+
+    --pad-y: 120px;
+    --pad-x: 32px;
+
+    --red: #ef4444;
+    --amber: #f59e0b;
+    --green: #059669;
+
+    --font-display: "Inter Tight", "Inter", system-ui, sans-serif;
+    --font-body: "Inter", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    --font-serif: "Fraunces", Georgia, serif;
+  }
+  /* Dark mode tokens */
+  html[data-theme="dark"] {
+    --bg: #0a0f1a;
+    --bg-alt: #0f172a;
+    --ink-900: #f8fafc;
+    --ink-800: #e2e8f0;
+    --ink-700: #cbd5e1;
+    --ink-600: #94a3b8;
+    --ink-500: #94a3b8;
+    --ink-400: #64748b;
+    --ink-300: #475569;
+    --ink-200: #334155;
+    --ink-100: #1e293b;
+    --ink-50:  #0f172a;
+    --ink-25:  #0a0f1a;
+    --accent-soft: rgba(29,78,216,0.18);
+  }
+  /* Density */
+  html[data-density="compact"] { --pad-y: 84px; }
+  html[data-density="airy"]   { --pad-y: 160px; }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-body);
+    color: var(--ink-800);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; }
+
+  ::selection { background: var(--accent); color: #fff; }
+
+  /* =========== GLOBAL CHROME =========== */
+
+  /* Tweaks panel */
+  #tweaks-panel {
+    position: fixed; right: 16px; bottom: 16px; z-index: 210;
+    width: 296px; max-height: calc(100vh - 32px);
+    overflow-y: auto;
+    background: #0a0f1a; color: #e2e8f0;
+    border-radius: 14px; padding: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.28), 0 4px 12px rgba(0,0,0,0.16);
+    font-size: 12px;
+    display: none;
+  }
+  #tweaks-panel.open { display: block; }
+  #tweaks-panel h3 {
+    margin: 0 0 14px 0; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: #fff; font-weight: 700; font-family: var(--font-mono);
+  }
+  #tweaks-panel .tweak-row { margin-bottom: 14px; }
+  #tweaks-panel label {
+    display: block; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: #94a3b8; font-family: var(--font-mono); margin-bottom: 7px;
+  }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 4px; }
+  .chip {
+    appearance: none; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04);
+    color: #cbd5e1; border-radius: 999px; padding: 5px 10px; font-size: 11px; cursor: pointer;
+    font-weight: 500; transition: all .15s;
+  }
+  .chip:hover { background: rgba(255,255,255,0.08); color: #fff; }
+  .chip.active { background: #fff; color: #0a0f1a; border-color: #fff; font-weight: 600; }
+  .chip.accent { width: 22px; height: 22px; padding: 0; border-radius: 50%; }
+  .chip.accent.active { box-shadow: 0 0 0 2px #0a0f1a, 0 0 0 4px #fff; }
+  .toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 4px 0; }
+  .toggle-row .label-txt { font-size: 12px; color: #e2e8f0; font-weight: 500; }
+  .switch {
+    position: relative; width: 32px; height: 18px; background: rgba(255,255,255,0.12); border-radius: 999px;
+    border: none; cursor: pointer; flex-shrink: 0; transition: background .15s;
+  }
+  .switch::after {
+    content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; background: #fff;
+    border-radius: 50%; transition: transform .15s;
+  }
+  .switch.on { background: var(--accent); }
+  .switch.on::after { transform: translateX(14px); }
+
+  /* Tweak toggle FAB */
+  #tweaks-fab {
+    position: fixed; right: 16px; bottom: 16px; z-index: 209;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: #0a0f1a; color: #fff; border: none;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.22);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 14px; font-weight: 700;
+  }
+  #tweaks-fab.hidden { display: none; }
+
+  /* =========== SHARED: NAV + FOOTER =========== */
+
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in srgb, var(--bg) 80%, transparent);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--ink-100);
+  }
+  .nav-inner {
+    max-width: 1200px; margin: 0 auto; padding: 14px 32px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--font-display); font-weight: 800; font-size: 17px; letter-spacing: -0.02em;
+    color: var(--ink-900);
+  }
+  .nav-logo-mark {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: conic-gradient(from 215deg, var(--accent) 0deg, transparent 200deg);
+    display: inline-block; position: relative;
+  }
+  .nav-logo-mark::after {
+    content: ''; position: absolute; inset: 4px; background: var(--accent-dark); border-radius: 50%;
+  }
+  .nav-logo-mark::before {
+    content: ''; position: absolute; top: 6px; right: 5px; width: 7px; height: 7px; background: #fff; border-radius: 50%; z-index: 2;
+  }
+  .nav-links { display: flex; align-items: center; gap: 2px; }
+  .nav-link {
+    padding: 8px 14px; font-size: 14px; font-weight: 500; color: var(--ink-500);
+    border-radius: 6px; transition: color .15s;
+  }
+  .nav-link:hover { color: var(--accent); }
+  .nav-cta {
+    margin-left: 10px; padding: 10px 20px; background: var(--ink-900); color: var(--bg);
+    border-radius: 8px; font-size: 14px; font-weight: 600;
+    transition: background .15s;
+  }
+  .nav-cta:hover { background: var(--accent); }
+
+  /* Footer */
+  .footer {
+    background: var(--bg-alt); border-top: 1px solid var(--ink-100);
+    padding: 64px 32px 32px;
+    color: var(--ink-500);
+    font-size: 14px;
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; }
+  .footer h4 { color: var(--ink-800); font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin: 0 0 14px; font-family: var(--font-mono); }
+  .footer a { display: block; padding: 5px 0; color: var(--ink-500); font-size: 13px; }
+  .footer a:hover { color: var(--accent); }
+  .footer-bottom { max-width: 1200px; margin: 48px auto 0; padding-top: 24px; border-top: 1px solid var(--ink-100); display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-400); font-family: var(--font-mono); }
+  @media (max-width: 767px) {
+    .footer-inner { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .nav-links .nav-link { display: none; }
+  }
+
+  /* Variant roots */
+  .variant { display: none; }
+  .variant.active { display: block; }
+
+  /* Reusable */
+  .eyebrow {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    font-weight: 500; color: var(--accent); display: inline-flex; align-items: center; gap: 8px;
+  }
+  .eyebrow-dot { width: 6px; height: 6px; background: currentColor; border-radius: 50%; display: inline-block; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px;
+    background: var(--ink-900); color: var(--bg); border-radius: 8px;
+    font-weight: 600; font-size: 14px; letter-spacing: 0.01em; transition: all .2s; cursor: pointer; border: none;
+  }
+  .btn-primary:hover { background: var(--accent); transform: translateY(-1px); }
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 8px; padding: 14px 22px;
+    color: var(--ink-700); border: 1px solid var(--ink-200); border-radius: 8px;
+    font-weight: 500; font-size: 14px; transition: all .2s; background: transparent; cursor: pointer;
+  }
+  .btn-ghost:hover { border-color: var(--ink-400); color: var(--ink-900); }
+
+  .arrow { width: 12px; height: 12px; display: inline-block; }
+
+  /* A-specific, B-specific, C-specific are loaded per-variant file */
+</style>
+</head>
+<body>
+
+<!-- Variant D root -->
+<div class="variant active" id="variant-d"></div>
+
+<!-- Tweaks panel -->
+<button id="tweaks-fab" title="Open tweaks">✱</button>
+<div id="tweaks-panel">
+  <h3>Tweaks</h3>
+
+  <div class="tweak-row">
+    <label>Accent color</label>
+    <div class="chip-row" id="accent-chips">
+      <button class="chip accent active" data-accent="#1d4ed8" style="background:#1d4ed8"></button>
+      <button class="chip accent" data-accent="#0d9488" style="background:#0d9488"></button>
+      <button class="chip accent" data-accent="#7c3aed" style="background:#7c3aed"></button>
+      <button class="chip accent" data-accent="#ea580c" style="background:#ea580c"></button>
+      <button class="chip accent" data-accent="#e11d48" style="background:#e11d48"></button>
+      <button class="chip accent" data-accent="#059669" style="background:#059669"></button>
+      <button class="chip accent" data-accent="#0f172a" style="background:#0f172a"></button>
+    </div>
+  </div>
+
+  <div class="tweak-row">
+    <label>Density</label>
+    <div class="chip-row" id="density-chips">
+      <button class="chip" data-density="compact">Compact</button>
+      <button class="chip active" data-density="default">Default</button>
+      <button class="chip" data-density="airy">Airy</button>
+    </div>
+  </div>
+
+  <div class="tweak-row">
+    <label>Headline copy</label>
+    <div class="chip-row" id="headline-chips">
+      <button class="chip active" data-headline="0">Original</button>
+      <button class="chip" data-headline="1">Proof</button>
+      <button class="chip" data-headline="2">Independence</button>
+      <button class="chip" data-headline="3">Accountability</button>
+    </div>
+  </div>
+
+  <div class="tweak-row">
+    <div class="toggle-row"><span class="label-txt">Dark mode</span><button class="switch" id="sw-dark"></button></div>
+    <div class="toggle-row"><span class="label-txt">Trust Gap section</span><button class="switch on" id="sw-trust"></button></div>
+    <div class="toggle-row"><span class="label-txt">Venice testimonial</span><button class="switch on" id="sw-venice"></button></div>
+    <div class="toggle-row"><span class="label-txt">Final CTA</span><button class="switch on" id="sw-cta"></button></div>
+  </div>
+</div>
+
+<script>
+  // =========== TWEAK STATE ===========
+  const TWEAKS = /*EDITMODE-BEGIN*/{
+    "accent": "#1d4ed8",
+    "density": "compact",
+    "headline": 0,
+    "dark": false,
+    "trust": true,
+    "venice": true,
+    "cta": true
+  }/*EDITMODE-END*/;
+
+  const HEADLINES = {
+    d: [
+      { eyebrow: "The Vendor Report Problem", h1a: "What your vendor says.", h1b: "What actually happened.", sub: "Drag the slider. See the gap between a polished monthly report and the data IQS Flow captured from the field." },
+      { eyebrow: "Proof vs. Promises", h1a: "Their report.", h1b: "Our receipts.", sub: "Vendor self-reports on the left. GPS-stamped, photo-verified reality on the right." },
+      { eyebrow: "Independence, visualized", h1a: "Self-graded.", h1b: "Independently verified.", sub: "The same shift, two versions. One written by the contractor. One written by the data." },
+      { eyebrow: "Accountability, side by side", h1a: "Summary PDF.", h1b: "Source of truth.", sub: "Monthly deck on the left. Continuous, independent evidence on the right." },
+    ]
+  };
+
+  function applyTweaks() {
+    const html = document.documentElement;
+    html.style.setProperty('--accent', TWEAKS.accent);
+    html.setAttribute('data-density', TWEAKS.density);
+    html.setAttribute('data-theme', TWEAKS.dark ? 'dark' : 'light');
+
+    // Accent chips
+    document.querySelectorAll('#accent-chips .chip').forEach(c => c.classList.toggle('active', c.dataset.accent === TWEAKS.accent));
+    document.querySelectorAll('#density-chips .chip').forEach(c => c.classList.toggle('active', c.dataset.density === TWEAKS.density));
+    document.querySelectorAll('#headline-chips .chip').forEach(c => c.classList.toggle('active', String(c.dataset.headline) === String(TWEAKS.headline)));
+
+    // Switches
+    document.getElementById('sw-dark')?.classList.toggle('on', !!TWEAKS.dark);
+    document.getElementById('sw-trust')?.classList.toggle('on', !!TWEAKS.trust);
+    document.getElementById('sw-venice')?.classList.toggle('on', !!TWEAKS.venice);
+    document.getElementById('sw-cta')?.classList.toggle('on', !!TWEAKS.cta);
+
+    // Section visibility
+    document.querySelectorAll('[data-section="trust"]').forEach(s => s.style.display = TWEAKS.trust ? '' : 'none');
+    document.querySelectorAll('[data-section="venice"]').forEach(s => s.style.display = TWEAKS.venice ? '' : 'none');
+    document.querySelectorAll('[data-section="cta"]').forEach(s => s.style.display = TWEAKS.cta ? '' : 'none');
+
+    // Headline swap (variant D)
+    document.querySelectorAll('[data-headline-target]').forEach(el => {
+      const field = el.dataset.headlineTarget;
+      const set = HEADLINES.d;
+      const h = set[TWEAKS.headline] || set[0];
+      if (h && h[field] !== undefined) el.textContent = h[field];
+    });
+  }
+
+  function setTweak(key, val, persist=true) {
+    TWEAKS[key] = val;
+    applyTweaks();
+    if (persist) {
+      try { window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [key]: val } }, '*'); } catch(e) {}
+    }
+  }
+
+  // Wire up tweaks
+  document.querySelectorAll('#accent-chips .chip').forEach(c => {
+    c.addEventListener('click', () => setTweak('accent', c.dataset.accent));
+  });
+  document.querySelectorAll('#density-chips .chip').forEach(c => {
+    c.addEventListener('click', () => setTweak('density', c.dataset.density));
+  });
+  document.querySelectorAll('#headline-chips .chip').forEach(c => {
+    c.addEventListener('click', () => setTweak('headline', Number(c.dataset.headline)));
+  });
+  document.getElementById('sw-dark').addEventListener('click', () => setTweak('dark', !TWEAKS.dark));
+  document.getElementById('sw-trust').addEventListener('click', () => setTweak('trust', !TWEAKS.trust));
+  document.getElementById('sw-venice').addEventListener('click', () => setTweak('venice', !TWEAKS.venice));
+  document.getElementById('sw-cta').addEventListener('click', () => setTweak('cta', !TWEAKS.cta));
+
+  // Tweaks FAB + host integration
+  const panel = document.getElementById('tweaks-panel');
+  const fab = document.getElementById('tweaks-fab');
+  fab.addEventListener('click', () => {
+    panel.classList.toggle('open');
+    fab.classList.toggle('hidden', panel.classList.contains('open'));
+  });
+
+  // Host integration
+  window.addEventListener('message', (e) => {
+    if (!e.data || typeof e.data !== 'object') return;
+    if (e.data.type === '__activate_edit_mode') {
+      panel.classList.add('open'); fab.classList.add('hidden');
+    } else if (e.data.type === '__deactivate_edit_mode') {
+      panel.classList.remove('open'); fab.classList.remove('hidden');
+    }
+  });
+  try { window.parent.postMessage({ type: '__edit_mode_available' }, '*'); } catch(e) {}
+
+  // Apply on load
+  applyTweaks();
+</script>
+
+
+<script>
+/* ============================================================
+   VARIANT D, Split Reality
+   Interactive drag-slider: vendor report (left) vs IQS Flow reality (right)
+   Plus "Moments" timeline, testimonial row, and stacked CTA.
+   ============================================================ */
+(function(){
+  const root = document.getElementById('variant-d');
+  if (!root) return;
+
+  const css = `
+    #variant-d {
+      --vd-bg: #fafaf7;
+      --vd-ink: #111111;
+      --vd-muted: #6b7280;
+      --vd-line: #e7e5de;
+      --vd-vendor: #eeece4;
+      --vd-vendor-ink: #3a3a36;
+      --vd-truth: #f5f1e6;
+      --vd-truth-ink: #1a1d24;
+      --vd-truth-line: #d9d3c2;
+      --vd-truth-muted: #6b6759;
+      --vd-truth-accent: #b45309;
+      --vd-pass: #2d6a3e;
+      --vd-flag: #a16207;
+      --vd-miss: #b91c1c;
+    }
+    html[data-theme="dark"] #variant-d {
+      --vd-bg: #0a0a0a;
+      --vd-ink: #f5f5f0;
+      --vd-muted: #9ca3af;
+      --vd-line: #1f2937;
+      --vd-vendor: #1a1a18;
+      --vd-vendor-ink: #a7a29a;
+      --vd-truth: #161a22;
+      --vd-truth-ink: #ece6d4;
+      --vd-truth-line: #2a3040;
+      --vd-truth-muted: #8b8778;
+      --vd-truth-accent: #f59e0b;
+      --vd-pass: #6ee7b7;
+      --vd-flag: #fcd34d;
+      --vd-miss: #fca5a5;
+    }
+    #variant-d .page { background: var(--vd-bg); color: var(--vd-ink); }
+
+    /* ---- NAV styles come from shared.css ---- */
+
+    /* ---- HERO ---- */
+    #variant-d .hero-d {
+      max-width: 1280px; margin: 0 auto; padding: 64px 32px 32px;
+    }
+    #variant-d .hero-d-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--vd-muted); font-weight: 500;
+      margin-bottom: 20px;
+    }
+    #variant-d .hero-d-eyebrow::before {
+      content: ''; width: 20px; height: 1px; background: currentColor;
+    }
+    #variant-d .hero-d h1 {
+      font-family: var(--font-display);
+      font-size: clamp(42px, 6vw, 84px);
+      font-weight: 700; letter-spacing: -0.045em; line-height: 1;
+      color: var(--vd-ink); margin: 0;
+      max-width: 1080px;
+    }
+    #variant-d .hero-d h1 .vs {
+      font-family: var(--font-serif);
+      font-style: italic; font-weight: 400; color: var(--vd-muted); letter-spacing: -0.02em;
+      font-size: 0.75em; display: inline-block; margin: 0 0.1em;
+    }
+    #variant-d .hero-d h1 .part-a { display: inline-block; }
+    #variant-d .hero-d h1 .part-b {
+      display: inline-block;
+      background: var(--vd-ink); color: var(--vd-bg);
+      padding: 0 0.12em;
+    }
+    html[data-theme="dark"] #variant-d .hero-d h1 .part-b { background: var(--vd-bg); color: var(--vd-ink); }
+    #variant-d .hero-d-sub {
+      margin: 24px 0 32px; max-width: 620px;
+      font-size: 17px; line-height: 1.55; color: var(--vd-muted);
+    }
+
+    /* ---- SPLIT ---- */
+    #variant-d .split-wrap {
+      max-width: 1280px; margin: 0 auto; padding: 0 32px 100px;
+    }
+    #variant-d .split {
+      position: relative;
+      aspect-ratio: 16/11;
+      border-radius: 16px; overflow: hidden;
+      border: 1px solid var(--vd-line);
+      box-shadow: 0 30px 80px rgba(10,15,26,0.08);
+      user-select: none;
+      touch-action: none;
+      background: var(--vd-vendor);
+    }
+    @media (max-width: 760px) {
+      #variant-d .split { aspect-ratio: 3/4; }
+    }
+    #variant-d .side {
+      position: absolute; inset: 0;
+      overflow: hidden;
+    }
+    #variant-d .side.vendor {
+      background: var(--vd-vendor);
+      color: var(--vd-vendor-ink);
+    }
+    #variant-d .side.truth {
+      background: var(--vd-truth);
+      color: var(--vd-truth-ink);
+      clip-path: polygon(var(--split-x, 50%) 0, 100% 0, 100% 100%, var(--split-x, 50%) 100%);
+    }
+    #variant-d .side .side-inner {
+      position: absolute; inset: 0;
+      padding: 28px 32px;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    #variant-d .side .side-lbl {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em;
+      text-transform: uppercase; font-weight: 600;
+      padding: 6px 10px; border-radius: 4px; margin-bottom: 24px;
+      align-self: flex-start;
+    }
+    #variant-d .side.vendor .side-lbl {
+      background: rgba(0,0,0,0.06); color: #7a7a72;
+    }
+    #variant-d .side.truth .side-lbl {
+      background: #1a1d24; color: #f5f1e6;
+    }
+    html[data-theme="dark"] #variant-d .side.truth .side-lbl {
+      background: color-mix(in srgb, var(--vd-truth-accent) 85%, black);
+      color: #0a0a0a;
+    }
+    #variant-d .side.truth h3 { color: var(--vd-truth-ink); }
+    #variant-d .side.truth h3 em {
+      font-family: var(--font-serif); font-style: italic; font-weight: 400;
+      color: var(--vd-miss);
+    }
+    #variant-d .side h3 {
+      font-family: var(--font-display); font-size: clamp(22px, 2.4vw, 32px);
+      font-weight: 700; letter-spacing: -0.025em; line-height: 1.1;
+      margin: 0 0 6px;
+    }
+    #variant-d .side.vendor h3 { color: #2a2a28; }
+    #variant-d .side .side-sub {
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
+      color: color-mix(in srgb, currentColor 60%, transparent);
+      margin-bottom: 24px;
+    }
+
+    /* Vendor "PDF" */
+    #variant-d .vendor-doc {
+      background: #fbfaf5;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 8px;
+      padding: 22px 26px;
+      flex: 1;
+      display: flex; flex-direction: column; gap: 18px;
+      font-family: var(--font-serif);
+      color: #2a2a28;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      position: relative;
+    }
+    #variant-d .vendor-doc::before {
+      content: 'CONFIDENTIAL · FOR CLIENT REVIEW';
+      position: absolute; top: -10px; left: 20px;
+      background: #fbfaf5; padding: 0 8px;
+      font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.2em;
+      color: #a8a69a;
+    }
+    #variant-d .vendor-doc .doc-head {
+      display: flex; justify-content: space-between;
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em;
+      color: #8a8879; text-transform: uppercase;
+      border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 12px;
+    }
+    #variant-d .vendor-doc .doc-h {
+      font-family: var(--font-display); font-size: 17px; font-weight: 700;
+      letter-spacing: -0.01em; color: #1a1a18; line-height: 1.3;
+    }
+    #variant-d .vendor-doc .rows { display: flex; flex-direction: column; gap: 10px; }
+    #variant-d .vendor-doc .row {
+      display: grid; grid-template-columns: 1fr auto; gap: 8px;
+      font-size: 13px;
+      padding-bottom: 8px; border-bottom: 1px dotted rgba(0,0,0,0.12);
+    }
+    #variant-d .vendor-doc .row:last-child { border-bottom: none; }
+    #variant-d .vendor-doc .row .lbl { color: #5a5850; font-style: italic; }
+    #variant-d .vendor-doc .row .val {
+      font-family: var(--font-display); font-weight: 600; color: #1a1a18;
+      font-style: normal;
+    }
+    #variant-d .vendor-doc .row .val.pos { color: #2d6a3e; }
+    #variant-d .vendor-doc .footnote {
+      font-family: var(--font-mono); font-size: 9px; color: #a8a69a; margin-top: auto;
+      letter-spacing: 0.1em; padding-top: 12px; border-top: 1px dotted rgba(0,0,0,0.12);
+    }
+
+    /* ======================================
+       TRUTH CONSOLE — editorial audit report
+       ====================================== */
+    #variant-d .truth-console {
+      background: #fdfbf4;
+      border: 1px solid var(--vd-truth-line);
+      border-radius: 8px;
+      padding: 16px 18px;
+      flex: 1;
+      display: flex; flex-direction: column; gap: 12px;
+      font-family: var(--font-body);
+      color: var(--vd-truth-ink);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.02), 0 20px 40px -24px rgba(20,23,30,0.18);
+      overflow: hidden;
+      position: relative;
+    }
+    html[data-theme="dark"] #variant-d .truth-console { background: #11141c; }
+
+    /* Masthead */
+    #variant-d .truth-console .t-head {
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em;
+      color: var(--vd-truth-muted);
+      text-transform: uppercase;
+      padding-bottom: 14px; border-bottom: 1px solid var(--vd-truth-line);
+    }
+    #variant-d .truth-console .t-head .brand {
+      font-family: var(--font-display); font-weight: 700; font-size: 11px;
+      letter-spacing: 0.04em; color: var(--vd-truth-ink); text-transform: none;
+    }
+    #variant-d .truth-console .t-head .brand::before {
+      content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--vd-truth-accent); margin-right: 6px; transform: translateY(-1px);
+    }
+    #variant-d .truth-console .t-head .live {
+      display: inline-flex; align-items: center; gap: 5px;
+      color: var(--vd-pass); font-weight: 600;
+    }
+    #variant-d .truth-console .t-head .live::before {
+      content: ''; width: 5px; height: 5px; border-radius: 50%;
+      background: var(--vd-pass); animation: vdBlink 1.6s infinite;
+    }
+    @keyframes vdBlink { 0%,100% {opacity:1} 50% {opacity:0.25} }
+
+    /* Title */
+    #variant-d .truth-console .t-h {
+      font-family: var(--font-display); font-size: 17px; font-weight: 700;
+      letter-spacing: -0.02em; color: var(--vd-truth-ink); line-height: 1.2;
+    }
+    #variant-d .truth-console .t-caption {
+      font-family: var(--font-serif); font-style: italic;
+      font-size: 12.5px; color: var(--vd-truth-muted);
+      margin-top: 5px; line-height: 1.4;
+    }
+
+    /* IQS score hero */
+    #variant-d .tc-score {
+      display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: center;
+      padding: 2px 0 10px;
+      border-bottom: 1px solid var(--vd-truth-line);
+    }
+    #variant-d .tc-ring { position: relative; width: 84px; height: 84px; flex-shrink: 0; }
+    #variant-d .tc-ring svg { transform: rotate(-90deg); display: block; width: 100%; height: 100%; }
+    #variant-d .tc-ring .rn {
+      position: absolute; inset: 0; display: grid; place-items: center;
+      font-family: var(--font-display); font-weight: 700; font-size: 34px;
+      color: var(--vd-truth-ink); letter-spacing: -0.04em; line-height: 1;
+    }
+    #variant-d .tc-ring .rl {
+      position: absolute; bottom: -14px; left: 50%; transform: translateX(-50%);
+      font-family: var(--font-mono); font-size: 8.5px; letter-spacing: 0.18em;
+      color: var(--vd-truth-muted); white-space: nowrap;
+    }
+    #variant-d .tc-score-meta .lbl {
+      font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.16em;
+      color: var(--vd-truth-muted);
+      text-transform: uppercase;
+    }
+    #variant-d .tc-score-meta .hd {
+      font-family: var(--font-display); font-size: 17px; font-weight: 700;
+      letter-spacing: -0.015em; margin: 4px 0 6px; color: var(--vd-miss);
+      display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+    }
+    #variant-d .tc-score-meta .sb {
+      font-family: var(--font-serif); font-size: 13px; line-height: 1.45;
+      color: color-mix(in srgb, var(--vd-truth-ink) 80%, transparent);
+    }
+    #variant-d .tc-score-meta .sb b { font-weight: 700; color: var(--vd-miss); font-family: var(--font-display); }
+    #variant-d .tc-score-meta .delta {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em;
+      color: var(--vd-miss); font-weight: 600;
+      padding: 2px 7px; border-radius: 3px;
+      background: color-mix(in srgb, var(--vd-miss) 10%, transparent);
+    }
+
+    /* Month timeline */
+    #variant-d .tc-timeline {
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    #variant-d .tc-timeline .lbl-row {
+      display: flex; justify-content: space-between;
+      font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.14em;
+      color: var(--vd-truth-muted); text-transform: uppercase;
+    }
+    #variant-d .tc-timeline .lbl-row .counts { color: var(--vd-truth-ink); font-weight: 600; letter-spacing: 0.08em; }
+    #variant-d .tc-bars {
+      display: grid; grid-template-columns: repeat(31, 1fr); gap: 2px;
+      height: 26px; padding: 3px 0;
+      border-top: 1px solid var(--vd-truth-line);
+      border-bottom: 1px solid var(--vd-truth-line);
+    }
+    #variant-d .tc-bars .d {
+      border-radius: 1px; position: relative;
+      background: color-mix(in srgb, var(--vd-truth-ink) 8%, transparent);
+    }
+    #variant-d .tc-bars .d.p { background: color-mix(in srgb, var(--vd-pass) 70%, transparent); }
+    #variant-d .tc-bars .d.f { background: var(--vd-flag); }
+    #variant-d .tc-bars .d.m {
+      background: var(--vd-miss);
+      box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--vd-miss) 25%, transparent);
+    }
+    #variant-d .tc-bars .d.today::after {
+      content: ''; position: absolute; top: -5px; left: 50%;
+      transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 3px solid transparent; border-right: 3px solid transparent;
+      border-top: 4px solid var(--vd-truth-ink);
+    }
+
+    /* KPIs */
+    #variant-d .tc-kpis {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--vd-truth-line);
+      border-bottom: 1px solid var(--vd-truth-line);
+    }
+    #variant-d .tc-kpi {
+      padding: 10px 12px;
+      border-right: 1px solid var(--vd-truth-line);
+    }
+    #variant-d .tc-kpi:last-child { border-right: none; }
+    #variant-d .tc-kpi .k {
+      font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.16em;
+      color: var(--vd-truth-muted);
+      text-transform: uppercase;
+    }
+    #variant-d .tc-kpi .v {
+      font-family: var(--font-display); font-size: 26px; font-weight: 700;
+      letter-spacing: -0.03em; color: var(--vd-truth-ink); margin-top: 4px; line-height: 1;
+      display: flex; align-items: baseline; gap: 4px;
+    }
+    #variant-d .tc-kpi .v .u {
+      font-size: 11px; font-weight: 500;
+      color: var(--vd-truth-muted);
+      font-family: var(--font-mono); letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    #variant-d .tc-kpi .trend {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.06em;
+      margin-top: 4px; font-weight: 600;
+    }
+    #variant-d .tc-kpi .trend.down { color: var(--vd-miss); }
+    #variant-d .tc-kpi .trend.up { color: var(--vd-pass); }
+
+    /* Inline photo thumbnail on event rows */
+    #variant-d .truth-console .ev .thumb {
+      width: 44px; height: 32px; border-radius: 2px;
+      background-size: cover; background-position: center;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 2px 6px rgba(20,23,30,0.1);
+      display: block;
+    }
+    #variant-d .truth-console .ev .thumb.ph-a {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.4)),
+        radial-gradient(45% 55% at 30% 50%, #cbd5e1 0%, #64748b 60%, #1e293b 100%);
+    }
+    #variant-d .truth-console .ev .thumb.ph-b {
+      background:
+        radial-gradient(30% 25% at 70% 60%, rgba(161,98,7,0.35), transparent),
+        linear-gradient(180deg, #e7e5e4 0%, #a8a29e 55%, #57534e 100%);
+    }
+    #variant-d .truth-console .ev .thumb.ph-c {
+      background:
+        linear-gradient(90deg, #1e3a8a 0%, #3730a3 40%, #1e1b4b 100%);
+    }
+    #variant-d .truth-console .ev .thumb.ph-d {
+      background:
+        radial-gradient(55% 40% at 50% 65%, #fde68a 0%, #d97706 50%, #78350f 100%);
+    }
+
+    /* Site heatmap row */
+    #variant-d .tc-heat {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      padding-top: 14px; border-top: 1px solid var(--vd-truth-line);
+    }
+    #variant-d .tc-heat .lbl {
+      font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.14em;
+      color: var(--vd-truth-muted);
+      text-transform: uppercase;
+    }
+    #variant-d .tc-heat .dots { display: flex; gap: 4px; }
+    #variant-d .tc-heat .dot {
+      width: 9px; height: 9px; border-radius: 50%;
+      background: color-mix(in srgb, var(--vd-pass) 65%, transparent);
+    }
+    #variant-d .tc-heat .dot.f { background: var(--vd-flag); }
+    #variant-d .tc-heat .dot.m {
+      background: var(--vd-miss);
+      box-shadow: 0 0 0 2.5px color-mix(in srgb, var(--vd-miss) 15%, transparent);
+    }
+    #variant-d .tc-heat .sha {
+      margin-left: auto;
+      font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.1em;
+      color: var(--vd-truth-muted);
+    }
+
+    /* Event log — editorial table */
+    #variant-d .truth-console .events {
+      display: flex; flex-direction: column;
+    }
+    #variant-d .truth-console .events-h {
+      font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.16em;
+      color: var(--vd-truth-muted);
+      text-transform: uppercase; padding-bottom: 8px;
+      border-bottom: 1.5px solid var(--vd-truth-ink);
+      display: flex; justify-content: space-between;
+    }
+    #variant-d .truth-console .events-h .tally {
+      color: var(--vd-truth-ink); letter-spacing: 0.08em;
+    }
+    #variant-d .truth-console .ev {
+      display: grid; grid-template-columns: 80px 44px 1fr 64px; gap: 12px;
+      align-items: center; font-size: 12px;
+      padding: 9px 0; border-bottom: 1px solid var(--vd-truth-line);
+    }
+    #variant-d .truth-console .ev:last-child { border-bottom: none; }
+    #variant-d .truth-console .ev .ts {
+      font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.02em;
+      color: var(--vd-truth-muted);
+    }
+    #variant-d .truth-console .ev .mg {
+      color: var(--vd-truth-ink); line-height: 1.5;
+      font-family: var(--font-serif); font-size: 13px;
+    }
+    #variant-d .truth-console .ev .mg .site {
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em;
+      color: var(--vd-truth-accent); margin-right: 6px; font-weight: 600;
+      text-transform: uppercase;
+    }
+    #variant-d .truth-console .ev .stat {
+      font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.16em;
+      padding: 3px 8px; border-radius: 2px; font-weight: 700;
+      justify-self: end;
+    }
+    #variant-d .truth-console .ev .stat.miss { background: var(--vd-miss); color: #fff; }
+    #variant-d .truth-console .ev .stat.pass { background: var(--vd-pass); color: #fff; }
+    #variant-d .truth-console .ev .stat.flag { background: var(--vd-flag); color: #1a1200; }
+
+    /* Footer seal */
+    #variant-d .truth-console .t-foot {
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em;
+      color: var(--vd-truth-muted);
+      margin-top: auto; padding-top: 14px;
+      border-top: 1px solid var(--vd-truth-line);
+      text-transform: uppercase;
+    }
+    #variant-d .truth-console .t-foot::before {
+      content: '§'; font-family: var(--font-serif); font-style: italic;
+      font-size: 16px; color: var(--vd-truth-accent); letter-spacing: 0;
+      margin-right: 8px;
+    }
+
+    /* ---- Drag handle ---- */
+    #variant-d .handle {
+      position: absolute; top: 0; bottom: 0;
+      left: var(--split-x, 50%);
+      width: 2px;
+      background: var(--accent);
+      transform: translateX(-1px);
+      z-index: 5;
+      cursor: ew-resize;
+    }
+    #variant-d .handle::before {
+      content: '';
+      position: absolute; top: 0; bottom: 0; left: -20px; right: -20px;
+    }
+    #variant-d .handle .knob {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono); font-size: 12px; font-weight: 700;
+      letter-spacing: 0.1em;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35), 0 0 0 6px color-mix(in srgb, var(--accent) 20%, transparent);
+      transition: transform .15s;
+    }
+    #variant-d .handle:hover .knob, #variant-d .handle.active .knob { transform: translate(-50%, -50%) scale(1.08); }
+    #variant-d .handle .arrow-row {
+      display: flex; gap: 2px; align-items: center; line-height: 1; font-size: 14px;
+    }
+
+    /* Floating labels on the bar */
+    #variant-d .float-lbl {
+      position: absolute; top: 16px;
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em;
+      text-transform: uppercase; font-weight: 600;
+      padding: 5px 10px; border-radius: 3px;
+      z-index: 4;
+      white-space: nowrap;
+    }
+    #variant-d .float-lbl.v { left: 20px; background: rgba(255,255,255,0.8); color: #3a3a36; }
+    #variant-d .float-lbl.t { right: 20px; background: color-mix(in srgb, var(--accent) 25%, transparent); color: color-mix(in srgb, var(--accent) 90%, white); backdrop-filter: blur(6px); }
+
+    /* ---- DELTA STRIP below split ---- */
+    #variant-d .delta-strip {
+      margin-top: 24px;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--vd-line);
+      border: 1px solid var(--vd-line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    #variant-d .delta-strip .d-cell {
+      background: var(--vd-bg);
+      padding: 20px 22px;
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    #variant-d .delta-strip .d-lbl {
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--vd-muted);
+    }
+    #variant-d .delta-strip .d-row {
+      display: flex; align-items: baseline; gap: 10px; margin-top: 6px;
+    }
+    #variant-d .delta-strip .d-vendor, #variant-d .delta-strip .d-truth {
+      font-family: var(--font-display); font-size: 22px; font-weight: 700; letter-spacing: -0.02em;
+    }
+    #variant-d .delta-strip .d-vendor {
+      color: var(--vd-muted); text-decoration: line-through; text-decoration-thickness: 1.5px;
+    }
+    #variant-d .delta-strip .d-arrow { color: var(--accent); font-family: var(--font-mono); font-size: 14px; }
+    #variant-d .delta-strip .d-truth { color: var(--vd-ink); }
+    #variant-d .delta-strip .d-note { font-size: 12px; color: var(--vd-muted); margin-top: 8px; }
+
+    @media (max-width: 760px) {
+      #variant-d .delta-strip { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ---- MOMENTS ---- */
+    #variant-d .moments {
+      background: var(--vd-ink);
+      color: var(--vd-bg);
+      padding: calc(var(--pad-y)) 32px;
+    }
+    html[data-theme="dark"] #variant-d .moments { background: #000; color: var(--vd-ink); }
+    #variant-d .moments-wrap { max-width: 1200px; margin: 0 auto; }
+    #variant-d .moments-head { max-width: 720px; margin-bottom: 72px; }
+    #variant-d .moments-eyebrow {
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: color-mix(in srgb, var(--accent) 70%, white);
+      margin-bottom: 16px; display: block;
+    }
+    #variant-d .moments h2 {
+      font-family: var(--font-display); font-size: clamp(36px, 5vw, 64px);
+      font-weight: 700; letter-spacing: -0.04em; line-height: 1.02;
+      color: inherit; margin: 0 0 16px;
+    }
+    #variant-d .moments-sub { font-size: 17px; line-height: 1.6; color: rgba(255,255,255,0.65); margin: 0; }
+    html[data-theme="dark"] #variant-d .moments-sub { color: rgba(245,245,240,0.65); }
+
+    #variant-d .timeline {
+      position: relative;
+      display: grid; grid-template-columns: 120px 1fr; gap: 32px;
+    }
+    #variant-d .t-axis {
+      position: relative;
+      border-right: 1px solid rgba(255,255,255,0.1);
+    }
+    #variant-d .t-tick {
+      position: absolute; right: -1px; width: 12px; height: 1px; background: rgba(255,255,255,0.25);
+    }
+    #variant-d .t-events { display: flex; flex-direction: column; gap: 48px; }
+    #variant-d .t-event { position: relative; }
+    #variant-d .t-event::before {
+      content: ''; position: absolute;
+      left: -40px; top: 6px;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent);
+    }
+    #variant-d .t-when {
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.5); text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    #variant-d .t-where {
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em;
+      color: color-mix(in srgb, var(--accent) 80%, white);
+      text-transform: uppercase; font-weight: 600; margin-bottom: 12px;
+    }
+    #variant-d .t-title {
+      font-family: var(--font-display); font-size: clamp(22px, 2.2vw, 30px);
+      font-weight: 700; letter-spacing: -0.025em; line-height: 1.15;
+      color: #fff; margin: 0 0 10px;
+    }
+    html[data-theme="dark"] #variant-d .t-title { color: var(--vd-ink); }
+    #variant-d .t-body {
+      font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.7); max-width: 640px; margin: 0 0 16px;
+    }
+    html[data-theme="dark"] #variant-d .t-body { color: rgba(245,245,240,0.7); }
+    #variant-d .t-proof {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: rgba(255,255,255,0.6);
+      padding: 8px 14px; border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 999px;
+    }
+    #variant-d .t-proof::before {
+      content: '◉'; color: var(--accent);
+    }
+
+    /* ---- VENICE ---- */
+    #variant-d .venice-d {
+      padding: var(--pad-y) 32px;
+      background: var(--vd-bg);
+    }
+    #variant-d .venice-d-wrap {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1.4fr 1fr; gap: 64px; align-items: center;
+    }
+    #variant-d .venice-d blockquote {
+      font-family: var(--font-display); font-size: clamp(26px, 3.2vw, 44px);
+      font-weight: 500; letter-spacing: -0.03em; line-height: 1.18;
+      margin: 0 0 28px; color: var(--vd-ink);
+    }
+    #variant-d .venice-d blockquote em {
+      font-family: var(--font-serif); font-style: italic; font-weight: 400;
+      color: var(--accent);
+    }
+    #variant-d .venice-d .sig-name { font-family: var(--font-display); font-weight: 700; font-size: 17px; color: var(--vd-ink); }
+    #variant-d .venice-d .sig-role { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--vd-muted); margin-top: 4px; }
+    #variant-d .venice-d .stacks {
+      display: grid; grid-template-columns: 1fr; gap: 14px;
+    }
+    #variant-d .venice-d .stat {
+      padding: 24px;
+      border: 1px solid var(--vd-line);
+      border-radius: 14px;
+      background: #fff;
+    }
+    html[data-theme="dark"] #variant-d .venice-d .stat { background: #111; }
+    #variant-d .venice-d .stat-n {
+      font-family: var(--font-display); font-size: 36px; font-weight: 700;
+      letter-spacing: -0.03em; color: var(--vd-ink); line-height: 1;
+    }
+    #variant-d .venice-d .stat-l {
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--vd-muted); margin-top: 10px;
+    }
+
+    /* ---- CTA ---- */
+    #variant-d .cta-d {
+      padding: var(--pad-y) 32px;
+      background: var(--vd-ink); color: var(--vd-bg);
+    }
+    html[data-theme="dark"] #variant-d .cta-d { background: #000; }
+    #variant-d .cta-d-wrap {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr auto; gap: 56px; align-items: end;
+    }
+    #variant-d .cta-d h2 {
+      font-family: var(--font-display); font-size: clamp(40px, 6vw, 88px);
+      font-weight: 700; letter-spacing: -0.045em; line-height: 0.96;
+      margin: 0; color: inherit;
+    }
+    #variant-d .cta-d h2 em {
+      font-family: var(--font-serif); font-style: italic; font-weight: 300;
+      color: var(--accent);
+    }
+    #variant-d .cta-d .acts { display: flex; gap: 12px; }
+    #variant-d .cta-d .b1 {
+      padding: 16px 26px; background: var(--vd-bg); color: var(--vd-ink);
+      border-radius: 999px; font-weight: 700; font-size: 14px;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    #variant-d .cta-d .b2 {
+      padding: 16px 26px; color: var(--vd-bg);
+      border: 1px solid rgba(255,255,255,0.2); border-radius: 999px;
+      font-weight: 500; font-size: 14px;
+    }
+
+    /* ---- FOOTER ---- */
+    #variant-d .footer-d {
+      padding: 48px 32px 32px;
+      background: var(--vd-bg);
+      border-top: 1px solid var(--vd-line);
+      color: var(--vd-muted);
+      font-size: 13px;
+    }
+    #variant-d .footer-d-inner {
+      max-width: 1280px; margin: 0 auto;
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px;
+    }
+    #variant-d .footer-d h4 {
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--vd-ink); margin: 0 0 12px; font-weight: 600;
+    }
+    #variant-d .footer-d a { display: block; padding: 4px 0; color: var(--vd-muted); }
+    #variant-d .footer-d a:hover { color: var(--vd-ink); }
+    #variant-d .footer-d-bottom {
+      max-width: 1280px; margin: 32px auto 0; padding-top: 20px;
+      border-top: 1px solid var(--vd-line);
+      display: flex; justify-content: space-between;
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+    }
+
+    @media (max-width: 760px) {
+      #variant-d .venice-d-wrap { grid-template-columns: 1fr; }
+      #variant-d .cta-d-wrap { grid-template-columns: 1fr; gap: 24px; }
+      #variant-d .footer-d-inner { grid-template-columns: 1fr 1fr; }
+      #variant-d .timeline { grid-template-columns: 60px 1fr; }
+      #variant-d .side .side-inner { padding: 20px; }
+    }
+  `;
+  const style = document.createElement('style');
+  style.textContent = css;
+  document.head.appendChild(style);
+
+  const navHTML = `
+    <div class="nav-d">
+      <div class="nav-d-inner">
+        <a class="nav-d-logo" href="index.html"><span class="nav-d-mark"></span>IQS FLOW</a>
+        <div class="nav-d-links">
+          <a href="why-iqs.html">Why IQS</a><a href="about.html">About</a><a href="features.html">Features</a><a href="industries.html">Industries</a><a href="pricing.html">Pricing</a>
+          <div class="nav-d-drop">
+            <button class="nav-d-trigger" type="button">
+              Resources
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="nav-d-drop-menu">
+              <a href="blog.html">Blog<span class="sub">Field notes from the floor</span></a>
+              <a href="api.html">API Documentation<span class="sub">REST, webhooks, SSO</span></a>
+              <a href="vendor-accountability-score.html">Vendor Accountability Score<span class="sub">Our independent scoring methodology</span></a>
+            </div>
+          </div>
+          <a class="nav-d-cta" href="contact.html">Request Demo</a>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const heroHTML = `
+    <section class="hero-d">
+      <div class="hero-d-eyebrow" data-headline-target="eyebrow">The Vendor Report Problem</div>
+      <h1>
+        <span class="part-a" data-headline-target="h1a">What your vendor says.</span>
+        <span class="vs">vs.</span>
+        <span class="part-b" data-headline-target="h1b">What actually happened.</span>
+      </h1>
+      <p class="hero-d-sub" data-headline-target="sub">Drag the slider. See the gap between a polished monthly report and the data IQS Flow captured from the field.</p>
+    </section>
+  `;
+
+  // ---- Vendor doc content ----
+  const vendorDocHTML = `
+    <div class="vendor-doc">
+      <div class="doc-head">
+        <span>Monthly Service Report</span>
+        <span>March 2026</span>
+      </div>
+      <div>
+        <div class="doc-h">Sunset Janitorial Services, LLC</div>
+        <div style="font-family: var(--font-mono); font-size: 10px; color: #8a8879; letter-spacing: 0.1em; margin-top: 6px;">ATLANTA HARTSFIELD · CONCOURSE B · CONTRACT #SJS-2418</div>
+      </div>
+      <div class="rows">
+        <div class="row"><span class="lbl">Inspections completed</span><span class="val pos">412 / 412</span></div>
+        <div class="row"><span class="lbl">Quality score (self-audit)</span><span class="val pos">98.4%</span></div>
+        <div class="row"><span class="lbl">Compliance findings</span><span class="val pos">0 critical</span></div>
+        <div class="row"><span class="lbl">Customer complaints</span><span class="val pos">None reported</span></div>
+        <div class="row"><span class="lbl">On-time crew arrival</span><span class="val pos">100%</span></div>
+      </div>
+      <div class="footnote">REPORT PREPARED BY VENDOR · NOT INDEPENDENTLY VERIFIED</div>
+    </div>
+  `;
+
+  // ---- Truth console content ----
+  const dayBarsArr = Array.from({length: 31}, (_, i) => {
+    const day = i + 1;
+    // Pattern: mostly pass, scattered flags, specific misses
+    let cls = 'p';
+    if ([4].includes(day)) cls = 'm';
+    else if ([11, 27].includes(day)) cls = 'f';
+    else if ([2, 15, 22].includes(day)) cls = 'f';
+    else if ([6, 9, 16, 23].includes(day)) cls = 'p'; // strong pass
+    const today = day === 27 ? ' today' : '';
+    return `<div class="d ${cls}${today}" title="Mar ${String(day).padStart(2,'0')}"></div>`;
+  }).join('');
+
+  const heatDots = [
+    ...Array(8).fill('').map(() => '<div class="dot"></div>'),
+    '<div class="dot f"></div>',
+    '<div class="dot"></div>',
+    '<div class="dot m"></div>',
+    '<div class="dot"></div>',
+    '<div class="dot f"></div>',
+    ...Array(3).fill('').map(() => '<div class="dot"></div>'),
+  ].join('');
+
+  const truthConsoleHTML = `
+    <div class="truth-console">
+      <div class="t-head">
+        <span class="brand">IQS Flow · Independent Audit</span>
+        <span class="live">LIVE</span>
+      </div>
+
+      <div>
+        <div class="t-h">Sunset Janitorial · ATL Concourse B</div>
+        <div class="t-caption">March 2026 — 412 inspections, 8,104 photo submissions, contract #SJS-241</div>
+      </div>
+
+      <div class="tc-score">
+        <div class="tc-ring">
+          <svg viewBox="0 0 92 92">
+            <circle cx="46" cy="46" r="38" fill="none" stroke="#e8e1cb" stroke-width="6"/>
+            <circle cx="46" cy="46" r="38" fill="none" stroke="#a16207" stroke-width="6"
+              stroke-dasharray="238.76" stroke-dashoffset="62.08" stroke-linecap="round"/>
+          </svg>
+          <div class="rn">74</div>
+          <div class="rl">IQS · OUT OF 100</div>
+        </div>
+        <div class="tc-score-meta">
+          <div class="lbl">Independent quality score</div>
+          <div class="hd">At risk — action required<span class="delta">▼ 22 vs self-audit</span></div>
+          <div class="sb">Vendor reported <b>96 / 100</b>. Our auditors observed three documented misses, nine flagged issues, and GPS evidence of late arrivals at gate B14.</div>
+        </div>
+      </div>
+
+      <div class="tc-timeline">
+        <div class="lbl-row">
+          <span>Daily results · March 2026</span>
+          <span class="counts">3 miss · 9 flag · 400 pass</span>
+        </div>
+        <div class="tc-bars">${dayBarsArr}</div>
+        <div class="lbl-row" style="padding-top:2px;">
+          <span>Mar 01</span><span>Mar 15</span><span>Mar 31</span>
+        </div>
+      </div>
+
+      <div class="tc-kpis">
+        <div class="tc-kpi">
+          <div class="k">On-time crew arrival</div>
+          <div class="v">87<span class="u">%</span></div>
+          <div class="trend down">▼ 6 pts vs Feb</div>
+        </div>
+        <div class="tc-kpi">
+          <div class="k">Photo-verified tasks</div>
+          <div class="v">98.3<span class="u">%</span></div>
+          <div class="trend up">▲ 1.2 pts</div>
+        </div>
+        <div class="tc-kpi">
+          <div class="k">Rework incidents</div>
+          <div class="v">4<span class="u">sites</span></div>
+          <div class="trend down">▲ 2 vs Feb</div>
+        </div>
+      </div>
+
+      <div class="events">
+        <div class="events-h">
+          <span>Event log · March 2026</span>
+          <span class="tally">Last 4 of 412 signals</span>
+        </div>
+        <div class="ev"><span class="ts">Mar 04 · 03:12</span><span class="thumb ph-a" aria-label="photo evidence"></span><span class="mg"><span class="site">ATL·B14</span>Crew arrived 47 min late; no manager sign-off on record</span><span class="stat miss">MISS</span></div>
+        <div class="ev"><span class="ts">Mar 11 · 17:44</span><span class="thumb ph-b" aria-label="photo evidence"></span><span class="mg"><span class="site">ATL·B22</span>Restroom: surface residue on 3 of 6 fixtures, photo attached</span><span class="stat flag">FLAG</span></div>
+        <div class="ev"><span class="ts">Mar 19 · 06:01</span><span class="thumb ph-c" aria-label="photo evidence"></span><span class="mg"><span class="site">ATL·B09</span>Pre-board deep clean verified by GPS and photo pair</span><span class="stat pass">PASS</span></div>
+        <div class="ev"><span class="ts">Mar 27 · 22:18</span><span class="thumb ph-d" aria-label="photo evidence"></span><span class="mg"><span class="site">ATL·B14</span>Compliance gap: ATA 103 checklist incomplete at closeout</span><span class="stat flag">FLAG</span></div>
+      </div>
+
+      <div class="tc-heat">
+        <span class="lbl">16 sites</span>
+        <div class="dots">${heatDots}</div>
+        <span class="sha">SHA-256 · 9f2c…b41a</span>
+      </div>
+
+      <div class="t-foot">Independent · GPS-stamped · Photo-verified · Immutable</div>
+    </div>
+  `;
+
+  const splitHTML = `
+    <div class="split-wrap">
+      <div class="split" id="vd-split">
+        <div class="side vendor">
+          <div class="side-inner">
+            <span class="side-lbl">VENDOR REPORT</span>
+            <h3>“A stellar month.”</h3>
+            <div class="side-sub">SUBMITTED APR 01 · PDF · 4 PAGES</div>
+            ${vendorDocHTML}
+          </div>
+        </div>
+        <div class="side truth">
+          <div class="side-inner">
+            <span class="side-lbl">IQS FLOW · INDEPENDENT AUDIT</span>
+            <h3><em>Actually</em>: 3 flags, 1 miss.</h3>
+            <div class="side-sub">REAL-TIME · INDEPENDENT · IMMUTABLE</div>
+            ${truthConsoleHTML}
+          </div>
+        </div>
+        <div class="handle" id="vd-handle">
+          <div class="knob"><span class="arrow-row">◀ ▶</span></div>
+        </div>
+      </div>
+
+      <div class="delta-strip">
+        <div class="d-cell">
+          <span class="d-lbl">Quality score</span>
+          <div class="d-row"><span class="d-vendor">98.4%</span><span class="d-arrow">→</span><span class="d-truth">87.1%</span></div>
+          <span class="d-note">−11.3 points when independently scored</span>
+        </div>
+        <div class="d-cell">
+          <span class="d-lbl">Compliance findings</span>
+          <div class="d-row"><span class="d-vendor">0 critical</span><span class="d-arrow">→</span><span class="d-truth">2 flags</span></div>
+          <span class="d-note">ATA 103 checklist incomplete ×2</span>
+        </div>
+        <div class="d-cell">
+          <span class="d-lbl">On-time arrival</span>
+          <div class="d-row"><span class="d-vendor">100%</span><span class="d-arrow">→</span><span class="d-truth">94.6%</span></div>
+          <span class="d-note">22 late arrivals caught by GPS</span>
+        </div>
+        <div class="d-cell">
+          <span class="d-lbl">Photo evidence</span>
+          <div class="d-row"><span class="d-vendor">0</span><span class="d-arrow">→</span><span class="d-truth">8,104</span></div>
+          <span class="d-note">Every inspection documented</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // ---- MOMENTS ----
+  const momentsHTML = `
+    <section class="moments" data-section="trust">
+      <div class="moments-wrap">
+        <div class="moments-head">
+          <span class="moments-eyebrow">— Moments from the field</span>
+          <h2>A month, in evidence.</h2>
+          <p class="moments-sub">These are real patterns we catch every week, the kind of events vendor reports round away, but operations leaders pay for in reputation, compliance, and passenger complaints.</p>
+        </div>
+
+        <div class="timeline">
+          <div class="t-axis">
+            <div class="t-tick" style="top: 0;"></div>
+            <div class="t-tick" style="top: 25%;"></div>
+            <div class="t-tick" style="top: 50%;"></div>
+            <div class="t-tick" style="top: 75%;"></div>
+            <div class="t-tick" style="top: 100%;"></div>
+          </div>
+          <div class="t-events">
+            <div class="t-event">
+              <div class="t-when">MAR 04 · 03:12 AM</div>
+              <div class="t-where">ATL · Concourse B · Gate B14</div>
+              <h3 class="t-title">Crew arrived 47 minutes late. Nobody signed off.</h3>
+              <p class="t-body">GPS pinged the crew van at the perimeter checkpoint at 03:12, well past the 02:25 pre-board window. No manager sign-off logged. The monthly report marked it &ldquo;100% on-time.&rdquo;</p>
+              <span class="t-proof">GPS + geofence + manager audit trail</span>
+            </div>
+            <div class="t-event">
+              <div class="t-when">MAR 11 · 05:44 PM</div>
+              <div class="t-where">ATL · Concourse B · Gate B22 restroom</div>
+              <h3 class="t-title">Three of six fixtures failed the photo audit.</h3>
+              <p class="t-body">Post-clean photos showed visible surface residue. The IQS rubric auto-flagged the inspection and requested a re-clean within 40 minutes. Vendor&rsquo;s internal report: &ldquo;98.4%, zero findings.&rdquo;</p>
+              <span class="t-proof">Photo · AI-scored · re-clean verified</span>
+            </div>
+            <div class="t-event">
+              <div class="t-when">MAR 19 · 06:01 AM</div>
+              <div class="t-where">ATL · Concourse B · Gate B09</div>
+              <h3 class="t-title">Pre-board deep clean, verified, textbook.</h3>
+              <p class="t-body">Crew arrived on time, all 14 checklist items photographed and GPS-stamped. The inspection closed in 23 minutes against a 30-minute SLA. This is what good looks like.</p>
+              <span class="t-proof">GPS + photo + checklist complete</span>
+            </div>
+            <div class="t-event">
+              <div class="t-when">MAR 27 · 10:18 PM</div>
+              <div class="t-where">ATL · Concourse B · Gate B14</div>
+              <h3 class="t-title">ATA 103 checklist incomplete, compliance risk.</h3>
+              <p class="t-body">4 of 22 ATA 103 items marked &ldquo;n/a&rdquo; without photo evidence or supervisor override. IQS Flow auto-escalated to the operations director within 9 minutes of shift close.</p>
+              <span class="t-proof">Framework audit · auto-escalation</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+
+  const veniceHTML = `
+    <section class="venice-d" data-section="venice">
+      <div class="venice-d-wrap">
+        <div>
+          <blockquote>&ldquo;For twenty years, I watched monthly reports say everything was <em>fine</em>. Then I'd walk the concourse and see otherwise. IQS Flow is what I wish I'd had.&rdquo;</blockquote>
+          <div class="sig-name">Venice Collier</div>
+          <div class="sig-role">Co-Founder & CEO · 20+ Years in Facility Management</div>
+        </div>
+        <div class="stacks">
+          <div class="stat"><div class="stat-n">20+</div><div class="stat-l">Years in facility management</div></div>
+          <div class="stat"><div class="stat-n">4</div><div class="stat-l">Airlines previously served</div></div>
+          <div class="stat"><div class="stat-n">1</div><div class="stat-l">Problem we won't stop solving</div></div>
+        </div>
+      </div>
+    </section>
+  `;
+
+  const ctaHTML = `
+    <section class="cta-d" data-section="cta">
+      <div class="cta-d-wrap">
+        <h2>See <em>the gap</em> on your own vendors.</h2>
+        <div class="acts">
+          <a class="b1" href="contact.html">Request a Demo →</a>
+          <a class="b2" href="why-iqs.html">Take the assessment</a>
+        </div>
+      </div>
+    </section>
+  `;
+
+  const footerHTML = `
+    <footer class="footer-d">
+      <div class="footer-d-inner">
+        <div>
+          <div class="nav-d-logo" style="margin-bottom: 12px;"><span class="nav-d-mark"></span>IQS FLOW</div>
+          <p style="max-width: 320px; line-height: 1.55; margin: 0;">The independent quality intelligence layer for multi-vendor, multi-site operations.</p>
+        </div>
+        <div><h4>Product</h4><a href="features.html">Features</a><a href="industries.html">Industries</a><a href="pricing.html">Pricing</a><a href="api.html">API</a></div>
+        <div><h4>Company</h4><a href="about.html">About</a><a href="why-iqs.html">Why IQS</a><a href="careers.html">Careers</a><a href="contact.html">Contact</a><a href="blog.html">Blog</a></div>
+        <div><h4>Legal</h4><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div>
+      </div>
+      <div class="footer-d-bottom">
+        <div>© 2026 IQS FLOW, INC.</div>
+        <div>Made for the people who have to answer for the work.</div>
+      </div>
+    </footer>
+  `;
+
+  root.innerHTML = `<div class="page">${navHTML}${heroHTML}${splitHTML}${momentsHTML}${veniceHTML}${ctaHTML}${footerHTML}</div>`;
+
+  // ---- Drag interaction ----
+  const split = root.querySelector('#vd-split');
+  const handle = root.querySelector('#vd-handle');
+  let dragging = false;
+  function setX(clientX) {
+    const rect = split.getBoundingClientRect();
+    let pct = ((clientX - rect.left) / rect.width) * 100;
+    pct = Math.max(0, Math.min(100, pct));
+    split.style.setProperty('--split-x', pct + '%');
+  }
+  handle.addEventListener('pointerdown', (e) => {
+    dragging = true;
+    handle.classList.add('active');
+    handle.setPointerCapture(e.pointerId);
+    setX(e.clientX);
+  });
+  handle.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    setX(e.clientX);
+  });
+  handle.addEventListener('pointerup', (e) => {
+    dragging = false;
+    handle.classList.remove('active');
+    try { handle.releasePointerCapture(e.pointerId); } catch {}
+  });
+  split.addEventListener('pointerdown', (e) => {
+    if (e.target === handle || handle.contains(e.target)) return;
+    setX(e.clientX);
+  });
+
+  // Auto-sweep loop, eases back and forth until the user interacts
+  let userInteracted = false;
+  ['pointerdown', 'touchstart'].forEach(ev => {
+    split.addEventListener(ev, () => { userInteracted = true; });
+  });
+  const startT = performance.now();
+  function sweep(now) {
+    if (userInteracted) return;
+    // Only animate while this variant is visible
+    const active = document.getElementById('variant-d')?.classList.contains('active');
+    if (active) {
+      const t = (now - startT) / 1000;
+      // Ease-in-out sine from ~8% to ~92%, period ~7s
+      const phase = (Math.sin(t * (Math.PI * 2) / 16) + 1) / 2; // 0..1
+      const eased = phase * phase * (3 - 2 * phase); // smoothstep
+      const pct = eased * 100;
+      split.style.setProperty('--split-x', pct + '%');
+    }
+    requestAnimationFrame(sweep);
+  }
+  requestAnimationFrame(sweep);
+})();
+
+</script>
+<script>applyTweaks();</script>
+
+</body>
+</html>
