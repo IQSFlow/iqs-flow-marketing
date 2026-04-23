@@ -165,7 +165,7 @@
 
 <div class="ct-wrap">
   <!-- Form -->
-  <form class="ct-form" onsubmit="event.preventDefault(); this.querySelector('.sent').style.display='block';">
+  <form class="ct-form iqs-form" data-form-type="contact">
     <h2>Start a <em>conversation.</em></h2>
     <p class="sub">Replies from an actual person, typically inside one business day.</p>
 
@@ -178,23 +178,23 @@
     <div class="ct-fields">
       <div class="ct-field">
         <label>First name</label>
-        <input type="text" placeholder="Elena" required/>
+        <input type="text" name="firstName" placeholder="Elena" required/>
       </div>
       <div class="ct-field">
         <label>Last name</label>
-        <input type="text" placeholder="Reyes" required/>
+        <input type="text" name="lastName" placeholder="Reyes" required/>
       </div>
       <div class="ct-field">
         <label>Work email</label>
-        <input type="email" placeholder="elena@example.com" required/>
+        <input type="email" name="email" placeholder="elena@example.com" required/>
       </div>
       <div class="ct-field">
         <label>Organization</label>
-        <input type="text" placeholder="Acme Facilities"/>
+        <input type="text" name="organization" placeholder="Acme Facilities"/>
       </div>
       <div class="ct-field full">
         <label>What are you trying to score?</label>
-        <textarea placeholder="Portfolio size, vendor count, current rubric (if any), timeline..."></textarea>
+        <textarea name="message" placeholder="Portfolio size, vendor count, current rubric (if any), timeline..."></textarea>
       </div>
     </div>
 
@@ -270,7 +270,8 @@
 </section>
 
 <div id="footer-slot"></div>
-<script src="assets/shared.js?v=6"></script>
+<script src="assets/config.js?v=1"></script>
+<script src="assets/shared.js?v=7"></script>
 <script>
   // Role tabs
   document.querySelectorAll('.ct-role').forEach(btn => {

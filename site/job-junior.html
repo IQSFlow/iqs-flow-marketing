@@ -91,14 +91,14 @@
     <div class="apply-form">
       <h2>Apply.</h2>
       <p class="sub">We read every application. Don't overthink it.</p>
-      <form onsubmit="event.preventDefault(); this.querySelector('.af-sent').style.display='block'; this.reset();">
+      <form class="iqs-form" data-form-type="job-junior">
         <div class="af-fields">
-          <div class="af-field"><label>First name</label><input type="text" required/></div>
-          <div class="af-field"><label>Last name</label><input type="text" required/></div>
-          <div class="af-field"><label>Email</label><input type="email" required/></div>
-          <div class="af-field"><label>GitHub / portfolio URL</label><input type="url" placeholder="https://github.com/..." required/></div>
-          <div class="af-field full"><label>Something you built that you're proud of</label><textarea placeholder="Doesn't have to be professional. A side project, a fix, a tool you wrote for yourself." required></textarea></div>
-          <div class="af-field full"><label>Why engineering, and why here?</label><textarea placeholder="Short and honest beats polished."></textarea></div>
+          <div class="af-field"><label>First name</label><input type="text" name="firstName" required/></div>
+          <div class="af-field"><label>Last name</label><input type="text" name="lastName" required/></div>
+          <div class="af-field"><label>Email</label><input type="email" name="email" required/></div>
+          <div class="af-field"><label>GitHub / portfolio URL</label><input type="url" name="portfolioUrl" placeholder="https://github.com/..." required/></div>
+          <div class="af-field full"><label>Something you built that you're proud of</label><textarea name="proudOf" placeholder="Doesn't have to be professional. A side project, a fix, a tool you wrote for yourself." required></textarea></div>
+          <div class="af-field full"><label>Why engineering, and why here?</label><textarea name="whyEngineering" placeholder="Short and honest beats polished."></textarea></div>
         </div>
         <div class="af-submit">
           <span class="note">Your application is reviewed within 3 business days.</span>
@@ -124,6 +124,7 @@
 </div>
 
 <div id="footer-slot"></div>
-<script src="assets/shared.js?v=6"></script>
+<script src="assets/config.js?v=1"></script>
+<script src="assets/shared.js?v=7"></script>
 </body>
 </html>

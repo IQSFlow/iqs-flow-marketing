@@ -93,14 +93,14 @@
     <div class="apply-form">
       <h2>Apply.</h2>
       <p class="sub">We read every application. No ATS, no keyword scan.</p>
-      <form onsubmit="event.preventDefault(); this.querySelector('.af-sent').style.display='block'; this.reset();">
+      <form class="iqs-form" data-form-type="job-sales">
         <div class="af-fields">
-          <div class="af-field"><label>First name</label><input type="text" required/></div>
-          <div class="af-field"><label>Last name</label><input type="text" required/></div>
-          <div class="af-field"><label>Email</label><input type="email" required/></div>
-          <div class="af-field"><label>LinkedIn / portfolio URL</label><input type="url" placeholder="https://..."/></div>
-          <div class="af-field full"><label>A deal you're proud of (2–4 sentences)</label><textarea placeholder="What was the account, what was the blocker, how did you unblock it?" required></textarea></div>
-          <div class="af-field full"><label>Why this role, for you, right now?</label><textarea placeholder="Short and direct is better than long."></textarea></div>
+          <div class="af-field"><label>First name</label><input type="text" name="firstName" required/></div>
+          <div class="af-field"><label>Last name</label><input type="text" name="lastName" required/></div>
+          <div class="af-field"><label>Email</label><input type="email" name="email" required/></div>
+          <div class="af-field"><label>LinkedIn / portfolio URL</label><input type="url" name="linkedinUrl" placeholder="https://..."/></div>
+          <div class="af-field full"><label>A deal you're proud of (2–4 sentences)</label><textarea name="proudDeal" placeholder="What was the account, what was the blocker, how did you unblock it?" required></textarea></div>
+          <div class="af-field full"><label>Why this role, for you, right now?</label><textarea name="whyRole" placeholder="Short and direct is better than long."></textarea></div>
         </div>
         <div class="af-submit">
           <span class="note">Your application is reviewed within 3 business days.</span>
@@ -125,6 +125,7 @@
 </div>
 
 <div id="footer-slot"></div>
-<script src="assets/shared.js?v=6"></script>
+<script src="assets/config.js?v=1"></script>
+<script src="assets/shared.js?v=7"></script>
 </body>
 </html>

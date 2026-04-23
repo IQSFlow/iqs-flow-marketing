@@ -90,15 +90,15 @@
     <div class="apply-form">
       <h2>Apply.</h2>
       <p class="sub">Rolling basis. We fill spots as they come.</p>
-      <form onsubmit="event.preventDefault(); this.querySelector('.af-sent').style.display='block'; this.reset();">
+      <form class="iqs-form" data-form-type="job-intern">
         <div class="af-fields">
-          <div class="af-field"><label>First name</label><input type="text" required/></div>
-          <div class="af-field"><label>Last name</label><input type="text" required/></div>
-          <div class="af-field"><label>Email</label><input type="email" required/></div>
-          <div class="af-field"><label>GitHub or school</label><input type="text" placeholder="github.com/you  or  NOLA State, CS '27" required/></div>
-          <div class="af-field"><label>Availability (start date)</label><input type="text" placeholder="e.g. June 2026"/></div>
-          <div class="af-field"><label>Hours / week</label><input type="text" placeholder="e.g. 40 for summer"/></div>
-          <div class="af-field full"><label>Tell us about something you built</label><textarea placeholder="Class project, side project, a script you wrote to make your life easier — any of it counts." required></textarea></div>
+          <div class="af-field"><label>First name</label><input type="text" name="firstName" required/></div>
+          <div class="af-field"><label>Last name</label><input type="text" name="lastName" required/></div>
+          <div class="af-field"><label>Email</label><input type="email" name="email" required/></div>
+          <div class="af-field"><label>GitHub or school</label><input type="text" name="githubOrSchool" placeholder="github.com/you  or  NOLA State, CS '27" required/></div>
+          <div class="af-field"><label>Availability (start date)</label><input type="text" name="availability" placeholder="e.g. June 2026"/></div>
+          <div class="af-field"><label>Hours / week</label><input type="text" name="hoursPerWeek" placeholder="e.g. 40 for summer"/></div>
+          <div class="af-field full"><label>Tell us about something you built</label><textarea name="story" placeholder="Class project, side project, a script you wrote to make your life easier — any of it counts." required></textarea></div>
         </div>
         <div class="af-submit">
           <span class="note">Reviewed on a rolling basis.</span>
@@ -125,6 +125,7 @@
 </div>
 
 <div id="footer-slot"></div>
-<script src="assets/shared.js?v=6"></script>
+<script src="assets/config.js?v=1"></script>
+<script src="assets/shared.js?v=7"></script>
 </body>
 </html>

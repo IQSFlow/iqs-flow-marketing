@@ -762,10 +762,11 @@
         <div><b>0</b><span>Promo emails</span></div>
       </div>
     </div>
-    <form class="nl-form" onsubmit="event.preventDefault(); this.reset(); alert('Subscribed. Check your inbox.');">
-      <input type="email" placeholder="you@company.com" required/>
+    <form class="nl-form iqs-form" data-form-type="newsletter">
+      <input type="email" name="email" placeholder="you@company.com" required/>
       <button type="submit">Subscribe to Field Notes</button>
       <div class="micro">Published from New Orleans. Edited in-house by the IQS Flow team.</div>
+      <div class="sent" style="display:none; margin-top:12px; padding:10px 14px; background:rgba(22,163,74,0.08); color:#166534; border-radius:6px; font-size:13px;">Thanks &mdash; you're subscribed. First note lands next cycle.</div>
     </form>
   </div>
 </section>
@@ -844,7 +845,8 @@
 </section>
 
 <div id="footer-slot"></div>
-<script src="assets/shared.js?v=6"></script>
+<script src="assets/config.js?v=1"></script>
+<script src="assets/shared.js?v=7"></script>
 <script>
   // Department filtering: operates on both the index cards and the archive list
   document.querySelectorAll('.depts-list button').forEach(btn => {
