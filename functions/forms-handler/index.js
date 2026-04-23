@@ -44,6 +44,30 @@ const FORM_LABEL = {
 
 const ALLOWED_FORM_TYPES = new Set(Object.keys(FORM_LABEL));
 
+// Pretty labels for the email body. Anything not listed falls back to a
+// camelCase-to-spaced-Title-Case humanization.
+const FIELD_LABEL = {
+  email: "Email",
+  firstName: "First name",
+  lastName: "Last name",
+  organization: "Organization",
+  role: "Role",
+  message: "Message",
+  position: "Position",
+  resumeUrl: "Resume URL",
+  portfolioUrl: "Portfolio URL",
+  linkedin: "LinkedIn",
+  github: "GitHub",
+};
+
+function humanizeFieldKey(key) {
+  if (FIELD_LABEL[key]) return FIELD_LABEL[key];
+  return key
+    .replace(/([A-Z])/g, " $1")
+    .replace(/^./, (c) => c.toUpperCase())
+    .trim();
+}
+
 const ALLOWED_ORIGINS = new Set([
   "https://iqsflow.com",
   "https://www.iqsflow.com",
@@ -110,21 +134,69 @@ async function verifyRecaptcha(token, remoteIp) {
   };
 }
 
-// ---------- Gmail send via DWD ---------------------------------------------
+// ---------- Gmail send via DWD (IAM Credentials signJwt flow) --------------
+//
+// Cloud Functions Gen 2 gets ADC from the metadata server, which doesn't
+// expose the SA's private key. google-auth-library's `clientOptions.subject`
+// silently produces a non-impersonated SA token in that environment instead
+// of a DWD-impersonated user token, which made gmail.users.messages.send
+// fail with a bare `failedPrecondition` (SAs can't have Gmail mailboxes).
+//
+// To impersonate a Workspace user without a downloaded key, sign a DWD JWT
+// via the IAM Credentials API, then exchange it at the OAuth2 token endpoint.
+// Required IAM: SA must hold roles/iam.serviceAccountTokenCreator on itself.
 
-let gmailClientCache = null;
+const SA_EMAIL =
+  "marketing-forms@crested-booking-488922-f7.iam.gserviceaccount.com";
+const GMAIL_SCOPE = "https://www.googleapis.com/auth/gmail.send";
 
-async function getGmailClient() {
-  if (gmailClientCache) return gmailClientCache;
-  const impersonate = process.env.IMPERSONATE_USER;
-  if (!impersonate) throw new Error("IMPERSONATE_USER not configured");
+async function getImpersonatedAccessToken(impersonate) {
   const auth = new google.auth.GoogleAuth({
-    scopes: ["https://www.googleapis.com/auth/gmail.send"],
-    clientOptions: { subject: impersonate },
+    scopes: ["https://www.googleapis.com/auth/iam"],
   });
   const authClient = await auth.getClient();
-  gmailClientCache = google.gmail({ version: "v1", auth: authClient });
-  return gmailClientCache;
+
+  const now = Math.floor(Date.now() / 1000);
+  const claims = {
+    iss: SA_EMAIL,
+    sub: impersonate,
+    scope: GMAIL_SCOPE,
+    aud: "https://oauth2.googleapis.com/token",
+    iat: now,
+    exp: now + 3600,
+  };
+
+  const signRes = await authClient.request({
+    url: `https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/${encodeURIComponent(SA_EMAIL)}:signJwt`,
+    method: "POST",
+    data: { payload: JSON.stringify(claims) },
+  });
+  const signedJwt = signRes.data.signedJwt;
+
+  const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
+      assertion: signedJwt,
+    }),
+  });
+  const tokenData = await tokenRes.json();
+  if (!tokenData.access_token) {
+    throw new Error(
+      `dwd_token_exchange_failed: ${JSON.stringify(tokenData)}`
+    );
+  }
+  return tokenData.access_token;
+}
+
+async function getGmailClient() {
+  const impersonate = process.env.IMPERSONATE_USER;
+  if (!impersonate) throw new Error("IMPERSONATE_USER not configured");
+  const accessToken = await getImpersonatedAccessToken(impersonate);
+  const oauth2 = new google.auth.OAuth2();
+  oauth2.setCredentials({ access_token: accessToken });
+  return google.gmail({ version: "v1", auth: oauth2 });
 }
 
 function base64urlEncode(str) {
@@ -240,20 +312,20 @@ functions.http("handler", async (req, res) => {
   }
   const data = parsed.data;
 
-  // Build email
+  // Build email — keep subject ASCII so we don't need RFC 2047 encoding.
   const label = FORM_LABEL[formType] || formType;
-  const subject = `[iqsflow.com] ${label} — ${data.email}`;
+  const rolePrefix = data.role
+    ? `[${data.role.charAt(0).toUpperCase()}${data.role.slice(1)}] `
+    : "";
+  const subject = `${rolePrefix}${label} from ${data.email}`;
+  // Sales-facing body. Audit metadata (reCAPTCHA score, IP, UA, timestamp)
+  // stays in Cloud Logging via the structured `form_submission` log below.
   const bodyLines = [
-    `New ${label.toLowerCase()} from iqsflow.com`,
+    `New ${label.toLowerCase()} from iqsflow.com.`,
     "",
-    ...Object.entries(data).map(([k, v]) => `${k}: ${v || "(empty)"}`),
-    "",
-    "---",
-    `reCAPTCHA score: ${recaptcha.score.toFixed(2)}`,
-    `reCAPTCHA action: ${recaptcha.action}`,
-    `IP: ${ip}`,
-    `User-Agent: ${req.headers["user-agent"] || "(unknown)"}`,
-    `Timestamp: ${new Date().toISOString()}`,
+    ...Object.entries(data).map(
+      ([k, v]) => `${humanizeFieldKey(k)}: ${v || "(empty)"}`
+    ),
   ];
 
   // Send
@@ -265,7 +337,20 @@ functions.http("handler", async (req, res) => {
       body: bodyLines.join("\n"),
     });
   } catch (err) {
-    console.error("email_send_failed", err, { formType });
+    // Dump the full Gmail error response — Node's util.inspect truncates
+    // err.response.data to `[Object]` at depth 2, hiding the details[] array
+    // that names the actual precondition (e.g. "Mail service not enabled").
+    const gmailErrorDetails = err?.response?.data
+      ? JSON.stringify(err.response.data, null, 2)
+      : null;
+    console.error("email_send_failed", {
+      formType,
+      impersonate: process.env.IMPERSONATE_USER,
+      message: err?.message,
+      code: err?.code,
+      status: err?.response?.status,
+      gmailError: gmailErrorDetails,
+    });
     // Still log the submission so it's not lost
     console.log("form_submission_unsent", {
       formType,
