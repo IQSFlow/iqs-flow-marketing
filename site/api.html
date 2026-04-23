@@ -144,11 +144,15 @@
       <pre class="code"><span class="c"># Production</span>
 https://api.iqsflow.com/v2
 
-<span class="c"># EU residency tenant</span>
-https://api.eu.iqsflow.com/v2</pre>
+<span class="c"># EU residency tenant (roadmap, 2026)</span>
+<span class="c"># https://api.eu.iqsflow.com/v2</span></pre>
       <div class="callout">
         <div class="cl-label">⚑ Independence note</div>
         Your API token scopes data to <strong>your tenant only</strong>. Vendor organizations issued separate client portals do not share a namespace with your data. That's the point.
+      </div>
+      <div class="callout" style="margin-top:12px;background:rgba(253,224,71,0.08);border-color:rgba(253,224,71,0.35)">
+        <div class="cl-label" style="color:#a16207">◉ API status</div>
+        The v2 API, SDKs, webhooks, and OpenAPI spec documented on this page are <strong>rolling out through 2026</strong>. Current early-access customers integrate via a private v1 endpoint during onboarding. <a href="contact.html" style="color:var(--accent);text-decoration:underline;">Contact sales</a> for early-access credentials or the preview specification.
       </div>
     </section>
 
@@ -237,16 +241,16 @@ Content-Type: application/json
 
     <section id="frameworks">
       <h2>Frameworks.</h2>
-      <p class="h2-sub">Compliance rubrics. Six are built in; custom frameworks can be authored on Enterprise plans and versioned in place.</p>
+      <p class="h2-sub">Compliance rubrics. Six reference frameworks are shipping with the platform. Custom-framework authoring is a 2026 roadmap feature for Enterprise plans; until then, custom rubrics are configured by our team during onboarding.</p>
       <div class="ep"><span class="method GET">GET</span><span class="path">/v2/frameworks</span></div>
       <div class="ep"><span class="method GET">GET</span><span class="path">/v2/frameworks/{id}/items</span></div>
     </section>
 
     <section id="webhooks">
       <h2>Webhooks.</h2>
-      <p class="h2-sub">Subscribe to lifecycle events and we'll POST a signed payload to your endpoint. Failed deliveries retry with exponential backoff for up to 24 hours.</p>
+      <p class="h2-sub">Roadmap for 2026. Planned: subscribe to lifecycle events and we POST a signed payload to your endpoint, with exponential-backoff retries for up to 24 hours on failed deliveries.</p>
       <div class="ep"><span class="method POST">POST</span><span class="path">/v2/webhooks</span></div>
-      <pre class="code"><span class="c">// Webhook payload (signed: HMAC-SHA256)</span>
+      <pre class="code"><span class="c">// Planned webhook payload (HMAC-SHA256 signed)</span>
 {
   <span class="k">"event"</span>: <span class="s">"inspection.flagged"</span>,
   <span class="k">"tenant_id"</span>: <span class="s">"org_02G9..."</span>,
@@ -261,7 +265,7 @@ Content-Type: application/json
 
     <section id="events">
       <h2>Event catalog.</h2>
-      <p class="h2-sub">The full list of emitted events. Subscribe to as many or as few as your integration needs.</p>
+      <p class="h2-sub">The planned event catalog. These events will be emitted once the webhook endpoint ships; subscribe to as many or as few as your integration needs.</p>
       <div class="events-grid">
         <div class="ev-card"><code>inspection.created</code><div class="ed">A new inspection has been submitted.</div></div>
         <div class="ev-card"><code>inspection.scored</code><div class="ed">Scoring has completed for an inspection.</div></div>
@@ -276,8 +280,9 @@ Content-Type: application/json
 
     <section id="sso">
       <h2>SAML SSO.</h2>
-      <p class="h2-sub">SP-initiated and IdP-initiated flows supported. Okta, Azure AD, Google Workspace, and generic SAML 2.0 tested.</p>
-      <pre class="code">ACS URL:     https://api.iqsflow.com/v2/sso/saml/acs
+      <p class="h2-sub">Roadmap for 2026. SP-initiated and IdP-initiated flows planned for Okta, Azure AD, Google Workspace, and generic SAML 2.0. Early-access customers can request a configuration today.</p>
+      <pre class="code"><span class="c"># Planned endpoint shape</span>
+ACS URL:     https://api.iqsflow.com/v2/sso/saml/acs
 Entity ID:   urn:iqsflow:sp:{tenant_id}
 Name ID:     EmailAddress
 Signing:     SHA-256, assertion required</pre>
@@ -285,7 +290,7 @@ Signing:     SHA-256, assertion required</pre>
 
     <section id="scim">
       <h2>SCIM 2.0.</h2>
-      <p class="h2-sub">Full provisioning lifecycle: create, update, deactivate, and re-activate users and groups. Role mapping happens through group assignment.</p>
+      <p class="h2-sub">Roadmap for 2026. Full provisioning lifecycle planned: create, update, deactivate, and re-activate users and groups. Role mapping through group assignment.</p>
       <div class="ep"><span class="method GET">GET</span><span class="path">/v2/scim/Users</span></div>
       <div class="ep"><span class="method POST">POST</span><span class="path">/v2/scim/Users</span></div>
       <div class="ep"><span class="method GET">GET</span><span class="path">/v2/scim/Groups</span></div>
@@ -293,15 +298,15 @@ Signing:     SHA-256, assertion required</pre>
 
     <section id="sdks">
       <h2>Official SDKs.</h2>
-      <p class="h2-sub">Maintained by our team. Semver, generated from the OpenAPI spec, shipped on every minor API release.</p>
+      <p class="h2-sub">SDKs and a public OpenAPI spec are coming in 2026. Generated from a single source of truth and versioned alongside the API. Until then, the REST endpoints above are stable and usable directly with any HTTP client.</p>
       <div class="sdk-grid">
-        <div class="sdk-card"><div class="ln">TypeScript / Node</div><div class="v">@iqsflow/sdk · v2.4.1</div><a href="#">npm install →</a></div>
-        <div class="sdk-card"><div class="ln">Python</div><div class="v">iqsflow · v2.4.0</div><a href="#">pip install →</a></div>
-        <div class="sdk-card"><div class="ln">Go</div><div class="v">github.com/iqsflow/go-sdk · v2.3.2</div><a href="#">go get →</a></div>
+        <div class="sdk-card"><div class="ln">TypeScript / Node</div><div class="v">@iqsflow/sdk · coming 2026</div><span style="color:var(--vd-ink-3);font-size:12px">Planned</span></div>
+        <div class="sdk-card"><div class="ln">Python</div><div class="v">iqsflow · coming 2026</div><span style="color:var(--vd-ink-3);font-size:12px">Planned</span></div>
+        <div class="sdk-card"><div class="ln">Go</div><div class="v">iqsflow/go-sdk · coming 2026</div><span style="color:var(--vd-ink-3);font-size:12px">Planned</span></div>
       </div>
       <div class="callout">
         <div class="cl-label">✦ OpenAPI spec</div>
-        The canonical spec lives at <code style="font-family: var(--font-mono); color: var(--accent); font-weight: 600;">https://api.iqsflow.com/v2/openapi.json</code>. Use it with your own codegen if a first-party SDK isn't right for you.
+        A public OpenAPI 3.1 specification will be published at <code style="font-family: var(--font-mono); color: var(--accent); font-weight: 600;">https://api.iqsflow.com/v2/openapi.json</code> alongside the SDK release. Early-access integrators can request the spec today via <a href="contact.html" style="color:var(--accent);">sales</a>.
       </div>
     </section>
   </div>
