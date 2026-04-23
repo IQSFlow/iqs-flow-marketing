@@ -15,7 +15,7 @@ PROJECT_ID="crested-booking-488922-f7"
 REGION="us-central1"
 FUNCTION_NAME="marketing-forms-handler"
 SERVICE_ACCOUNT="marketing-forms@${PROJECT_ID}.iam.gserviceaccount.com"
-IMPERSONATE_USER="${IMPERSONATE_USER:-jhinton@iqsflow.com}"
+IMPERSONATE_USER="${IMPERSONATE_USER:-noreply@iqsflow.com}"
 TO_EMAIL="${TO_EMAIL:-sales@iqsflow.com}"
 
 echo "==> Deploying ${FUNCTION_NAME} to ${REGION}"

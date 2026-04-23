@@ -133,6 +133,8 @@
           msg = "The bot check didn't pass. Please refresh the page and try again.";
         } else if (data && data.error === "invalid_payload") {
           msg = "Please check every required field and try again.";
+        } else if (data && data.error === "rate_limited") {
+          msg = "You have sent too many submissions recently. Please try again in a few minutes, or email sales@iqsflow.com directly.";
         }
       } catch (e) { /* non-JSON response, keep default */ }
       showError(form, msg);

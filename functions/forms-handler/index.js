@@ -49,6 +49,40 @@ const ALLOWED_ORIGINS = new Set([
   "https://www.iqsflow.com",
 ]);
 
+// ---------- Per-IP rate limiter --------------------------------------------
+// In-memory window; each Cloud Function instance keeps its own map. With
+// max-instances=10 the worst-case effective ceiling is ~10x the per-instance
+// limit, which is still an order of magnitude below any legitimate use.
+// Cleanup runs opportunistically to keep memory bounded.
+
+const RATE_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+const RATE_MAX_PER_IP = 5; // per instance per window
+const rateLimits = new Map();
+
+function checkRateLimit(ip) {
+  if (!ip) return { allowed: true, remaining: RATE_MAX_PER_IP };
+  const now = Date.now();
+  const entry = rateLimits.get(ip);
+  if (!entry || now - entry.windowStart > RATE_WINDOW_MS) {
+    rateLimits.set(ip, { count: 1, windowStart: now });
+    cleanupRateMap(now);
+    return { allowed: true, remaining: RATE_MAX_PER_IP - 1 };
+  }
+  if (entry.count >= RATE_MAX_PER_IP) {
+    const retryAfterMs = RATE_WINDOW_MS - (now - entry.windowStart);
+    return { allowed: false, retryAfterSeconds: Math.ceil(retryAfterMs / 1000) };
+  }
+  entry.count++;
+  return { allowed: true, remaining: RATE_MAX_PER_IP - entry.count };
+}
+
+function cleanupRateMap(now) {
+  if (rateLimits.size < 1000) return;
+  for (const [key, entry] of rateLimits.entries()) {
+    if (now - entry.windowStart > RATE_WINDOW_MS) rateLimits.delete(key);
+  }
+}
+
 // ---------- reCAPTCHA v3 ----------------------------------------------------
 
 async function verifyRecaptcha(token, remoteIp) {
@@ -162,6 +196,15 @@ functions.http("handler", async (req, res) => {
     (req.headers["x-forwarded-for"] || "").toString().split(",")[0].trim() ||
     req.ip ||
     "";
+
+  // Rate limit per IP (before spending a reCAPTCHA API call)
+  const rl = checkRateLimit(ip);
+  if (!rl.allowed) {
+    console.warn("rate_limited", { ip, retryAfterSeconds: rl.retryAfterSeconds });
+    res.set("Retry-After", String(rl.retryAfterSeconds));
+    res.status(429).json({ error: "rate_limited", retry_after_seconds: rl.retryAfterSeconds });
+    return;
+  }
 
   // Verify reCAPTCHA
   let recaptcha;
