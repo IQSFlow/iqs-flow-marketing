@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Terms of Service, IQS Flow</title>
+<link rel="icon" type="image/svg+xml" href="/assets/iqs-mark.svg"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,300;9..144,400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/assets/shared.css?v=6"/>
+<style>
+  .legal-wrap {
+    max-width: 880px; margin: 0 auto; padding: 40px 32px 96px;
+    display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start;
+  }
+  @media (max-width: 900px) { .legal-wrap { grid-template-columns: 1fr; gap: 32px; } }
+  .legal-toc { position: sticky; top: 84px; align-self: start; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
+  .legal-toc .label { color: var(--vd-muted); margin-bottom: 12px; }
+  .legal-toc a { display: block; padding: 6px 0 6px 12px; color: var(--vd-ink); border-left: 2px solid var(--vd-line); }
+  .legal-toc a + a { margin-top: 2px; }
+  .legal-toc a:hover { border-color: var(--accent); color: var(--accent); }
+  .legal-body h2 { font-family: var(--font-display); font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin: 40px 0 12px; scroll-margin-top: 96px; }
+  .legal-body h2:first-of-type { margin-top: 0; }
+  .legal-body p, .legal-body li { font-size: 15px; line-height: 1.7; color: var(--vd-ink); text-wrap: pretty; }
+  .legal-body p { margin: 0 0 14px; }
+  .legal-body ul, .legal-body ol { padding-left: 20px; margin: 0 0 18px; }
+  .legal-body li + li { margin-top: 6px; }
+  .legal-body code { font-family: var(--font-mono); font-size: 13px; background: var(--vd-vendor); padding: 1px 6px; border-radius: 4px; }
+  .legal-meta { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--vd-muted); margin-bottom: 32px; display: flex; gap: 20px; border-bottom: 1px solid var(--vd-line); padding-bottom: 16px; }
+  .legal-meta b { color: var(--vd-ink); letter-spacing: 0; text-transform: none; font-family: var(--font-body); font-weight: 500; }
+</style>
+</head>
+<body data-page="terms">
+<div id="nav-slot"></div>
+
+<header class="ph">
+  <div class="ph-eyebrow">Legal · Policy 02</div>
+  <h1>Terms of <em>service.</em></h1>
+  <p class="ph-sub">The agreement between IQS Flow, Inc. and the organizations and users who access the platform. Written plainly; the MSA remains the governing document for enterprise accounts.</p>
+</header>
+
+<div class="legal-wrap">
+  <aside class="legal-toc">
+    <div class="label">On this page</div>
+    <a href="#accept">01 · Acceptance</a>
+    <a href="#access">02 · Access &amp; accounts</a>
+    <a href="#roles">03 · The three roles</a>
+    <a href="#data">04 · Data ownership</a>
+    <a href="#pay">05 · Fees &amp; billing</a>
+    <a href="#term">06 · Term &amp; termination</a>
+    <a href="#sla">07 · Availability (SLA)</a>
+    <a href="#limit">08 · Liability</a>
+    <a href="#law">09 · Governing law</a>
+  </aside>
+
+  <article class="legal-body">
+    <div class="legal-meta">
+      <span>Effective <b>Apr 12, 2026</b></span>
+      <span>Version <b>2.4</b></span>
+      <span>Supersedes v2.3</span>
+    </div>
+
+    <h2 id="accept">01 &middot; Acceptance.</h2>
+    <p>By creating an account or using IQS Flow, the organization on whose behalf the account is created agrees to these terms. If you are an individual using the product as part of an enterprise account, your use is governed by the master services agreement signed by your organization and, secondarily, by these terms to the extent the two do not conflict.</p>
+
+    <h2 id="access">02 &middot; Access and accounts.</h2>
+    <p>An IQS Flow account is provisioned by IQS Flow in one of three role types: Customer, Vendor, or Inspector. Each user is accountable for the accuracy of their own credentials and for notifying us promptly of suspected compromise. Passwords must meet minimum NIST 800-63B complexity requirements; multi-factor authentication is available for all accounts and required for Inspector and Admin roles.</p>
+
+    <h2 id="roles">03 &middot; The three roles.</h2>
+    <p>IQS Flow is not a neutral multi-tenant SaaS product; it is a system that produces a scored record that three commercial parties agree to treat as independent. Access is scoped accordingly:</p>
+    <ul>
+      <li><b>Customers</b> may read scored records for their portfolio, configure rubrics, and export evidence.</li>
+      <li><b>Vendors</b> may read scored records for work performed under their contract, submit corrective actions, and attach context to findings; they may <em>not</em> alter, delete, or re-score completed inspections.</li>
+      <li><b>Inspectors</b> may record inspections, attach evidence, and submit scores. Once signed, inspection records become immutable.</li>
+    </ul>
+    <p>These restrictions are load-bearing. The product&rsquo;s usefulness to all three parties depends on them being enforced technically, and we will not grant exceptions except via contract amendment.</p>
+
+    <h2 id="data">04 &middot; Data ownership.</h2>
+    <p>The customer owns the operational data produced under its contract. IQS Flow is the processor. We do not sell, license, or share customer operational data outside the scoped role-based sharing that is the product itself. We retain an aggregated, de-identified right to use operational data for methodology research (e.g., the VAS corpus) and for product improvement. That aggregated use never includes customer-identifiable data in external publications.</p>
+
+    <h2 id="pay">05 &middot; Fees and billing.</h2>
+    <p>Fees are as set forth in the applicable order form or self-service plan. Self-service plans are billed monthly in advance; enterprise plans are billed per the order form. All fees are in US dollars unless otherwise stated. Failure to pay within 30 days of invoice may result in suspension of the account, with 14 days of written notice.</p>
+
+    <h2 id="term">06 &middot; Term and termination.</h2>
+    <p>Self-service subscriptions renew monthly until canceled. Enterprise subscriptions run for the term set in the order form. Either party may terminate for material breach on 30 days&rsquo; written notice, provided the breaching party has not cured the breach within that window. On termination, the customer may export all data for a period of 90 days; after that, data is retained per the Privacy Policy.</p>
+
+    <h2 id="sla">07 &middot; Availability.</h2>
+    <p>We commit to 99.9% monthly uptime on the core application surface (authentication, inspection capture, evidence upload, score read). Planned maintenance windows are published at least 72 hours in advance and do not count against uptime. Service credits for missed SLA are detailed in the enterprise order form.</p>
+
+    <h2 id="limit">08 &middot; Liability.</h2>
+    <p>Each party&rsquo;s aggregate liability for claims arising from these terms is limited to the fees paid by the customer to IQS Flow in the 12 months preceding the claim. Neither party is liable for indirect, consequential, or lost-profit damages. Nothing in this section limits liability for willful misconduct, breach of confidentiality, or indemnification obligations.</p>
+
+    <h2 id="law">09 &middot; Governing law.</h2>
+    <p>These terms are governed by the laws of the State of Delaware, without regard to conflict-of-laws principles. Disputes arising under these terms shall be resolved by binding arbitration in Wilmington, Delaware, in accordance with the Commercial Arbitration Rules of the American Arbitration Association.</p>
+
+    <p style="color:var(--vd-muted); font-size:13px; margin-top:32px;">Contact for contract questions: <code>legal@iqsflow.com</code>.</p>
+  </article>
+</div>
+
+<section class="cta-band">
+  <div class="cta-band-wrap" style="max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:40px;flex-wrap:wrap;">
+    <h2>Need the <em>full</em> MSA?</h2>
+    <div class="acts">
+      <a class="b1" href="/contact/">Request MSA →</a>
+      <a class="b2" href="/privacy/">Privacy policy</a>
+    </div>
+  </div>
+</section>
+
+<div id="footer-slot"></div>
+<script src="/assets/shared.js?v=6"></script>
+</body>
+</html>

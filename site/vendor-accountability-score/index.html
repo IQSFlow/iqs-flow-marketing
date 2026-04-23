@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Vendor Accountability Score, IQS Flow</title>
+<link rel="icon" type="image/svg+xml" href="/assets/iqs-mark.svg"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,300;9..144,400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/assets/shared.css?v=6"/>
+<style>
+  /* Score hero */
+  .score-hero {
+    background: var(--vd-truth); color: var(--vd-truth-ink);
+    padding: 80px 32px; position: relative; overflow: hidden;
+  }
+  .score-hero-wrap {
+    max-width: 1280px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+  }
+  .score-hero .lbl {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: rgba(229,242,255,0.55); margin-bottom: 16px;
+  }
+  .score-hero h2 {
+    font-family: var(--font-display); font-size: clamp(32px, 4.2vw, 56px); font-weight: 700;
+    letter-spacing: -0.04em; line-height: 1.04; margin: 0 0 20px; color: #fff;
+  }
+  .score-hero h2 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); }
+  .score-hero p { font-size: 16px; line-height: 1.65; color: rgba(229,242,255,0.7); margin: 0 0 20px; max-width: 520px; }
+
+  .score-card {
+    background: #fff; color: var(--vd-ink); border-radius: 16px; padding: 40px 36px;
+    position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  }
+  .score-card .sc-head {
+    display: flex; justify-content: space-between; align-items: start; margin-bottom: 28px;
+  }
+  .score-card .sc-name { font-family: var(--font-display); font-size: 20px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 2px; }
+  .score-card .sc-sub { font-family: var(--font-mono); font-size: 11px; color: var(--vd-muted); letter-spacing: 0.08em; text-transform: uppercase; }
+  .score-card .sc-period { font-family: var(--font-mono); font-size: 11px; color: var(--vd-muted); letter-spacing: 0.08em; text-transform: uppercase; }
+  .score-card .sc-big {
+    font-family: var(--font-display); font-size: 112px; font-weight: 700;
+    letter-spacing: -0.055em; line-height: 1; color: var(--accent);
+  }
+  .score-card .sc-ltr {
+    display: inline-block; padding: 4px 14px; background: var(--vd-ink); color: var(--vd-bg);
+    border-radius: 6px; font-family: var(--font-display); font-size: 20px; font-weight: 700;
+    margin-left: 12px; vertical-align: top; margin-top: 12px;
+  }
+  .score-card .sc-delta {
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em;
+    color: #059669; font-weight: 600; margin-top: 8px;
+  }
+  .score-card .sc-bars { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--vd-line); }
+  .score-card .bar-row {
+    display: grid; grid-template-columns: 100px 1fr 36px; gap: 12px; align-items: center;
+    padding: 9px 0; font-family: var(--font-body);
+  }
+  .bar-row .nm { font-family: var(--font-mono); font-size: 11px; color: var(--vd-muted); letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500; }
+  .bar-row .bg { height: 6px; background: var(--vd-line); border-radius: 3px; overflow: hidden; }
+  .bar-row .bg span { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+  .bar-row .vl { font-family: var(--font-mono); font-size: 12px; color: var(--vd-ink); font-weight: 600; text-align: right; }
+
+  @media (max-width: 900px) { .score-hero-wrap { grid-template-columns: 1fr; } }
+
+  /* Dimensions */
+  .dims { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; }
+  .dim {
+    background: #fff; border: 1px solid var(--vd-line); padding: 28px;
+    border-right: none;
+  }
+  .dim:first-child { border-radius: 14px 0 0 14px; }
+  .dim:last-child { border-right: 1px solid var(--vd-line); border-radius: 0 14px 14px 0; }
+  .dim .wt {
+    font-family: var(--font-display); font-size: 40px; font-weight: 700;
+    letter-spacing: -0.03em; color: var(--accent); line-height: 1;
+  }
+  .dim .wt .pct { font-family: var(--font-mono); font-size: 16px; color: var(--vd-muted); vertical-align: super; margin-left: 4px; }
+  .dim h4 { font-family: var(--font-display); font-size: 17px; font-weight: 700; letter-spacing: -0.02em; margin: 16px 0 8px; }
+  .dim p { font-size: 13px; line-height: 1.55; color: var(--vd-muted); margin: 0; }
+  @media (max-width: 900px) {
+    .dims { grid-template-columns: 1fr 1fr; }
+    .dim, .dim:first-child, .dim:last-child { border-radius: 0; border-right: 1px solid var(--vd-line); }
+  }
+  @media (max-width: 600px) { .dims { grid-template-columns: 1fr; } }
+
+  /* Formula */
+  .formula {
+    background: var(--vd-truth); color: var(--vd-truth-ink);
+    border-radius: 14px; padding: 40px 36px; margin-top: 48px;
+    text-align: center; font-family: var(--font-mono);
+  }
+  .formula .line {
+    font-size: 18px; line-height: 1.8; color: rgba(229,242,255,0.85);
+    margin: 0 0 10px;
+  }
+  .formula .line .tk { color: var(--accent); font-weight: 700; }
+  .formula .line .wt { color: #fbbf24; }
+  .formula .legend { font-size: 11px; color: rgba(229,242,255,0.55); margin-top: 20px; letter-spacing: 0.06em; }
+
+  /* Grade scale */
+  .grades {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
+    margin: 32px 0;
+  }
+  .grade {
+    padding: 24px 20px; border-radius: 12px; color: #fff;
+  }
+  .grade .ltr { font-family: var(--font-display); font-size: 48px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+  .grade .rng { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; opacity: 0.9; margin-top: 8px; }
+  .grade .nm { font-family: var(--font-display); font-size: 14px; font-weight: 600; margin-top: 6px; }
+  .grade.a { background: #059669; }
+  .grade.b { background: #0891b2; }
+  .grade.c { background: #ca8a04; }
+  .grade.d { background: #ea580c; }
+  .grade.f { background: #b91c1c; }
+  @media (max-width: 700px) { .grades { grid-template-columns: 1fr 1fr; } }
+
+  /* Comparison */
+  .vendors {
+    background: #fff; border: 1px solid var(--vd-line); border-radius: 14px;
+    overflow: hidden;
+  }
+  .vendors table { width: 100%; border-collapse: collapse; }
+  .vendors th { text-align: left; padding: 16px 20px; background: var(--vd-bg); font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; color: var(--vd-muted); border-bottom: 1px solid var(--vd-line); }
+  .vendors td { padding: 18px 20px; border-bottom: 1px solid var(--vd-line); font-size: 14px; }
+  .vendors tr:last-child td { border-bottom: none; }
+  .vendors .vname { font-family: var(--font-display); font-weight: 700; font-size: 15px; }
+  .vendors .vscore { font-family: var(--font-display); font-size: 22px; font-weight: 700; letter-spacing: -0.02em; color: var(--accent); }
+  .vendors .vgrade { display: inline-block; padding: 3px 10px; border-radius: 4px; font-family: var(--font-display); font-size: 12px; font-weight: 700; color: #fff; }
+  .vg-a { background: #059669; }
+  .vg-b { background: #0891b2; }
+  .vg-c { background: #ca8a04; }
+  .vg-d { background: #ea580c; }
+  .vendors .dlt { font-family: var(--font-mono); font-size: 12px; font-weight: 600; }
+  .dlt.up { color: #059669; }
+  .dlt.down { color: #b91c1c; }
+
+  /* FAQ */
+  .vas-faq details {
+    background: #fff; border: 1px solid var(--vd-line); border-radius: 12px;
+    padding: 20px 24px; margin-bottom: 10px;
+  }
+  .vas-faq summary {
+    font-family: var(--font-display); font-weight: 600; font-size: 16px;
+    cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;
+  }
+  .vas-faq summary::-webkit-details-marker { display: none; }
+  .vas-faq summary::after { content: '+'; font-family: var(--font-mono); font-size: 18px; color: var(--vd-muted); }
+  .vas-faq details[open] summary::after { content: '−'; }
+  .vas-faq p { font-size: 14px; line-height: 1.6; color: var(--vd-muted); margin: 12px 0 0; }
+</style>
+</head>
+<body data-page="vas">
+<div id="nav-slot"></div>
+
+<section class="ph">
+  <div class="ph-eyebrow">Vendor Accountability Score · Methodology</div>
+  <h1>One number. <em>Five</em> weighted dimensions. Zero mystery.</h1>
+  <p class="ph-sub">The VAS is how we summarize a vendor's operational integrity, across sites, across frameworks, across time. Published openly so your vendor can show you how it's calculated before you ever pull it up.</p>
+</section>
+
+<section class="score-hero">
+  <div class="score-hero-wrap">
+    <div>
+      <div class="lbl">, Example vendor scorecard</div>
+      <h2>A <em>single</em> number to negotiate with.</h2>
+      <p>Quality conversations used to end at adjectives: reliable, responsive, professional. With VAS, a renewal or rebate discussion starts at a number, 0 to 100, that your vendor already knows and agrees to.</p>
+      <p>Computed nightly across your portfolio. Surfaced to both sides in the same dashboard at the same time.</p>
+    </div>
+    <div class="score-card">
+      <div class="sc-head">
+        <div>
+          <div class="sc-name">Airport Services Co.</div>
+          <div class="sc-sub">47 SITES · 6 FRAMEWORKS</div>
+        </div>
+        <div class="sc-period">Q1 · 2026</div>
+      </div>
+      <div>
+        <span class="sc-big">87</span><span class="sc-ltr">B+</span>
+      </div>
+      <div class="sc-delta">▲ +3.4 pts vs Q4 2025</div>
+      <div class="sc-bars">
+        <div class="bar-row"><span class="nm">Quality</span><span class="bg"><span style="width:92%"></span></span><span class="vl">92</span></div>
+        <div class="bar-row"><span class="nm">Evidence</span><span class="bg"><span style="width:88%"></span></span><span class="vl">88</span></div>
+        <div class="bar-row"><span class="nm">Compliance</span><span class="bg"><span style="width:84%"></span></span><span class="vl">84</span></div>
+        <div class="bar-row"><span class="nm">Response</span><span class="bg"><span style="width:79%"></span></span><span class="vl">79</span></div>
+        <div class="bar-row"><span class="nm">Consistency</span><span class="bg"><span style="width:86%"></span></span><span class="vl">86</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-eyebrow">— The five dimensions</div>
+  <h2>What actually gets <em>measured.</em></h2>
+  <p class="section-sub">Weights were chosen to reflect what operations leaders told us actually matters at renewal. Every dimension normalizes by site count so small vendors aren't penalized for scale.</p>
+
+  <div class="dims">
+    <div class="dim">
+      <div class="wt">30<span class="pct">%</span></div>
+      <h4>Quality</h4>
+      <p>Average inspection score across the rubric, weighted by site and normalized by framework tier.</p>
+    </div>
+    <div class="dim">
+      <div class="wt">25<span class="pct">%</span></div>
+      <h4>Evidence</h4>
+      <p>Percentage of inspections with complete, photo-verified evidence per required checklist item.</p>
+    </div>
+    <div class="dim">
+      <div class="wt">20<span class="pct">%</span></div>
+      <h4>Compliance</h4>
+      <p>Framework-scored performance: ATA 103, JCAHO, OSHA, ISSA, CDC EVS, ISO 14644 as applicable.</p>
+    </div>
+    <div class="dim">
+      <div class="wt">15<span class="pct">%</span></div>
+      <h4>Response</h4>
+      <p>Time from finding to remediation. Weighted inversely by severity tier of the flagged item.</p>
+    </div>
+    <div class="dim">
+      <div class="wt">10<span class="pct">%</span></div>
+      <h4>Consistency</h4>
+      <p>Standard deviation of score across sites and shifts, penalizes volatility, not absolute performance.</p>
+    </div>
+  </div>
+
+  <div class="formula">
+    <div class="line"><span class="tk">VAS</span> = <span class="wt">0.30</span>·Q + <span class="wt">0.25</span>·E + <span class="wt">0.20</span>·C + <span class="wt">0.15</span>·R + <span class="wt">0.10</span>·σ<sub>−1</sub></div>
+    <div class="legend">Q quality · E evidence · C compliance · R response · σ<sub>−1</sub> inverse volatility · normalized 0-100</div>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 0">
+  <div class="section-eyebrow">— Grade bands</div>
+  <h2>How we map <em>scores</em> to letters.</h2>
+  <p class="section-sub">Bands were calibrated against 18 months of cross-industry inspection data. A <strong>B</strong> is an operator doing their job well, it isn't a failure.</p>
+
+  <div class="grades">
+    <div class="grade a"><div class="ltr">A</div><div class="rng">90 - 100</div><div class="nm">Exceptional</div></div>
+    <div class="grade b"><div class="ltr">B</div><div class="rng">80 - 89</div><div class="nm">Strong</div></div>
+    <div class="grade c"><div class="ltr">C</div><div class="rng">70 - 79</div><div class="nm">Adequate</div></div>
+    <div class="grade d"><div class="ltr">D</div><div class="rng">60 - 69</div><div class="nm">At risk</div></div>
+    <div class="grade f"><div class="ltr">F</div><div class="rng">&lt; 60</div><div class="nm">Action required</div></div>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 0">
+  <div class="section-eyebrow">— Portfolio example</div>
+  <h2>What a VAS leaderboard looks <em>like.</em></h2>
+  <p class="section-sub">Sample data from a Portfolio-plan customer running 12 janitorial and aviation services vendors across 47 sites.</p>
+
+  <div class="vendors">
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 40px">#</th>
+          <th>Vendor</th>
+          <th>Scope</th>
+          <th>VAS</th>
+          <th>Grade</th>
+          <th>QoQ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>01</td><td class="vname">Meridian Environmental</td><td>11 sites · ISSA, OSHA</td><td class="vscore">94</td><td><span class="vgrade vg-a">A</span></td><td class="dlt up">▲ 2.1</td></tr>
+        <tr><td>02</td><td class="vname">Airport Services Co.</td><td>8 sites · ATA 103</td><td class="vscore">87</td><td><span class="vgrade vg-b">B+</span></td><td class="dlt up">▲ 3.4</td></tr>
+        <tr><td>03</td><td class="vname">Clearline Industrial</td><td>6 sites · ISSA, ISO 14644</td><td class="vscore">84</td><td><span class="vgrade vg-b">B</span></td><td class="dlt up">▲ 0.8</td></tr>
+        <tr><td>04</td><td class="vname">HealthCore EVS Partners</td><td>5 sites · JCAHO, CDC EVS</td><td class="vscore">82</td><td><span class="vgrade vg-b">B</span></td><td class="dlt down">▼ 1.2</td></tr>
+        <tr><td>05</td><td class="vname">Vanguard Facility Group</td><td>7 sites · ISSA, OSHA</td><td class="vscore">76</td><td><span class="vgrade vg-c">C+</span></td><td class="dlt up">▲ 4.7</td></tr>
+        <tr><td>06</td><td class="vname">Southstar Cleaning</td><td>4 sites · ISSA</td><td class="vscore">71</td><td><span class="vgrade vg-c">C</span></td><td class="dlt down">▼ 2.3</td></tr>
+        <tr><td>07</td><td class="vname">Keystone Ramp Services</td><td>3 sites · ATA 103</td><td class="vscore">68</td><td><span class="vgrade vg-d">D+</span></td><td class="dlt down">▼ 5.1</td></tr>
+        <tr><td>08</td><td class="vname">Pinnacle Janitorial</td><td>3 sites · ISSA</td><td class="vscore">63</td><td><span class="vgrade vg-d">D</span></td><td class="dlt down">▼ 6.8</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 0">
+  <div class="section-eyebrow">— Methodology questions</div>
+  <h2>How we keep it <em>honest.</em></h2>
+
+  <div class="vas-faq">
+    <details open>
+      <summary>Who reviews the methodology?</summary>
+      <p>The weights and normalization are reviewed annually by an external advisory board of operations directors (airlines, hospitals, REITs). Any change is published with version number, effective date, and a back-computed comparison against the previous method.</p>
+    </details>
+    <details>
+      <summary>Can a vendor dispute a finding?</summary>
+      <p>Yes. Any flagged inspection has a 72-hour appeal window in which the vendor can submit counter-evidence. Appeals are adjudicated by the customer's configured reviewer, not by IQS. Appeal outcomes are part of the public audit trail.</p>
+    </details>
+    <details>
+      <summary>How does site size affect the score?</summary>
+      <p>Every dimension is computed per-site and then averaged, so a vendor with 3 well-run sites isn't punished for having less data than a vendor with 30. Consistency (σ<sub>−1</sub>) uses a minimum-observation threshold to avoid noise at low counts.</p>
+    </details>
+    <details>
+      <summary>Is this published as an open standard?</summary>
+      <p>The methodology is published here and the computation code for dimensions Q, E, and R is open-source under MIT. Compliance mapping (dimension C) is proprietary to our framework libraries and updated on their cadence.</p>
+    </details>
+    <details>
+      <summary>Can we use our own weights?</summary>
+      <p>Enterprise customers can override weights for internal use with our in-product weight editor. The published VAS always uses the canonical weights so cross-portfolio comparisons remain comparable.</p>
+    </details>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="cta-band-wrap">
+    <h2>Start negotiating with <em>numbers.</em></h2>
+    <div class="acts">
+      <a class="b1" href="/contact/">Request a Demo →</a>
+      <a class="b2" href="/api/">VAS API endpoints</a>
+    </div>
+  </div>
+</section>
+
+<div id="footer-slot"></div>
+<script src="/assets/shared.js?v=6"></script>
+</body>
+</html>

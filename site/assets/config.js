@@ -10,7 +10,7 @@
  * Nothing else to update across the site.
  */
 window.IQSFLOW_CONFIG = {
-  recaptchaSiteKey: "PASTE_RECAPTCHA_V3_SITE_KEY_HERE",
+  recaptchaSiteKey: "6LdGosUsAAAAAJub44ym0e_xRd_3arjWflwI_jdk",
   formsEndpoint: "/api/forms/submit",
 };
 

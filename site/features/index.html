@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Features, IQS Flow</title>
+<link rel="icon" type="image/svg+xml" href="/assets/iqs-mark.svg"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,300;9..144,400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/assets/shared.css?v=6"/>
+<style>
+  .feature-row {
+    display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: center;
+    padding: 80px 0; border-bottom: 1px solid var(--vd-line);
+  }
+  .feature-row:last-child { border-bottom: none; }
+  .feature-row.flip { grid-template-columns: 1.2fr 1fr; }
+  .feature-row.flip .fr-copy { order: 2; }
+  .fr-num {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--vd-muted); margin-bottom: 12px; display: block;
+  }
+  .fr-copy h3 {
+    font-family: var(--font-display); font-size: clamp(28px, 3.4vw, 44px);
+    font-weight: 700; letter-spacing: -0.035em; line-height: 1.05; margin: 0 0 16px;
+  }
+  .fr-copy h3 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); }
+  .fr-copy p { font-size: 16px; line-height: 1.65; color: var(--vd-muted); margin: 0 0 20px; max-width: 480px; }
+  .fr-copy ul { list-style: none; padding: 0; margin: 0; }
+  .fr-copy li {
+    padding: 10px 0; border-top: 1px solid var(--vd-line);
+    font-size: 14px; color: var(--vd-ink); display: grid; grid-template-columns: 60px 1fr; gap: 12px;
+  }
+  .fr-copy li .k { font-family: var(--font-mono); font-size: 11px; color: var(--vd-muted); letter-spacing: 0.08em; }
+
+  .fr-vis {
+    background: var(--vd-truth); color: var(--vd-truth-ink);
+    border-radius: 14px; overflow: hidden;
+    min-height: 320px; padding: 24px;
+    font-family: var(--font-mono); position: relative;
+  }
+  .fr-vis.light { background: #fff; color: var(--vd-ink); border: 1px solid var(--vd-line); }
+  .fr-vis .v-head { display: flex; justify-content: space-between; font-size: 10px; letter-spacing: 0.14em; color: rgba(255,255,255,0.55); text-transform: uppercase; margin-bottom: 18px; }
+  .fr-vis.light .v-head { color: var(--vd-muted); }
+  .fr-vis .v-head .live::before { content:'●'; color:#34d399; margin-right:4px; animation:pulse 1.6s infinite; }
+  @keyframes pulse { 0%,100% {opacity:1} 50%{opacity:.3} }
+
+  .v-insp { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 16px; margin-bottom: 10px; font-family: var(--font-body); }
+  .v-insp .h { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .v-insp .m { font-size: 12px; color: rgba(255,255,255,0.6); font-family: var(--font-mono); letter-spacing: 0.06em; }
+  .v-insp .photos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 12px; }
+  .v-insp .photos .p { aspect-ratio: 1/1; background: repeating-linear-gradient(45deg, rgba(255,255,255,0.06), rgba(255,255,255,0.06) 5px, rgba(255,255,255,0.1) 5px, rgba(255,255,255,0.1) 10px); border-radius: 4px; position: relative; }
+  .v-insp .photos .p.ok::after { content:'✓'; position: absolute; top:4px; right:4px; width:14px; height:14px; background: #10b981; border-radius: 50%; color: #fff; font-size: 9px; display: flex; align-items: center; justify-content: center; font-family: var(--font-body); font-weight: 700; }
+  .v-insp .photos .p.flag::after { content:'!'; position: absolute; top:4px; right:4px; width:14px; height:14px; background: #f59e0b; border-radius: 50%; color: #fff; font-size: 9px; display: flex; align-items: center; justify-content: center; font-family: var(--font-body); font-weight: 700; }
+
+  .v-map { position: relative; aspect-ratio: 16/10; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden; }
+  .v-map .dot { position: absolute; width: 8px; height: 8px; border-radius: 50%; transform: translate(-50%,-50%); }
+  .v-map .dot.ok { background: #34d399; box-shadow: 0 0 0 3px rgba(52,211,153,0.25); }
+  .v-map .dot.err { background: #f87171; box-shadow: 0 0 0 3px rgba(248,113,113,0.25); animation: pulse 1.2s infinite; }
+  .v-map .dot.warn { background: #fbbf24; box-shadow: 0 0 0 3px rgba(251,191,36,0.25); }
+  .v-map svg.grid { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.35; }
+
+  .v-compl { display: flex; flex-direction: column; gap: 14px; font-family: var(--font-body); }
+  .v-compl .row { display: grid; grid-template-columns: 90px 1fr 40px; gap: 12px; align-items: center; }
+  .v-compl .name { font-size: 12px; color: var(--vd-ink); font-weight: 600; font-family: var(--font-mono); }
+  .v-compl .bar { height: 6px; background: var(--vd-line); border-radius: 3px; overflow: hidden; }
+  .v-compl .bar span { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+  .v-compl .pct { text-align: right; font-family: var(--font-mono); font-size: 12px; color: var(--vd-ink); font-weight: 600; }
+
+  .v-portals { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-family: var(--font-body); }
+  .v-portal { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 14px; }
+  .v-portal .pn { font-family: var(--font-display); font-weight: 700; font-size: 15px; color: #fff; margin-bottom: 2px; }
+  .v-portal .pr { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; color: rgba(255,255,255,0.5); text-transform: uppercase; margin-bottom: 10px; }
+  .v-portal .pbar { height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; }
+  .v-portal .pbar span { display: block; height: 100%; background: var(--accent); border-radius: 2px; }
+
+  .v-alerts ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-family: var(--font-body); }
+  .v-alerts li { padding: 12px; background: rgba(255,255,255,0.03); border-left: 3px solid var(--accent); border-radius: 6px; font-size: 13px; color: rgba(255,255,255,0.85); }
+  .v-alerts li b { color: #fff; display: block; margin-bottom: 2px; font-size: 13px; }
+  .v-alerts li .ts { font-family: var(--font-mono); font-size: 10px; color: rgba(255,255,255,0.45); letter-spacing: 0.06em; }
+
+  @media (max-width: 900px) {
+    .feature-row, .feature-row.flip { grid-template-columns: 1fr; gap: 32px; }
+    .feature-row.flip .fr-copy { order: 0; }
+  }
+</style>
+</head>
+<body data-page="features">
+<div id="nav-slot"></div>
+
+<section class="ph">
+  <div class="ph-eyebrow">Features</div>
+  <h1>Every inspection. Every vendor. <em>Every shift.</em></h1>
+  <p class="ph-sub">Six integrated capabilities, built for operations leaders who can't afford to wonder whether the work actually happened.</p>
+</section>
+
+<section class="section">
+  <div class="feature-row">
+    <div class="fr-copy">
+      <span class="fr-num">01 / 06</span>
+      <h3>Structured inspections with <em>forced evidence.</em></h3>
+      <p>Every inspection uses a rubric scored against your compliance framework. Photos aren't optional, they're required to close a ticket. GPS stamps every action.</p>
+      <ul>
+        <li><span class="k">EVIDENCE</span><span>Required photos per checklist item, GPS + timestamp on every action</span></li>
+        <li><span class="k">RUBRIC</span><span>Configurable per site, per contract, per framework</span></li>
+        <li><span class="k">SCORING</span><span>Automatic weighted scoring, re-audit triggered below threshold</span></li>
+      </ul>
+    </div>
+    <div class="fr-vis">
+      <div class="v-head"><span>INSPECTION · ATL·B14</span><span class="live">LIVE</span></div>
+      <div class="v-insp">
+        <div class="h">Pre-board deep clean</div>
+        <div class="m">MAR 19 · 06:01 · CREW #7</div>
+        <div class="photos"><div class="p ok"></div><div class="p ok"></div><div class="p ok"></div><div class="p ok"></div></div>
+      </div>
+      <div class="v-insp">
+        <div class="h">Restroom audit · B22</div>
+        <div class="m">MAR 11 · 17:44 · CREW #12</div>
+        <div class="photos"><div class="p ok"></div><div class="p flag"></div><div class="p flag"></div><div class="p ok"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="feature-row flip">
+    <div class="fr-vis">
+      <div class="v-head"><span>47 SITES · 12 VENDORS</span><span>LAST 30 DAYS</span></div>
+      <div class="v-map">
+        <svg class="grid" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <line x1="0" y1="10" x2="100" y2="10" stroke="white" stroke-opacity="0.1"/>
+          <line x1="0" y1="20" x2="100" y2="20" stroke="white" stroke-opacity="0.1"/>
+          <line x1="0" y1="30" x2="100" y2="30" stroke="white" stroke-opacity="0.1"/>
+          <line x1="0" y1="40" x2="100" y2="40" stroke="white" stroke-opacity="0.1"/>
+          <line x1="0" y1="50" x2="100" y2="50" stroke="white" stroke-opacity="0.1"/>
+          <line x1="0" y1="60" x2="100" y2="60" stroke="white" stroke-opacity="0.1"/>
+          <line x1="0" y1="70" x2="100" y2="70" stroke="white" stroke-opacity="0.1"/>
+          <line x1="0" y1="80" x2="100" y2="80" stroke="white" stroke-opacity="0.1"/>
+          <line x1="0" y1="90" x2="100" y2="90" stroke="white" stroke-opacity="0.1"/>
+          <line x1="10" y1="0" x2="10" y2="100" stroke="white" stroke-opacity="0.1"/>
+          <line x1="20" y1="0" x2="20" y2="100" stroke="white" stroke-opacity="0.1"/>
+          <line x1="30" y1="0" x2="30" y2="100" stroke="white" stroke-opacity="0.1"/>
+          <line x1="40" y1="0" x2="40" y2="100" stroke="white" stroke-opacity="0.1"/>
+          <line x1="50" y1="0" x2="50" y2="100" stroke="white" stroke-opacity="0.1"/>
+          <line x1="60" y1="0" x2="60" y2="100" stroke="white" stroke-opacity="0.1"/>
+          <line x1="70" y1="0" x2="70" y2="100" stroke="white" stroke-opacity="0.1"/>
+          <line x1="80" y1="0" x2="80" y2="100" stroke="white" stroke-opacity="0.1"/>
+          <line x1="90" y1="0" x2="90" y2="100" stroke="white" stroke-opacity="0.1"/>
+        </svg>
+        <div class="dot ok" style="left:18%;top:30%"></div>
+        <div class="dot ok" style="left:32%;top:55%"></div>
+        <div class="dot ok" style="left:48%;top:42%"></div>
+        <div class="dot warn" style="left:65%;top:62%"></div>
+        <div class="dot ok" style="left:72%;top:36%"></div>
+        <div class="dot err" style="left:82%;top:70%"></div>
+        <div class="dot ok" style="left:54%;top:72%"></div>
+        <div class="dot ok" style="left:38%;top:25%"></div>
+        <div class="dot ok" style="left:22%;top:64%"></div>
+      </div>
+    </div>
+    <div class="fr-copy">
+      <span class="fr-num">02 / 06</span>
+      <h3>Portfolio view across <em>every</em> site and vendor.</h3>
+      <p>One dashboard. All sites. All vendors. All frameworks. Sort by score, by trend, by compliance risk, and drill down to a single photo in two clicks.</p>
+      <ul>
+        <li><span class="k">SCOPE</span><span>Multi-site, multi-vendor, multi-region in one view</span></li>
+        <li><span class="k">TRENDS</span><span>Rolling benchmarks, MoM / QoQ / YoY comparisons</span></li>
+        <li><span class="k">DRILL</span><span>From portfolio score to a single photo in 2 clicks</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="feature-row">
+    <div class="fr-copy">
+      <span class="fr-num">03 / 06</span>
+      <h3>Six frameworks, scored <em>live.</em></h3>
+      <p>Your inspections map to the frameworks that matter in your industry, automatically. When an audit lands, you hand over a pre-assembled evidence pack, not a stack of spreadsheets.</p>
+      <ul>
+        <li><span class="k">AVIATION</span><span>ATA 103 aircraft appearance & interior cleaning</span></li>
+        <li><span class="k">HEALTHCARE</span><span>JCAHO environment of care, CDC EVS, HAI prevention</span></li>
+        <li><span class="k">FACILITIES</span><span>ISSA CIMS, OSHA 1910, ISO 14644 cleanroom</span></li>
+      </ul>
+    </div>
+    <div class="fr-vis light">
+      <div class="v-head" style="color: var(--vd-muted)"><span>COMPLIANCE · Q1 2026</span><span>LIVE</span></div>
+      <div class="v-compl">
+        <div class="row"><span class="name">ATA 103</span><span class="bar"><span style="width:89%"></span></span><span class="pct">89</span></div>
+        <div class="row"><span class="name">ISSA CIMS</span><span class="bar"><span style="width:98%"></span></span><span class="pct">98</span></div>
+        <div class="row"><span class="name">JCAHO</span><span class="bar"><span style="width:96%"></span></span><span class="pct">96</span></div>
+        <div class="row"><span class="name">OSHA 1910</span><span class="bar"><span style="width:94%"></span></span><span class="pct">94</span></div>
+        <div class="row"><span class="name">CDC EVS</span><span class="bar"><span style="width:92%"></span></span><span class="pct">92</span></div>
+        <div class="row"><span class="name">ISO 14644</span><span class="bar"><span style="width:91%"></span></span><span class="pct">91</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="feature-row flip">
+    <div class="fr-vis">
+      <div class="v-head"><span>FOUR PORTALS · ONE DATA MODEL</span><span>SYNC</span></div>
+      <div class="v-portals">
+        <div class="v-portal"><div class="pn">Admin</div><div class="pr">Operations Director</div><div class="pbar"><span style="width:100%"></span></div></div>
+        <div class="v-portal"><div class="pn">Manager</div><div class="pr">Site Manager</div><div class="pbar"><span style="width:78%"></span></div></div>
+        <div class="v-portal"><div class="pn">Worker</div><div class="pr">Crew Member · Mobile</div><div class="pbar"><span style="width:46%"></span></div></div>
+        <div class="v-portal"><div class="pn">Client</div><div class="pr">External stakeholder</div><div class="pbar"><span style="width:24%"></span></div></div>
+      </div>
+    </div>
+    <div class="fr-copy">
+      <span class="fr-num">04 / 06</span>
+      <h3>Four portals. <em>One</em> source of truth.</h3>
+      <p>Admin, Manager, Worker, Client, four role-scoped experiences against the same underlying data. No copies, no exports, no surprises about who saw what.</p>
+      <ul>
+        <li><span class="k">ADMIN</span><span>Full portfolio, user management, framework config</span></li>
+        <li><span class="k">MANAGER</span><span>Site-scoped dashboards, schedule, re-audits</span></li>
+        <li><span class="k">WORKER</span><span>Mobile-first inspection UX, offline-capable</span></li>
+        <li><span class="k">CLIENT</span><span>Read-only vendor view, the same data you see</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="feature-row">
+    <div class="fr-copy">
+      <span class="fr-num">05 / 06</span>
+      <h3>Alerts that reach the <em>right</em> person.</h3>
+      <p>Thresholds trigger escalations routed by role, shift, and severity. No more finding out next month. No more alerts lost in a generic inbox.</p>
+      <ul>
+        <li><span class="k">ROUTING</span><span>Role-based escalation trees with on-call shift logic</span></li>
+        <li><span class="k">CHANNELS</span><span>SMS, push, email, Slack, Teams, webhook</span></li>
+        <li><span class="k">SLA</span><span>Median time-to-flag: 47 minutes across the portfolio</span></li>
+      </ul>
+    </div>
+    <div class="fr-vis">
+      <div class="v-head"><span>ALERTS · OPERATIONS</span><span class="live">LIVE</span></div>
+      <div class="v-alerts"><ul>
+        <li><b>ATA 103 checklist incomplete</b>4 of 22 items without evidence, escalated to Ops Director<div class="ts">22:27 · ATL · B14</div></li>
+        <li><b>Site score dropped below threshold</b>Portfolio score 84 (−6 pts) in last 4 hrs<div class="ts">09:18 · ATL · B22</div></li>
+        <li><b>Crew arrived 47 min late</b>GPS ping at perimeter · no manager sign-off<div class="ts">03:12 · ATL · B14</div></li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="feature-row flip">
+    <div class="fr-vis light" style="font-family: var(--font-mono);">
+      <div class="v-head" style="color: var(--vd-muted)"><span>REST · WEBHOOKS · SSO</span><span>V2</span></div>
+      <pre style="margin:0; padding: 0; font-size: 12px; line-height: 1.65; color: var(--vd-ink); white-space: pre-wrap;">POST /v2/inspections
+Authorization: Bearer ***
+Content-Type: application/json
+
+{
+  "site": "ATL-B14",
+  "framework": "ATA_103",
+  "crew_id": "SJS-7",
+  "evidence": [&lt;photos[]&gt;]
+}
+
+// Webhook payload
+{
+  "event": "inspection.flagged",
+  "score": 72,
+  "framework_delta": -11.3
+}</pre>
+    </div>
+    <div class="fr-copy">
+      <span class="fr-num">06 / 06</span>
+      <h3>Connect your stack. <em>Own</em> your data.</h3>
+      <p>REST + webhooks for operations systems. SAML SSO for identity. SCIM for user lifecycle. Your data lives in one place, and it's yours.</p>
+      <ul>
+        <li><span class="k">API</span><span>REST v2, rate-limited per tenant, versioned endpoints</span></li>
+        <li><span class="k">EVENTS</span><span>Webhooks for inspection lifecycle + compliance events</span></li>
+        <li><span class="k">IDENTITY</span><span>SAML SSO, SCIM provisioning, audit log</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="cta-band-wrap">
+    <h2>See it <em>working</em> on your vendors.</h2>
+    <div class="acts">
+      <a class="b1" href="/contact/">Request a Demo →</a>
+      <a class="b2" href="/pricing/">See pricing</a>
+    </div>
+  </div>
+</section>
+
+<div id="footer-slot"></div>
+<script src="/assets/shared.js?v=6"></script>
+</body>
+</html>

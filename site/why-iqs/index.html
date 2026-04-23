@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Why IQS Flow, Independent quality intelligence</title>
+<link rel="icon" type="image/svg+xml" href="/assets/iqs-mark.svg"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,300;9..144,400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/assets/shared.css?v=6"/>
+<style>
+  .philosophy { background: var(--vd-ink); color: var(--vd-bg); padding: 120px 32px; }
+  .philosophy-wrap { max-width: 1100px; margin: 0 auto; }
+  .philosophy h2 {
+    font-family: var(--font-display); font-size: clamp(40px, 6vw, 80px);
+    font-weight: 700; letter-spacing: -0.045em; line-height: 1.02;
+    margin: 32px 0 40px; color: var(--vd-bg); max-width: 1000px;
+  }
+  .philosophy h2 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); }
+  .philosophy p { font-size: 19px; line-height: 1.7; color: rgba(255,255,255,0.75); max-width: 760px; margin: 0 0 24px; }
+  .philosophy .principles {
+    margin-top: 80px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+    border-top: 1px solid rgba(255,255,255,0.12); padding-top: 48px;
+  }
+  .principle .k {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
+    color: rgba(255,255,255,0.5); text-transform: uppercase; margin-bottom: 12px;
+  }
+  .principle h3 { font-family: var(--font-display); font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 8px; color: var(--vd-bg); }
+  .principle p { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.65); margin: 0; }
+  @media (max-width: 800px) { .philosophy .principles { grid-template-columns: 1fr; } }
+
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--vd-line); border-radius: 16px; overflow: hidden; }
+  .compare .col { padding: 40px 36px; }
+  .compare .them { background: var(--vd-vendor); border-right: 1px solid var(--vd-line); }
+  .compare .us   { background: #fff; }
+  .compare .ct-lbl {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em;
+    text-transform: uppercase; font-weight: 600; margin-bottom: 24px;
+    display: inline-block; padding: 5px 10px; border-radius: 4px;
+  }
+  .compare .them .ct-lbl { background: rgba(0,0,0,0.08); color: #6b6b60; }
+  .compare .us .ct-lbl { background: color-mix(in srgb, var(--accent) 15%, transparent); color: var(--accent); }
+  .compare h3 { font-family: var(--font-display); font-size: 24px; font-weight: 700; letter-spacing: -0.025em; margin: 0 0 20px; }
+  .compare ul { list-style: none; padding: 0; margin: 0; }
+  .compare li {
+    padding: 14px 0; border-top: 1px solid rgba(0,0,0,0.08);
+    font-size: 14px; line-height: 1.5; display: grid; grid-template-columns: 20px 1fr; gap: 10px;
+  }
+  .compare li:first-child { border-top: none; padding-top: 0; }
+  .compare .them li { color: #5a5850; }
+  .compare .them li::before { content: '✕'; color: #c2410c; font-weight: 700; }
+  .compare .us li::before { content: '✓'; color: var(--accent); font-weight: 700; }
+  @media (max-width: 800px) { .compare { grid-template-columns: 1fr; } .compare .them { border-right: none; border-bottom: 1px solid var(--vd-line); } }
+
+  .numbers { background: #fff; border: 1px solid var(--vd-line); border-radius: 16px; padding: 48px; margin-top: 48px; }
+  .numbers-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; }
+  .n-n { font-family: var(--font-display); font-size: 56px; font-weight: 700; letter-spacing: -0.04em; line-height: 1; color: var(--accent); }
+  .n-l { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--vd-muted); margin-top: 12px; }
+  .n-d { font-size: 13px; color: var(--vd-muted); margin-top: 6px; }
+  @media (max-width: 800px) { .numbers-grid { grid-template-columns: 1fr 1fr; } }
+
+  /* Leadership */
+  .leadership { max-width: 1080px; margin: 0 auto; padding: 96px 32px 32px; }
+  .lead-head { display: flex; align-items: baseline; gap: 24px; margin-bottom: 40px; border-bottom: 1px solid var(--vd-line); padding-bottom: 24px; }
+  .lead-head h2 { font-family: var(--font-display); font-size: 48px; font-weight: 700; letter-spacing: -0.03em; margin: 0; color: var(--vd-ink); }
+  .lead-head .loc { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--vd-muted); }
+  .lead-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .lead-card { display: flex; flex-direction: column; gap: 20px; padding: 32px 0; border-top: 1px solid transparent; }
+  .lead-card .avatar {
+    width: 160px; height: 160px; border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid var(--vd-line);
+    background: #eee2d0;
+  }
+  .lead-card .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .lead-card h3 { font-family: var(--font-display); font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 4px; color: var(--vd-ink); }
+  .lead-card .role { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+  .lead-card p { font-size: 15.5px; line-height: 1.65; color: var(--vd-body); margin: 0 0 12px; }
+  .lead-card p:last-child { margin-bottom: 0; }
+  @media (max-width: 800px) {
+    .lead-grid { grid-template-columns: 1fr; gap: 0; }
+    .lead-head { flex-direction: column; gap: 8px; align-items: flex-start; }
+    .lead-head h2 { font-size: 36px; }
+  }
+</style>
+</head>
+<body data-page="why">
+<div id="nav-slot"></div>
+
+<section class="ph">
+  <div class="ph-eyebrow">Why IQS Flow</div>
+  <h1>Your quality data shouldn't be <em>written</em> by the vendor it's <span class="mark">about</span>.</h1>
+  <p class="ph-sub">Most operations leaders discover gaps the hard way, a compliance finding, a passenger complaint, a contract renegotiation. IQS Flow closes the gap before anyone sees it.</p>
+</section>
+
+<section class="philosophy">
+  <div class="philosophy-wrap">
+    <div class="section-eyebrow" style="color: rgba(255,255,255,0.55)">— Our philosophy</div>
+    <h2>Evidence, not <em>assurances.</em></h2>
+    <p>For twenty years, Venice Collier managed facility services for airlines, hospitals, and retail chains. Every month the reports said the same thing: 98% quality, zero findings, all green. Every month the reality on the floor said something else.</p>
+    <p>IQS Flow is what happens when the people who lived the problem build the fix, a platform that captures ground truth, scores it independently, and hands your vendor the same data they used to write for themselves.</p>
+    <div class="principles">
+      <div class="principle">
+        <div class="k">01 · Independence</div>
+        <h3>Never the same party</h3>
+        <p>The hand that does the work should never grade the work. Our inspectors don't work for your vendors. Full stop.</p>
+      </div>
+      <div class="principle">
+        <div class="k">02 · Evidence</div>
+        <h3>Photo, GPS, timestamp</h3>
+        <p>Every inspection carries its own proof. No photo, no GPS, no log, no inspection.</p>
+      </div>
+      <div class="principle">
+        <div class="k">03 · Transparency</div>
+        <h3>Everyone sees the same thing</h3>
+        <p>Your vendor sees what you see. No separate dashboards, no spin, no surprises. Same data, same time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-eyebrow">— How we're different</div>
+  <h2>Other platforms. And <em>us.</em></h2>
+  <p class="section-sub">We get compared to inspection software, workflow tools, and facility management suites. Here's the real split.</p>
+
+  <div class="compare">
+    <div class="col them">
+      <span class="ct-lbl">OTHER PLATFORMS</span>
+      <h3>Vendor-operated inspection tools</h3>
+      <ul>
+        <li>Your vendor installs the app, trains their crews, sets the rubric.</li>
+        <li>Inspections are self-reported and self-scored.</li>
+        <li>Photos optional. Timestamps optional.</li>
+        <li>Your access: a monthly PDF export.</li>
+        <li>Frameworks: &ldquo;we support whatever you use.&rdquo;</li>
+        <li>When something goes wrong, you find out next month.</li>
+      </ul>
+    </div>
+    <div class="col us">
+      <span class="ct-lbl">IQS FLOW</span>
+      <h3>The independent quality layer</h3>
+      <ul>
+        <li>We install, we train, we set the rubric with you.</li>
+        <li>Inspections are third-party, GPS-stamped, and photo-required.</li>
+        <li>Every finding is scored against ISSA, JCAHO, OSHA, ATA 103, CDC EVS, ISO 14644.</li>
+        <li>Your access: live dashboard, real-time alerts, immutable audit trail.</li>
+        <li>Every site, every vendor, one source of truth.</li>
+        <li>When something goes wrong, you know in minutes, not months.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="numbers">
+    <div class="numbers-grid">
+      <div>
+        <div class="n-n">11.3<span style="font-size:28px;color:var(--vd-muted)"> pts</span></div>
+        <div class="n-l">Avg quality-score correction</div>
+        <div class="n-d">When independently scored vs. vendor-reported</div>
+      </div>
+      <div>
+        <div class="n-n">47<span style="font-size:28px;color:var(--vd-muted)"> min</span></div>
+        <div class="n-l">Median time to flag</div>
+        <div class="n-d">From issue captured to operations alert</div>
+      </div>
+      <div>
+        <div class="n-n">6</div>
+        <div class="n-l">Compliance frameworks</div>
+        <div class="n-d">ISSA · JCAHO · OSHA · ATA · CDC · ISO</div>
+      </div>
+      <div>
+        <div class="n-n">100<span style="font-size:28px;color:var(--vd-muted)">%</span></div>
+        <div class="n-l">Photo-verified inspections</div>
+        <div class="n-d">No photo, no log, no exceptions</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="cta-band-wrap">
+    <h2>Ready to see <em>your own</em> gap?</h2>
+    <div class="acts">
+      <a class="b1" href="/contact/">Request a Demo →</a>
+      <a class="b2" href="/features/">See features</a>
+    </div>
+  </div>
+</section>
+
+<div id="footer-slot"></div>
+<script src="/assets/shared.js?v=6"></script>
+</body>
+</html>
