@@ -351,22 +351,22 @@ functions.http("handler", async (req, res) => {
       status: err?.response?.status,
       gmailError: gmailErrorDetails,
     });
-    // Still log the submission so it's not lost
+    // Log metadata only — no PII (email, message, resume URLs stay out of Cloud Logging)
     console.log("form_submission_unsent", {
       formType,
-      fields: data,
+      fieldCount: Object.keys(data).length,
       recaptchaScore: recaptcha.score,
     });
     res.status(500).json({ error: "email_failed" });
     return;
   }
 
-  // Structured backup log
+  // Structured backup log — metadata only, no PII
   console.log("form_submission", {
     formType,
-    fields: data,
+    fieldCount: Object.keys(data).length,
+    hasEmail: Boolean(data.email),
     recaptchaScore: recaptcha.score,
-    ip,
   });
 
   res.status(200).json({ ok: true });
