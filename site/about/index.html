@@ -67,13 +67,15 @@
   .val p { font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.7); margin: 0; }
   @media (max-width: 800px) { .values-grid { grid-template-columns: 1fr; } }
 
-  /* Certification */
+  /* Certifications */
   .certs { max-width: 1080px; margin: 0 auto; padding: 0 32px 32px; }
   .certs-inner {
     border-top: 1px solid var(--vd-line); padding-top: 56px;
     display: flex; align-items: center; gap: 56px;
   }
-  .certs-badge { flex: 0 0 150px; }
+  .certs-marks { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-start; gap: 32px; }
+  .certs-badge { width: 150px; }
+  .certs-gmsdc { display: block; width: 210px; height: auto; }
   .certs-text { flex: 1; }
   .certs-text .section-eyebrow {
     font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
@@ -137,13 +139,16 @@
 
 <section class="certs">
   <div class="certs-inner">
-    <div class="certs-badge">
-      <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="eed19a2b-4900-4872-ab09-292e2f4b5835" data-share-badge-host="https://www.credly.com"></div>
+    <div class="certs-marks">
+      <div class="certs-badge">
+        <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="eed19a2b-4900-4872-ab09-292e2f4b5835" data-share-badge-host="https://www.credly.com"></div>
+      </div>
+      <img class="certs-gmsdc" src="/assets/gmsdc-logo.png" width="300" height="154" alt="Georgia Minority Supplier Development Council (GMSDC)"/>
     </div>
     <div class="certs-text">
-      <div class="section-eyebrow">— Certification</div>
+      <div class="section-eyebrow">— Certifications</div>
       <h2>Certified, and independently <em>verified.</em></h2>
-      <p>Founder and CEO Venice Collier holds an active Minority Business Enterprise (MBE) certification — an independent credential, verifiable through Credly.</p>
+      <p>IQS Flow is a certified Minority Business Enterprise (MBE) — a credential granted by the National Minority Supplier Development Council through its Georgia affiliate, the Georgia Minority Supplier Development Council (GMSDC), and independently verifiable on Credly.</p>
     </div>
   </div>
 </section>
