@@ -66,6 +66,29 @@
   .val h3 { font-family: var(--font-display); font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 10px; color: var(--vd-bg); }
   .val p { font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.7); margin: 0; }
   @media (max-width: 800px) { .values-grid { grid-template-columns: 1fr; } }
+
+  /* Certification */
+  .certs { max-width: 1080px; margin: 0 auto; padding: 0 32px 32px; }
+  .certs-inner {
+    border-top: 1px solid var(--vd-line); padding-top: 56px;
+    display: flex; align-items: center; gap: 56px;
+  }
+  .certs-badge { flex: 0 0 150px; }
+  .certs-text { flex: 1; }
+  .certs-text .section-eyebrow {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--vd-muted); margin-bottom: 16px;
+  }
+  .certs-text h2 {
+    font-family: var(--font-display); font-size: clamp(28px, 3.5vw, 44px);
+    font-weight: 700; letter-spacing: -0.03em; line-height: 1.08;
+    margin: 0 0 16px; color: var(--vd-ink);
+  }
+  .certs-text h2 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); }
+  .certs-text p { font-size: 17px; line-height: 1.65; color: var(--vd-body); margin: 0; max-width: 540px; }
+  @media (max-width: 800px) {
+    .certs-inner { flex-direction: column; align-items: flex-start; gap: 32px; padding-top: 40px; }
+  }
 </style>
 </head>
 <body data-page="about">
@@ -112,6 +135,19 @@
   </div>
 </section>
 
+<section class="certs">
+  <div class="certs-inner">
+    <div class="certs-badge">
+      <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="eed19a2b-4900-4872-ab09-292e2f4b5835" data-share-badge-host="https://www.credly.com"></div>
+    </div>
+    <div class="certs-text">
+      <div class="section-eyebrow">— Certification</div>
+      <h2>Certified, and independently <em>verified.</em></h2>
+      <p>Founder and CEO Venice Collier holds an active Minority Business Enterprise (MBE) certification — an independent credential, verifiable through Credly.</p>
+    </div>
+  </div>
+</section>
+
 <section class="values">
   <div class="values-wrap">
     <div class="section-eyebrow">— What we believe</div>
@@ -148,5 +184,6 @@
 
 <div id="footer-slot"></div>
 <script src="/assets/shared.js?v=6"></script>
+<script type="text/javascript" async src="https://cdn.credly.com/assets/utilities/embed.js"></script>
 </body>
 </html>
