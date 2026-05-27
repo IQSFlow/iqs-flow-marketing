@@ -231,9 +231,9 @@
 <!-- Variant D root -->
 <div class="variant active" id="variant-d"></div>
 
-<!-- Tweaks panel -->
-<button id="tweaks-fab" title="Open tweaks">✱</button>
-<div id="tweaks-panel">
+<!-- Tweaks panel — dev-only; hidden on prod. Add ?tweaks=1 to URL to show. -->
+<button id="tweaks-fab" title="Open tweaks" hidden>✱</button>
+<div id="tweaks-panel" hidden>
   <h3>Tweaks</h3>
 
   <div class="tweak-row">
@@ -351,9 +351,17 @@
   document.getElementById('sw-venice').addEventListener('click', () => setTweak('venice', !TWEAKS.venice));
   document.getElementById('sw-cta').addEventListener('click', () => setTweak('cta', !TWEAKS.cta));
 
-  // Tweaks FAB + host integration
+  // Tweaks FAB + host integration. Hidden on prod by the [hidden] attribute on
+  // the elements themselves. Pass ?tweaks=1 in the URL to reveal them for editing.
   const panel = document.getElementById('tweaks-panel');
   const fab = document.getElementById('tweaks-fab');
+  const tweaksEnabled =
+    typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).get('tweaks') === '1';
+  if (tweaksEnabled) {
+    panel.removeAttribute('hidden');
+    fab.removeAttribute('hidden');
+  }
   fab.addEventListener('click', () => {
     panel.classList.toggle('open');
     fab.classList.toggle('hidden', panel.classList.contains('open'));
