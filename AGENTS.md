@@ -1,6 +1,8 @@
 # AGENTS.md — IQS Flow two-agent SDLC
 
-This repo runs a two-agent pipeline: **Claude Code** as planner/builder, **Codex** as reviewer/refactor/security gate. Both agents read this file alongside `CLAUDE.md`.
+This repo runs a two-agent pipeline: **Claude Code** as planner/builder, **Codex** as reviewer/refactor/security gate. Both agents read this file alongside `README.md`.
+
+> **Repo context:** `iqs-flow-marketing` is the public marketing site for [iqsflow.com](https://iqsflow.com) — a **static HTML/CSS/JS** site (no framework, no build step) synced to a GCS bucket behind Cloud CDN, plus one Gen 2 Cloud Function for form submissions. It is one of the **seven** repos in the IQS Flow workspace (`iqs-flow-shared`, `iqs-flow-api`, `iqs-flow-web`, `iqs-flow-mobile`, `iqs-flow-infra`, `iqs-flow-marketing`, `iqs-flow-design-handoff`). It has **no `@iqsflow/shared` dependency** and is **not** part of the shared → api → web/mobile wave order; the multi-tenant safety checklist below applies only to the `functions/forms-handler` Cloud Function. See `README.md` for stack, layout, and deploy details.
 
 ## Role split
 
@@ -69,7 +71,7 @@ Merge claude/00-list-pages-render-new-fields (Codex review: clean, no blockers)
 - **`/check-reviews`** — Auto-pick the next unreviewed `claude/*` branch in this repo, review it, chain to the next. Stops on `BLOCKED` verdict or contract mismatch.
 - **`/monitor-reviews`** — Status dashboard across all repos: which branches await review, which are CLEAN/NEEDS_FIXES/BLOCKED, which next actions belong to Codex vs Claude orchestrator.
 - **`/check-tasks`** — Pick up the next pair-mode task (`pair: true`) in this repo, build it on `codex/<task-stem>`, push, write `.codex.done.md`, chain to next. Never merges to main; user compares against `claude/<task-stem>` and picks winner.
-- **`/monitor-tasks`** — Cross-repo task dashboard: PENDING / CLAUDE_DONE / PAIR_PARTIAL_* / PAIR_READY states across all six repos.
+- **`/monitor-tasks`** — Cross-repo task dashboard: PENDING / CLAUDE_DONE / PAIR_PARTIAL_* / PAIR_READY states across all seven repos.
 
 ## When in doubt
 
