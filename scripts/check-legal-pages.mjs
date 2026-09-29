@@ -60,6 +60,10 @@ const STALE_IDENTITY = /IQS Flow, Inc\.|Marta Halverson/i;
 // inspection, issue report, area lookup, map) are recorded for every role at any hour.
 // Only the cleaner 3-minute check-in is limited to the scheduled window.
 const LOCATION_OVERCLAIM = /\b(?:(?<!not )only|location|phone) during (?:your |a |the |their )?scheduled shifts?/i;
+// Coworkers (every WORKER in the tenant) can see a worker's name and latest position.
+const COWORKER_LOCATION = /\bco-?workers?\b[^.]*\blocation\b/i;
+// Clients see the GPS coordinates where each inspection was submitted.
+const CLIENT_LOCATION = /location where (?:the|an|each) inspection was submitted/i;
 const EM_DASH = /—|&mdash;|&#8212;|&#x2014;/i;
 const VOID = new Set(["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"]);
 
@@ -205,6 +209,22 @@ else {
   if (!/about every 3 minutes/.test(privacy)) fail("privacy", "does not describe the 3-minute location check-in");
   if (!/never collects location when (?:the app|it) is closed/i.test(privacy)) {
     fail("privacy", "does not say the app never collects location when it is closed");
+  }
+
+  // Who sees location. GET /api/live is open to WORKER and is tenant-wide for that
+  // role (iqs-flow-api src/routes/live.ts), and the app's map plots every coworker's
+  // name and latest position from it. Clients get each inspection's gpsCoordinates
+  // with no visibility flag (src/routes/inspections.ts clientInspectionDTO).
+  const mobileSection = sectionBetween(privacy, "mobile", "ai");
+  const shareSection = sectionBetween(privacy, "share", "retain");
+  if (!COWORKER_LOCATION.test(mobileSection)) {
+    fail("privacy", "section 04 does not say coworkers can see your name and location on the app's map");
+  }
+  if (!COWORKER_LOCATION.test(shareSection)) {
+    fail("privacy", "section 07 does not say coworkers can see your name and location on the app's map");
+  }
+  if (!CLIENT_LOCATION.test(shareSection)) {
+    fail("privacy", "section 07 does not say clients can see the location where an inspection was submitted");
   }
 
   // Deletion: the in-app path and a completion commitment, not just a reply.

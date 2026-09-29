@@ -129,6 +129,36 @@ test("fails when the policy drops that the app never collects location when clos
   expectFailure(check(site), /privacy: does not say the app never collects location when it is closed/);
 });
 
+// ---- finding: who can see a worker's location ------------------------------------------
+
+test("fails when the policy says only supervisors and managers can see your location", () => {
+  const { site } = fixture({
+    [PRIVACY]: pipe(
+      swap(
+        " Coworkers at your employer who use the app, including other cleaners, can see your name and the most recent location the app recorded for you today on the app&rsquo;s map.",
+        "",
+      ),
+      swap(
+        "<li><b>Coworkers.</b> Coworkers at your employer who use the IQS Flow app, including other cleaners, can see your name and the most recent location the app recorded for you today on the app&rsquo;s map. See <a href=\"#mobile\">section 04</a>.</li>",
+        "",
+      ),
+    ),
+  });
+  const r = check(site);
+  expectFailure(r, /privacy: section 04 does not say coworkers can see your name and location/);
+  assert.match(r.out, /privacy: section 07 does not say coworkers can see your name and location/);
+});
+
+test("fails when the policy leaves out that clients see where an inspection was submitted", () => {
+  const { site } = fixture({
+    [PRIVACY]: swap(
+      "These can include photos, the name of the person who did the inspection, and the location where the inspection was submitted (its GPS coordinates).",
+      "These can include photos and the name of the person who did the inspection.",
+    ),
+  });
+  expectFailure(check(site), /privacy: section 07 does not say clients can see the location where an inspection was submitted/);
+});
+
 // ---- finding: "Profile" is not a label the app shows ---------------------------------
 
 test("fails when the English deletion steps say Profile instead of More", () => {
