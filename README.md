@@ -59,12 +59,15 @@ Forms will not send locally (the `/api/forms/submit` route is wired by the produ
 
 ## Legal page check
 
-`/privacy/`, `/subprocessors/` and `/delete-account/` are the URLs the App Store and Google Play listings point to. A no-dependency check covers them (links, anchors, tag balance, no em dashes, correct legal entity, no unused vendors, the Spanish and French deletion steps):
+`/privacy/`, `/subprocessors/` and `/delete-account/` are the URLs the App Store and Google Play listings point to. A no-dependency check covers them (links, anchors, tag balance, no em dashes, no unconfirmed legal entity in the pages or the site footer, no unused vendors, location wording that matches the app, the in-app deletion steps with the app's real tab label in English, Spanish and French, and a deletion completion time):
 
 ```bash
 node scripts/check-legal-pages.mjs              # everyday check
-node scripts/check-legal-pages.mjs --publish    # also fails while any TODO(Josh) or draft notice remains; run before tagging
+node scripts/check-legal-pages.mjs --publish    # also fails while any TODO(Josh), draft notice or sign-off remains; run before tagging
+node --test scripts/check-legal-pages.test.mjs  # tests for the check itself
 ```
+
+Facts that nothing in the code can confirm live in `scripts/legal-signoff.json`: the exact legal entity, the date counsel reviewed the pages, proof that the deletion process is live, and the app version on every phone. `--publish` fails while any of them is `null`.
 
 ## Forms Cloud Function (`functions/forms-handler`)
 

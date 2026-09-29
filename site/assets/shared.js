@@ -23,6 +23,11 @@
       </div>
     </div>
   `;
+  // TODO(Josh): the copyright line must name the exact legal entity (name and
+  // type, as on the Apple seller record and Google Play developer account),
+  // the same string as /privacy/, /subprocessors/, /delete-account/ and /terms/.
+  // Nothing in the code confirms the type, so it names the company only.
+  // scripts/check-legal-pages.mjs --publish fails until this is settled.
   const footer = `
     <footer class="footer">
       <div class="footer-inner">
@@ -35,7 +40,7 @@
         <div><h4>Legal</h4><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div>
       </div>
       <div class="footer-bottom">
-        <div>© 2026 IQS FLOW, INC.</div>
+        <div>© 2026 INTEGRITY QUALITY SOLUTIONS</div>
         <div>Made for the people who have to answer for the work.</div>
       </div>
     </footer>
