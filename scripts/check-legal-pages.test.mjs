@@ -79,7 +79,7 @@ const APP_TEXT = {
       deleteTimeframe: "We complete deletion within 30 days and tell you when it is done.",
     },
     locationPermission: {
-      body: "While IQS Flow is open, it records your location when you do work. Your supervisor, and coworkers who use the app, can see your location on the map.",
+      body: "While IQS Flow is open, it records your location when you do work. Your supervisor, coworkers who use the app, and your employer's clients at their own sites can see your location.",
     },
   },
   es: {
@@ -92,7 +92,7 @@ const APP_TEXT = {
       deleteTimeframe: "Completamos la eliminación en un plazo de 30 días y te avisamos cuando esté hecha.",
     },
     locationPermission: {
-      body: "Mientras IQS Flow está abierta, registra tu ubicación cuando trabajas. Tu supervisor y tus compañeros que usan la app pueden ver tu ubicación en el mapa.",
+      body: "Mientras IQS Flow está abierta, registra tu ubicación cuando trabajas. Tu supervisor, tus compañeros que usan la app y los clientes de tu empleador en sus propios sitios pueden ver tu ubicación.",
     },
   },
   fr: {
@@ -105,7 +105,7 @@ const APP_TEXT = {
       deleteTimeframe: "Nous terminons la suppression sous 30 jours et vous prévenons lorsqu'elle est faite.",
     },
     locationPermission: {
-      body: "Quand IQS Flow est ouverte, elle enregistre votre position pendant le travail. Votre superviseur et vos collègues qui utilisent l'application peuvent voir votre position sur la carte.",
+      body: "Quand IQS Flow est ouverte, elle enregistre votre position pendant le travail. Votre superviseur, vos collègues qui utilisent l'application et les clients de votre employeur sur leurs propres sites peuvent voir votre position.",
     },
   },
 };
@@ -218,6 +218,46 @@ test("fails when the policy leaves out that clients see where an inspection was 
     ),
   });
   expectFailure(check(site), /privacy: section 07 does not say clients can see the location where an inspection was submitted/);
+});
+
+// GET /api/live/facility-status is open to CLIENT and returns live worker positions.
+test("fails when the policy says the only location clients see is where inspections were submitted", () => {
+  const { site } = fixture({
+    [PRIVACY]: pipe(
+      swap(
+        "Your employer&rsquo;s clients can see where each inspection they view was submitted, and the live position of workers at their own sites from the last 30 minutes, with each worker&rsquo;s name unless your employer hides names.",
+        "Your employer&rsquo;s clients can see where each inspection they view was submitted.",
+      ),
+      swap(" Your employer&rsquo;s clients can also see the live position of workers at their own sites (see &ldquo;Who can see it&rdquo; below).", ""),
+      (t) => t.replace(/, and the live position of workers at their own sites: [\s\S]*?Your employer cannot hide the positions themselves \(see /, " (see "),
+      swap(" Clients can also see the live position of workers at their sites from the last 30 minutes, as described in <a href=\"#mobile\">section 04</a>.", ""),
+    ),
+  });
+  const r = check(site);
+  for (const where of ["section 01", "section 04's Location permission row", "section 04's \"Who can see it\"", "section 07"]) {
+    assert.match(r.out, new RegExp(`privacy: ${where} does not say your employer's clients can see the live position of workers at their sites`));
+  }
+  assert.equal(r.code, 1);
+});
+
+test("a live-position disclosure that appears only in a TODO(Josh) note does not count", () => {
+  const { site } = fixture({
+    [PRIVACY]: swap(
+      " Clients can also see the live position of workers at their sites from the last 30 minutes, as described in <a href=\"#mobile\">section 04</a>.",
+      " <span class=\"todo\">TODO(Josh): clients can also see the live position of workers at their sites.</span>",
+    ),
+  });
+  expectFailure(check(site), /privacy: section 07 does not say your employer's clients can see the live position of workers/);
+});
+
+test("fails when the policy says the employer can hide locations from clients", () => {
+  const { site } = fixture({
+    [PRIVACY]: swap(
+      "Your employer can hide names, scores, notes and photos from its clients, but not locations:",
+      "Your employer can hide names, scores, notes, photos and locations from its clients:",
+    ),
+  });
+  expectFailure(check(site), /privacy: section 07 does not say your employer can hide names from clients but not locations/);
 });
 
 // ---- minor findings: photos, phone storage, updates, AI, maps, retention ---------------
@@ -430,6 +470,19 @@ test("--app-locales fails when the app's location notice does not mention cowork
     },
   });
   expectFailure(check(site, `--app-locales=${locales}`), /app en\.json: locationPermission\.body does not say coworkers can see your location/);
+});
+
+test("--app-locales fails when the app's location notice does not mention the employer's clients", () => {
+  const { dir, site } = fixture();
+  const locales = writeLocales(dir, {
+    en: { "locationPermission.body": "Your supervisor, and coworkers who use the app, can see your location on the map." },
+    es: { "locationPermission.body": "Tu supervisor y tus compañeros que usan la app pueden ver tu ubicación en el mapa." },
+    fr: { "locationPermission.body": "Votre superviseur et vos collègues qui utilisent l'application peuvent voir votre position sur la carte." },
+  });
+  const r = check(site, `--app-locales=${locales}`);
+  expectFailure(r, /app en\.json: locationPermission\.body does not say your employer's clients can see your live position/);
+  assert.match(r.out, /app es\.json: locationPermission\.body does not say your employer's clients/);
+  assert.match(r.out, /app fr\.json: locationPermission\.body does not say your employer's clients/);
 });
 
 test("--app-locales fails when a deletion step label differs from the app", () => {

@@ -76,6 +76,13 @@ const LOCATION_OVERCLAIM = /\b(?:(?<!not )only|location|phone) during (?:your |a
 const COWORKER_LOCATION = /\bco-?workers?\b[^.]*\blocation\b/i;
 // Clients see the GPS coordinates where each inspection was submitted.
 const CLIENT_LOCATION = /location where (?:the|an|each) inspection was submitted/i;
+// Clients also get live worker positions at their sites: GET /api/live/facility-status
+// is open to CLIENT and returns each worker's latest ping from the last 30 minutes
+// (lat/lon, capturedAt, userId, and the name unless the vendor turned crewNamesOn off)
+// for pings tied to the site (iqs-flow-api src/routes/live.ts).
+const CLIENT_LIVE_LOCATION = /\bclients?\b[^.]*\bcan (?:also )?see\b[^.]*\blive positions? of workers\b/i;
+// The crew-name setting hides names, never positions or inspection locations.
+const CLIENT_CANNOT_HIDE_LOCATION = /can hide names[^.]*\bbut not locations\b/i;
 // The audit log is append-only in the database (migration 20260602182654_audit_log_immutable)
 // and holds names, emails and phone numbers, so a deletion cannot remove them.
 const AUDIT_HISTORY = /audit history/i;
@@ -125,6 +132,12 @@ function sectionBetween(html, startId, endId) {
   const end = html.indexOf(`id="${endId}"`, start);
   return end === -1 ? html.slice(start) : html.slice(start, end);
 }
+
+/**
+ * What the page will say once published: TODO(Josh) notes are removed before then, so
+ * a disclosure that only appears inside one does not count.
+ */
+const withoutTodos = (html) => html.replace(/<span class="todo">[\s\S]*?<\/span>/g, "");
 
 /** Tiny tag-balance check: catches unclosed or crossed elements in hand-written HTML. */
 function checkTagBalance(page, html) {
@@ -240,6 +253,23 @@ else {
   }
   if (!CLIENT_LOCATION.test(shareSection)) {
     fail("privacy", "section 07 does not say clients can see the location where an inspection was submitted");
+  }
+  // Clients get live worker positions (GET /api/live/facility-status, open to CLIENT).
+  // Each place a reader looks for "who sees my location" must say so.
+  const claims = withoutTodos(privacy);
+  const clientLiveSpots = [
+    ["section 01", sectionBetween(claims, "summary", "who")],
+    ["section 04's Location permission row", claims.match(/<tr><td>Location \(while using the app\)<\/td>[\s\S]*?<\/tr>/)?.[0] ?? ""],
+    ["section 04's \"Who can see it\"", claims.match(/<li><b>Who can see it\.<\/b>[\s\S]*?<\/li>/)?.[0] ?? ""],
+    ["section 07", sectionBetween(claims, "share", "retain")],
+  ];
+  for (const [where, text] of clientLiveSpots) {
+    if (!CLIENT_LIVE_LOCATION.test(text)) {
+      fail("privacy", `${where} does not say your employer's clients can see the live position of workers at their sites`);
+    }
+  }
+  if (!CLIENT_CANNOT_HIDE_LOCATION.test(sectionBetween(claims, "share", "retain"))) {
+    fail("privacy", "section 07 does not say your employer can hide names from clients but not locations");
   }
 
   // Nothing strips photo EXIF: expo-image-picker copies the GPS tags on Android and
@@ -408,18 +438,21 @@ const APP_LANGS = {
     complete: /\b(?:delet|complet)\w*\b[^.]*\bwithin 30 days\b/i,
     replyOnly: /\brespond within 30 days\b/i,
     coworkers: /\bco-?workers?\b/i,
+    clients: /\bclients?\b/i,
   },
   es: {
     name: "Spanish",
     complete: /(?:elimin|complet)\w*[^.]*30 d[ií]as/i,
     replyOnly: /responderemos en un plazo de 30/i,
     coworkers: /compa[ñn]er[oa]s/i,
+    clients: /\bclientes?\b/i,
   },
   fr: {
     name: "French",
     complete: /(?:supprim|termin)\w*[^.]*30 jours/i,
     replyOnly: /r[ée]pondrons sous 30 jours/i,
     coworkers: /coll[èe]gues/i,
+    clients: /\bclients?\b/i,
   },
 };
 // Labels a person follows to delete their account, as the app shows them.
@@ -429,6 +462,7 @@ const lookup = (obj, key) => key.split(".").reduce((o, k) => (o && typeof o === 
 function checkAppText(dir) {
   const privacyText = privacy ? plainText(privacy) : "";
   const pageSaysCoworkers = COWORKER_LOCATION.test(privacyText);
+  const pageSaysClientsLive = privacy ? CLIENT_LIVE_LOCATION.test(plainText(withoutTodos(privacy))) : false;
   for (const [lang, rule] of Object.entries(APP_LANGS)) {
     const file = path.join(dir, `${lang}.json`);
     if (!existsSync(file)) {
@@ -475,6 +509,9 @@ function checkAppText(dir) {
     const notice = text("locationPermission.body");
     if (notice && pageSaysCoworkers && !rule.coworkers.test(notice)) {
       fail(where, "locationPermission.body does not say coworkers can see your location, but /privacy/ does");
+    }
+    if (notice && pageSaysClientsLive && !rule.clients.test(notice)) {
+      fail(where, "locationPermission.body does not say your employer's clients can see your live position, but /privacy/ does");
     }
   }
 }

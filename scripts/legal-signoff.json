@@ -4,7 +4,7 @@
     "legalEntity": "Exact legal name and entity type as shown on the Apple seller record and the Google Play developer account, for example \"Integrity Quality Solutions LLC\". Every legal page, the site footer (site/assets/shared.js) and /terms/ must then use this exact string.",
     "counselReviewedOn": "Date (YYYY-MM-DD) counsel approved /privacy/, /subprocessors/ and /delete-account/, including the processor position, the Play Data safety answer and each commitment flagged in the pages.",
     "deletionProcessLive": "Date (YYYY-MM-DD) or link showing that an in-app deletion request reaches privacy@iqsflow.com (or a queue IQS monitors), that a written deletion runbook exists matching /delete-account/, and that counsel approved how the append-only audit history keeps a deleted person's details (or that audit entries no longer store them).",
-    "appVersionWithGates": "App version on every phone that has the scheduled-shift gate on the 3-minute location check-in, the Delete my account option, deletion text that promises completed deletion within 30 days, and a location notice that says who can see your location, for example \"1.1.0\". Run the check with --publish --app-locales=<that release's locales folder>."
+    "appVersionWithGates": "App version on every phone that has the scheduled-shift gate on the 3-minute location check-in, the Delete my account option, deletion text that promises completed deletion within 30 days, and a location notice that says who can see your location (your supervisor, coworkers, and your employer's clients at their own sites), for example \"1.1.0\". Run the check with --publish --app-locales=<that release's locales folder>."
   },
   "legalEntity": null,
   "counselReviewedOn": null,
