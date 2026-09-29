@@ -426,9 +426,9 @@ test("fails when the pages promise de-identification without the audit history e
   const { site } = fixture({
     [PRIVACY]: (t) => t.replace(/\s*<tr><td>Security audit history<\/td>[\s\S]*?<\/tr>/, ""),
     [DELETE]: pipe(
-      (t) => t.replace(/\s*<li>One exception: our security audit history[\s\S]*?<\/li>/, ""),
-      (t) => t.replace(/\s*<li>Una excepci&oacute;n: nuestro historial de auditor&iacute;a[\s\S]*?<\/li>/, ""),
-      (t) => t.replace(/\s*<li>Une exception&nbsp;: notre historique d&rsquo;audit[\s\S]*?<\/li>/, ""),
+      (t) => t.replace(/\s*<li><b>Kept: our security audit history\.<\/b>[\s\S]*?<\/li>/, ""),
+      (t) => t.replace(/\s*<li><b>Se conserva: nuestro historial de auditor&iacute;a de seguridad\.<\/b>[\s\S]*?<\/li>/, ""),
+      (t) => t.replace(/\s*<li><b>Conserv&eacute;&nbsp;: notre historique d&rsquo;audit de s&eacute;curit&eacute;\.<\/b>[\s\S]*?<\/li>/, ""),
     ),
   });
   const r = check(site);
@@ -436,6 +436,69 @@ test("fails when the pages promise de-identification without the audit history e
   for (const lang of ["English", "Spanish", "French"]) {
     assert.match(r.out, new RegExp(`delete-account: ${lang} section does not say the security audit history keeps some details`));
   }
+});
+
+// ---- finding: deleted work orders and emergency reports are kept too ---------------------
+// Deleting a work order writes the whole row to the append-only work_order_deletions
+// table, and a real EMERGENCY work order cannot be deleted (api migration
+// 20260928150000_next_batch, live since prod-v6.3.0).
+
+test("fails when the pages say the audit history is the only thing kept after deletion", () => {
+  const { site } = fixture({
+    [PRIVACY]: pipe(
+      (t) => t.replace(/\s*<tr><td>Copies of deleted work orders<\/td>[\s\S]*?<\/tr>/, ""),
+      swap(
+        "Two kinds of records keep some of your details even then, as listed above: the security audit history, and copies of deleted work orders. Emergency reports cannot be deleted on their own.",
+        "The security audit history is the exception: it keeps the details listed above.",
+      ),
+    ),
+    [DELETE]: pipe(
+      (t) => t.replace(/\s*<li><b>Kept: copies of deleted work orders\.<\/b>[\s\S]*?<\/li>/, ""),
+      swap("<li><b>Kept: our security audit history.</b> It cannot be changed or deleted,", "<li>One exception: our security audit history cannot be changed or deleted,"),
+      (t) => t.replace(/\s*<li><b>Se conservan: copias de &oacute;rdenes de trabajo eliminadas\.<\/b>[\s\S]*?<\/li>/, ""),
+      swap(
+        "<li><b>Se conserva: nuestro historial de auditor&iacute;a de seguridad.</b> No se puede modificar ni eliminar,",
+        "<li>Una excepci&oacute;n: nuestro historial de auditor&iacute;a de seguridad no se puede modificar ni eliminar,",
+      ),
+      (t) => t.replace(/\s*<li><b>Conserv&eacute;es&nbsp;: les copies des ordres de travail supprim&eacute;s\.<\/b>[\s\S]*?<\/li>/, ""),
+      swap(
+        "<li><b>Conserv&eacute;&nbsp;: notre historique d&rsquo;audit de s&eacute;curit&eacute;.</b> Il ne peut",
+        "<li>Une exception&nbsp;: notre historique d&rsquo;audit de s&eacute;curit&eacute; ne peut",
+      ),
+    ),
+  });
+  const r = check(site);
+  expectFailure(r, /privacy: section 08 has no row for copies of deleted work orders/);
+  assert.match(r.out, /privacy: section 08 does not say emergency reports cannot be deleted/);
+  assert.match(r.out, /privacy: presents one store as the only thing kept after deletion/);
+  for (const lang of ["English", "Spanish", "French"]) {
+    assert.match(r.out, new RegExp(`delete-account: ${lang} section does not say copies of deleted work orders are kept`));
+    assert.match(r.out, new RegExp(`delete-account: ${lang} section does not say emergency reports cannot be deleted`));
+    assert.match(r.out, new RegExp(`delete-account: ${lang} section presents one store as the only thing kept after deletion`));
+  }
+});
+
+test("fails when the retention table says a work order's location lasts only as long as the record", () => {
+  const { site } = fixture({
+    [PRIVACY]: swap(
+      "<td>As long as the record they belong to, except for deleted work orders (next row).</td>",
+      "<td>As long as the record they belong to.</td>",
+    ),
+  });
+  expectFailure(check(site), /privacy: section 08 says a location saved with a record is kept only as long as the record/);
+});
+
+test("a deleted-work-order disclosure that appears only in a TODO(Josh) note does not count", () => {
+  const { site } = fixture({
+    [DELETE]: (t) =>
+      t.replace(
+        /<li><b>Kept: copies of deleted work orders\.<\/b>[\s\S]*?(<span class="todo">)/,
+        "<li>$1Deleted work orders are kept. Emergency reports cannot be deleted. ",
+      ),
+  });
+  const r = check(site);
+  expectFailure(r, /delete-account: English section does not say copies of deleted work orders are kept/);
+  assert.match(r.out, /delete-account: English section does not say emergency reports cannot be deleted/);
 });
 
 // ---- finding: the app's own deletion and location text must match the pages -------------

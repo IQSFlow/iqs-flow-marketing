@@ -56,7 +56,7 @@ const TYPED_ENTITY =
 const SIGNOFF_KEYS = {
   legalEntity: "the exact legal name and entity type on the Apple seller record and Google Play developer account",
   counselReviewedOn: "the date counsel approved the privacy, subprocessors and delete-account pages",
-  deletionProcessLive: "in-app deletion requests must reach privacy@iqsflow.com and a written deletion runbook must exist",
+  deletionProcessLive: "in-app deletion requests must reach privacy@iqsflow.com and a written deletion runbook must exist that covers the audit history and deleted work orders",
   appVersionWithGates: "the app version on every phone with the scheduled-shift location gate and the Delete my account option",
 };
 // Named in the old policy but not used anywhere in the IQS Flow code.
@@ -86,6 +86,30 @@ const CLIENT_CANNOT_HIDE_LOCATION = /can hide names[^.]*\bbut not locations\b/i;
 // The audit log is append-only in the database (migration 20260602182654_audit_log_immutable)
 // and holds names, emails and phone numbers, so a deletion cannot remove them.
 const AUDIT_HISTORY = /audit history/i;
+// The audit history is not the only store kept after deletion. Deleting any work order
+// writes a full copy of the row (GPS, description, notes, the people's user IDs) to
+// work_order_deletions, which is append-only and has no FK, so it survives even the
+// tenant delete; a non-test EMERGENCY work order cannot be deleted at all without a
+// break-glass setting (iqs-flow-api migration 20260928150000_next_batch, live since
+// prod-v6.3.0). Per language: deleted work orders are kept, emergency reports cannot be
+// deleted, and no wording that presents one store as the only exception.
+const KEPT_AFTER_DELETION = {
+  en: {
+    tombstone: /deleted work orders/i,
+    emergency: /emergency reports cannot be deleted/i,
+    soleException: /\bone exception\b|\bis the exception\b|\bthe only exception\b/i,
+  },
+  es: {
+    tombstone: /(?:&oacute;|ó)rdenes de trabajo eliminadas/i,
+    emergency: /reportes de emergencia no se pueden eliminar/i,
+    soleException: /\buna excepci(?:&oacute;|ó)n\b|\bla (?:&uacute;|ú)nica excepci(?:&oacute;|ó)n\b/i,
+  },
+  fr: {
+    tombstone: /ordres de travail supprim(?:&eacute;|é)s/i,
+    emergency: /signalements d(?:&rsquo;|'|’)urgence ne peuvent pas (?:&ecirc;|ê)tre supprim/i,
+    soleException: /\bune exception\b|\bla seule exception\b/i,
+  },
+};
 const EM_DASH = /—|&mdash;|&#8212;|&#x2014;/i;
 const VOID = new Set(["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"]);
 
@@ -316,6 +340,21 @@ else {
   if (!/<tr><td>[^<]*audit history[^<]*<\/td>/i.test(retention)) {
     fail("privacy", "section 08 has no row for the security audit history, which keeps names and contact details after deletion");
   }
+  // Deleting a work order keeps a permanent copy of it (work_order_deletions).
+  const retentionClaims = withoutTodos(retention);
+  if (!/<tr><td>[^<]*deleted work orders[^<]*<\/td>/i.test(retentionClaims)) {
+    fail("privacy", "section 08 has no row for copies of deleted work orders, which keep their location and notes with no end date");
+  }
+  const recordRow = retentionClaims.match(/<tr><td>Locations saved with a record[\s\S]*?<\/tr>/i)?.[0];
+  if (recordRow && !/<\/td>\s*<td>[\s\S]*deleted work orders/i.test(recordRow)) {
+    fail("privacy", "section 08 says a location saved with a record is kept only as long as the record, but deleting a work order keeps a copy of it");
+  }
+  if (!KEPT_AFTER_DELETION.en.emergency.test(retentionClaims)) {
+    fail("privacy", "section 08 does not say emergency reports cannot be deleted");
+  }
+  if (KEPT_AFTER_DELETION.en.soleException.test(withoutTodos(privacy))) {
+    fail("privacy", "presents one store as the only thing kept after deletion, but the audit history and copies of deleted work orders are both kept");
+  }
 }
 
 // ---- subprocessors ----------------------------------------------------------
@@ -371,19 +410,19 @@ else {
 
   const LANGS = [
     {
-      name: "English", text: en,
+      name: "English", lang: "en", text: en,
       tab: "<b>More</b>", wrongTab: "<b>Profile</b>", client: /client account/i,
       complete: /complete deletion within 30 days/i, replyOnly: /respond within 30 days/i,
       audit: AUDIT_HISTORY,
     },
     {
-      name: "Spanish", text: es,
+      name: "Spanish", lang: "es", text: es,
       tab: "<b>M&aacute;s</b>", wrongTab: "<b>Perfil</b>", client: /cuenta de cliente/i,
       complete: /Completamos la eliminaci&oacute;n en un plazo de 30 d&iacute;as/, replyOnly: /Respondemos en un plazo de 30/,
       audit: /historial de auditor(?:&iacute;|í)a/i,
     },
     {
-      name: "French", text: fr,
+      name: "French", lang: "fr", text: fr,
       tab: "<b>Plus</b>", wrongTab: "<b>Profil</b>", client: /compte client/i,
       complete: /Nous terminons la suppression sous 30 jours/, replyOnly: /Nous r&eacute;pondons sous 30 jours/,
       audit: /historique d(?:&rsquo;|'|’)audit/i,
@@ -401,6 +440,15 @@ else {
     if (l.replyOnly.test(l.text)) fail("delete-account", `${l.name} section gives only a response time, not a completion time`);
     if (!l.audit.test(l.text)) {
       fail("delete-account", `${l.name} section does not say the security audit history keeps some details (it cannot be changed or deleted)`);
+    }
+    const kept = KEPT_AFTER_DELETION[l.lang];
+    const claims = withoutTodos(l.text);
+    if (!kept.tombstone.test(claims)) {
+      fail("delete-account", `${l.name} section does not say copies of deleted work orders are kept (with their location and notes)`);
+    }
+    if (!kept.emergency.test(claims)) fail("delete-account", `${l.name} section does not say emergency reports cannot be deleted`);
+    if (kept.soleException.test(claims)) {
+      fail("delete-account", `${l.name} section presents one store as the only thing kept after deletion, but deleted work orders are kept too`);
     }
   }
   deleteSections = { en, es, fr };
