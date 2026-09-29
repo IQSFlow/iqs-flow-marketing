@@ -211,13 +211,14 @@
           <tr><td>Work records and photos</td><td><span class="todo">TODO(Josh): retention period</span></td></tr>
           <tr><td>Location history</td><td><span class="todo">TODO(Josh): retention period</span></td></tr>
           <tr><td>Account details after the account is closed or deleted</td><td><span class="todo">TODO(Josh): retention period</span></td></tr>
+          <tr><td>Security audit history</td><td>No end date. The database blocks every change to it and every deletion from it, so it keeps the names, email addresses and phone numbers recorded when accounts are created or changed, and the email address on a deletion request, even after an account is deleted. <span class="todo">TODO(Josh): with counsel, set a retention period for the audit history and decide whether to stop writing personal details into audit entries (for example, record user IDs only). As built, a deleted person&rsquo;s details in it cannot be removed or de-identified.</span></td></tr>
           <tr><td>Crash reports and server logs</td><td><span class="todo">TODO(Josh): retention period</span></td></tr>
           <tr><td>Website form emails</td><td><span class="todo">TODO(Josh): retention period</span></td></tr>
           <tr><td>Backups</td><td><span class="todo">TODO(Josh): how long deleted data can remain in backups</span></td></tr>
         </tbody>
       </table>
     </div>
-    <p>When an account is deleted, work records that your employer or its clients need may be kept with your personal details removed. See <a href="#delete">section 09</a>.</p>
+    <p>When an account is deleted, work records that your employer or its clients need may be kept with your personal details removed. The security audit history is the exception: it keeps the details listed above. See <a href="#delete">section 09</a>.</p>
 
     <h2 id="delete">09 &middot; Deleting your account.</h2>
     <ul>
@@ -225,7 +226,7 @@
       <li><b>By email:</b> write to <a href="mailto:privacy@iqsflow.com?subject=Delete%20my%20account">privacy@iqsflow.com</a> with the subject &ldquo;Delete my account&rdquo;.</li>
       <li><b>Client accounts:</b> if you sign in with a client account, the app does not offer these steps. Use email instead.</li>
     </ul>
-    <p>We complete deletion within 30 days and tell you when it is done. <span class="todo">TODO(Josh): do not publish this promise until (1) a request made in the app reaches IQS (today it only emails your employer&rsquo;s administrators and never reaches privacy@iqsflow.com), and (2) a written deletion runbook exists that says what is deleted and how completion is confirmed. Then confirm the 30 days and set deletionProcessLive in scripts/legal-signoff.json.</span> Because your employer created your account, we let your employer know about the request. The <a href="/delete-account/">account deletion page</a> explains what is deleted and what may be kept.</p>
+    <p>We complete deletion within 30 days and tell you when it is done. <span class="todo">TODO(Josh): do not publish this promise until (1) a request made in the app reaches IQS (today it only emails your employer&rsquo;s administrators and never reaches privacy@iqsflow.com), and (2) a written deletion runbook exists that says what is deleted and how completion is confirmed. Then confirm the 30 days and set deletionProcessLive in scripts/legal-signoff.json. The app&rsquo;s own text must say the same thing: the 1.1.0 app says a privacy team member will review the request and promises only a reply within 30 days, not completed deletion (profile.deleteConfirm and profile.deleteTimeframe, in English, Spanish and French), and the API answers &ldquo;A tenant admin will review your request.&rdquo; Change them to match this section, then run the check with --app-locales.</span> Because your employer created your account, we let your employer know about the request. The <a href="/delete-account/">account deletion page</a> explains what is deleted and what may be kept.</p>
 
     <h2 id="rights">10 &middot; Your rights and choices.</h2>
     <p>Depending on where you live, you may have the right to ask for a copy of your information, to correct it, to delete it, to get it in a format you can take elsewhere, or to object to or limit some uses of it.</p>
@@ -241,7 +242,7 @@
       <li>Google Cloud encrypts the data we store.</li>
       <li>Passwords and sign-in codes are stored only as one-way hashes.</li>
       <li>Access is limited by role, and each customer&rsquo;s data is kept separate.</li>
-      <li>Changes to important records are kept in a tamper-evident audit log.</li>
+      <li>Changes to important records are kept in a tamper-evident audit log (see <a href="#retain">section 08</a>).</li>
     </ul>
     <p>No system is perfectly secure. If a breach affects your information, we will notify the affected customers and people as the law requires. <span class="todo">TODO(Josh): have counsel approve this breach notice commitment.</span></p>
 

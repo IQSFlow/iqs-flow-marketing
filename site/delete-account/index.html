@@ -63,9 +63,10 @@
 
       <h3 id="en-next">What happens next</h3>
       <ul>
-        <li><b>We complete deletion within 30 days and tell you when it is done.</b> <span class="todo">TODO(Josh): do not publish this promise until (1) a request made in the app reaches IQS (today it only emails your employer&rsquo;s administrators and never reaches privacy@iqsflow.com), and (2) a written deletion runbook exists. Then confirm the 30 days and set deletionProcessLive in scripts/legal-signoff.json. Also decide how to confirm completion to cleaners who have no email address on file, for example through their employer.</span></li>
+        <li><b>We complete deletion within 30 days and tell you when it is done.</b> <span class="todo">TODO(Josh): do not publish this promise until (1) a request made in the app reaches IQS (today it only emails your employer&rsquo;s administrators and never reaches privacy@iqsflow.com), and (2) a written deletion runbook exists. Then confirm the 30 days and set deletionProcessLive in scripts/legal-signoff.json. Also decide how to confirm completion to cleaners who have no email address on file, for example through their employer. The app&rsquo;s own text must say the same thing: the 1.1.0 app says a privacy team member will review the request and promises only a reply within 30 days, not completed deletion (profile.deleteConfirm and profile.deleteTimeframe, in English, Spanish and French), and the API answers &ldquo;A tenant admin will review your request.&rdquo; Change them to match this page, then run the check with --app-locales.</span></li>
         <li>We let your employer know, because your employer created your account.</li>
         <li>We delete or de-identify your personal details, such as your name, phone number, sign-in code, push notification tokens and location history. <span class="todo">TODO(Josh): no deletion runbook exists yet. Write it first, then make this list match it exactly. Have counsel confirm IQS may delete a worker&rsquo;s data at the worker&rsquo;s request when the employer controls the records.</span></li>
+        <li>One exception: our security audit history cannot be changed or deleted, so it keeps the name, email address and phone number recorded when your account was created or changed, and the email address on your deletion request. <span class="todo">TODO(Josh): the database blocks every change to and deletion from the audit history (the audit_logs append-only trigger), and creating or editing an account writes the name, email address and phone number into it. With counsel, either approve this exception and a retention period for it, or stop writing personal details into audit entries (for example, record user IDs only) and remove this item. Settle it before setting deletionProcessLive.</span></li>
         <li>Work records that your employer or its clients must keep, such as completed inspections, may be kept with your name removed. <span class="todo">TODO(Josh): state how long these records are kept.</span></li>
         <li><span class="todo">TODO(Josh): state how long deleted data can remain in backups and logs.</span></li>
       </ul>
@@ -109,6 +110,7 @@
         <li><b>Completamos la eliminaci&oacute;n en un plazo de 30 d&iacute;as y te avisamos cuando est&eacute; hecha.</b></li>
         <li>Avisamos a tu empleador, porque tu empleador cre&oacute; tu cuenta.</li>
         <li>Eliminamos o anonimizamos tus datos personales, como tu nombre, n&uacute;mero de tel&eacute;fono, c&oacute;digo de acceso, tokens de notificaciones e historial de ubicaci&oacute;n.</li>
+        <li>Una excepci&oacute;n: nuestro historial de auditor&iacute;a de seguridad no se puede modificar ni eliminar, por lo que conserva el nombre, el correo electr&oacute;nico y el n&uacute;mero de tel&eacute;fono registrados cuando se cre&oacute; o se modific&oacute; tu cuenta, y el correo electr&oacute;nico de tu solicitud de eliminaci&oacute;n.</li>
         <li>Los registros de trabajo que tu empleador o sus clientes deben conservar, como las inspecciones completadas, pueden conservarse sin tu nombre.</li>
       </ul>
 
@@ -151,6 +153,7 @@
         <li><b>Nous terminons la suppression sous 30 jours et vous pr&eacute;venons lorsqu&rsquo;elle est faite.</b></li>
         <li>Nous pr&eacute;venons votre employeur, car c&rsquo;est lui qui a cr&eacute;&eacute; votre compte.</li>
         <li>Nous supprimons ou anonymisons vos donn&eacute;es personnelles, comme votre nom, votre num&eacute;ro de t&eacute;l&eacute;phone, votre code de connexion, vos jetons de notification et votre historique de position.</li>
+        <li>Une exception&nbsp;: notre historique d&rsquo;audit de s&eacute;curit&eacute; ne peut &ecirc;tre ni modifi&eacute; ni supprim&eacute;. Il conserve donc le nom, l&rsquo;adresse e-mail et le num&eacute;ro de t&eacute;l&eacute;phone enregistr&eacute;s lors de la cr&eacute;ation ou de la modification de votre compte, ainsi que l&rsquo;adresse e-mail de votre demande de suppression.</li>
         <li>Les dossiers de travail que votre employeur ou ses clients doivent conserver, comme les inspections termin&eacute;es, peuvent &ecirc;tre conserv&eacute;s sans votre nom.</li>
       </ul>
 

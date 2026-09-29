@@ -12,6 +12,10 @@
  *   node scripts/check-legal-pages.mjs <site-root>      # check another copy of site/
  *   node scripts/check-legal-pages.mjs --publish        # also fail on any TODO(Josh), draft notice or missing sign-off
  *   node scripts/check-legal-pages.mjs --signoff=<file> # read sign-off facts from another file (the tests use this)
+ *   node scripts/check-legal-pages.mjs --app-locales=<dir>
+ *       # also compare the pages with the app's own text: <dir> is the locales/ folder
+ *       # (en.json, es.json, fr.json) of the iqs-flow-mobile release that will be on
+ *       # every phone. --publish requires it.
  *
  * Facts that nothing in the code can confirm (the legal entity, counsel review, the
  * deletion process, the app version on the fleet) live in scripts/legal-signoff.json.
@@ -27,6 +31,7 @@ import { fileURLToPath } from "node:url";
 const args = process.argv.slice(2);
 const publishMode = args.includes("--publish");
 const signoffArg = args.find((a) => a.startsWith("--signoff="))?.slice("--signoff=".length);
+const appLocalesArg = args.find((a) => a.startsWith("--app-locales="))?.slice("--app-locales=".length);
 const rootArg = args.find((a) => !a.startsWith("--"));
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const siteRoot = path.resolve(rootArg ?? path.join(repoRoot, "site"));
@@ -64,6 +69,9 @@ const LOCATION_OVERCLAIM = /\b(?:(?<!not )only|location|phone) during (?:your |a
 const COWORKER_LOCATION = /\bco-?workers?\b[^.]*\blocation\b/i;
 // Clients see the GPS coordinates where each inspection was submitted.
 const CLIENT_LOCATION = /location where (?:the|an|each) inspection was submitted/i;
+// The audit log is append-only in the database (migration 20260602182654_audit_log_immutable)
+// and holds names, emails and phone numbers, so a deletion cannot remove them.
+const AUDIT_HISTORY = /audit history/i;
 const EM_DASH = /—|&mdash;|&#8212;|&#x2014;/i;
 const VOID = new Set(["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"]);
 
@@ -235,6 +243,12 @@ else {
   if (/<b>Profile<\/b>|\(Profile,/.test(privacy)) fail("privacy", "tells people to tap Profile, but the app's tab is labelled More");
   if (!/tap <b>More<\/b>/i.test(deletion)) fail("privacy", "section 09 does not tell people to tap More");
   if (!/client account/i.test(deletion)) fail("privacy", "section 09 does not tell client accounts to use email");
+
+  const retention = sectionBetween(privacy, "retain", "delete");
+  // A row in the retention table, not just a passing mention.
+  if (!/<tr><td>[^<]*audit history[^<]*<\/td>/i.test(retention)) {
+    fail("privacy", "section 08 has no row for the security audit history, which keeps names and contact details after deletion");
+  }
 }
 
 // ---- subprocessors ----------------------------------------------------------
@@ -252,6 +266,8 @@ else {
 }
 
 // ---- account deletion ---------------------------------------------------------
+/** The English, Spanish and French sections of /delete-account/, for the app-text check. */
+let deleteSections = {};
 const del = read(PAGES.deleteAccount);
 if (!del) fail("delete-account", `missing ${PAGES.deleteAccount}`);
 else {
@@ -278,16 +294,19 @@ else {
       name: "English", text: en,
       tab: "<b>More</b>", wrongTab: "<b>Profile</b>", client: /client account/i,
       complete: /complete deletion within 30 days/i, replyOnly: /respond within 30 days/i,
+      audit: AUDIT_HISTORY,
     },
     {
       name: "Spanish", text: es,
       tab: "<b>M&aacute;s</b>", wrongTab: "<b>Perfil</b>", client: /cuenta de cliente/i,
       complete: /Completamos la eliminaci&oacute;n en un plazo de 30 d&iacute;as/, replyOnly: /Respondemos en un plazo de 30/,
+      audit: /historial de auditor(?:&iacute;|í)a/i,
     },
     {
       name: "French", text: fr,
       tab: "<b>Plus</b>", wrongTab: "<b>Profil</b>", client: /compte client/i,
       complete: /Nous terminons la suppression sous 30 jours/, replyOnly: /Nous r&eacute;pondons sous 30 jours/,
+      audit: /historique d(?:&rsquo;|'|’)audit/i,
     },
   ];
   for (const l of LANGS) {
@@ -300,7 +319,121 @@ else {
     if (!l.client.test(l.text)) fail("delete-account", `${l.name} section does not tell client accounts to use email`);
     if (!l.complete.test(l.text)) fail("delete-account", `${l.name} section does not say when deletion is complete`);
     if (l.replyOnly.test(l.text)) fail("delete-account", `${l.name} section gives only a response time, not a completion time`);
+    if (!l.audit.test(l.text)) {
+      fail("delete-account", `${l.name} section does not say the security audit history keeps some details (it cannot be changed or deleted)`);
+    }
   }
+  deleteSections = { en, es, fr };
+}
+
+// ---- the app's own text (--app-locales) -----------------------------------------
+// The pages quote the app's labels and repeat its promises, so they must match the
+// strings on the release that is on every phone (iqs-flow-mobile locales/*.json).
+const NAMED_ENTITIES = {
+  amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " ", middot: "·",
+  rsquo: "'", lsquo: "'", ldquo: '"', rdquo: '"', laquo: "«", raquo: "»",
+  aacute: "á", eacute: "é", iacute: "í", oacute: "ó", uacute: "ú",
+  Aacute: "Á", Eacute: "É", Iacute: "Í", Oacute: "Ó", Uacute: "Ú",
+  agrave: "à", egrave: "è", ugrave: "ù", Agrave: "À", Egrave: "È",
+  acirc: "â", ecirc: "ê", icirc: "î", ocirc: "ô", ucirc: "û",
+  euml: "ë", iuml: "ï", uuml: "ü", ntilde: "ñ", Ntilde: "Ñ", ccedil: "ç", Ccedil: "Ç",
+  iexcl: "¡", iquest: "¿",
+};
+/** Page HTML (or an app string) as plain text: tags dropped, entities decoded, quotes straightened. */
+function plainText(html) {
+  return html
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (whole, e) => {
+      if (e[0] === "#") return String.fromCodePoint(e[1].toLowerCase() === "x" ? parseInt(e.slice(2), 16) : Number(e.slice(1)));
+      return NAMED_ENTITIES[e] ?? whole;
+    })
+    .replace(/[‘’]/g, "'")
+    .replace(/[“”]/g, '"')
+    .replace(/ /g, " ")
+    .replace(/\s+/g, " ");
+}
+const APP_LANGS = {
+  en: {
+    name: "English",
+    complete: /\b(?:delet|complet)\w*\b[^.]*\bwithin 30 days\b/i,
+    replyOnly: /\brespond within 30 days\b/i,
+    coworkers: /\bco-?workers?\b/i,
+  },
+  es: {
+    name: "Spanish",
+    complete: /(?:elimin|complet)\w*[^.]*30 d[ií]as/i,
+    replyOnly: /responderemos en un plazo de 30/i,
+    coworkers: /compa[ñn]er[oa]s/i,
+  },
+  fr: {
+    name: "French",
+    complete: /(?:supprim|termin)\w*[^.]*30 jours/i,
+    replyOnly: /r[ée]pondrons sous 30 jours/i,
+    coworkers: /coll[èe]gues/i,
+  },
+};
+// Labels a person follows to delete their account, as the app shows them.
+const APP_LABEL_KEYS = ["tabs.more", "profile.privacyData", "profile.deleteAccount", "profile.sendDeleteRequest", "profile.deleteRequested"];
+const lookup = (obj, key) => key.split(".").reduce((o, k) => (o && typeof o === "object" ? o[k] : undefined), obj);
+
+function checkAppText(dir) {
+  const privacyText = privacy ? plainText(privacy) : "";
+  const pageSaysCoworkers = COWORKER_LOCATION.test(privacyText);
+  for (const [lang, rule] of Object.entries(APP_LANGS)) {
+    const file = path.join(dir, `${lang}.json`);
+    if (!existsSync(file)) {
+      fail("app", `missing ${file}`);
+      continue;
+    }
+    let strings;
+    try {
+      strings = JSON.parse(readFileSync(file, "utf8"));
+    } catch (err) {
+      fail("app", `${lang}.json is not valid JSON (${err.message})`);
+      continue;
+    }
+    const where = `app ${lang}.json`;
+    const text = (key) => {
+      const v = lookup(strings, key);
+      if (typeof v !== "string" || !v.trim()) {
+        fail(where, `has no ${key} string`);
+        return null;
+      }
+      return plainText(v).trim();
+    };
+
+    const section = deleteSections[lang] ? plainText(deleteSections[lang]) : null;
+    for (const key of APP_LABEL_KEYS) {
+      const label = text(key);
+      if (label && section !== null && !section.includes(label)) {
+        fail("delete-account", `${rule.name} steps do not show the app's label "${label}" (${key})`);
+      }
+    }
+    if (lang === "en" && privacy) {
+      const deletion = plainText(sectionBetween(privacy, "delete", "rights"));
+      for (const key of ["tabs.more", "profile.deleteAccount", "profile.sendDeleteRequest"]) {
+        const label = text(key);
+        if (label && !deletion.includes(label)) fail("privacy", `section 09 does not show the app's label "${label}" (${key})`);
+      }
+    }
+
+    const timeframe = text("profile.deleteTimeframe");
+    if (timeframe && (!rule.complete.test(timeframe) || rule.replyOnly.test(timeframe))) {
+      fail(where, `profile.deleteTimeframe ("${timeframe}") does not promise what /delete-account/ promises: deletion completed within 30 days`);
+    }
+
+    const notice = text("locationPermission.body");
+    if (notice && pageSaysCoworkers && !rule.coworkers.test(notice)) {
+      fail(where, "locationPermission.body does not say coworkers can see your location, but /privacy/ does");
+    }
+  }
+}
+
+if (appLocalesArg) checkAppText(path.resolve(appLocalesArg));
+else if (publishMode) {
+  fail("app", "pass --app-locales=<iqs-flow-mobile>/locales from the release on every phone, so the pages can be compared with the app's own text");
+} else {
+  note("app", "app text not compared (pass --app-locales=<iqs-flow-mobile>/locales)");
 }
 
 // ---- site footer (rendered on every legal page by assets/shared.js) ----------

@@ -64,6 +64,65 @@ function writeSignoff(dir, values) {
   return file;
 }
 
+// The app's own strings (iqs-flow-mobile locales/*.json), written the way the pages
+// need them to read. Tests override single keys to put back what the app says today.
+const APP_TEXT = {
+  en: {
+    tabs: { more: "More" },
+    profile: {
+      privacyData: "Privacy & data",
+      deleteAccount: "Delete my account",
+      sendDeleteRequest: "Send request",
+      deleteRequested: "Request sent",
+      deleteTimeframe: "We complete deletion within 30 days and tell you when it is done.",
+    },
+    locationPermission: {
+      body: "While IQS Flow is open, it records your location when you do work. Your supervisor, and coworkers who use the app, can see your location on the map.",
+    },
+  },
+  es: {
+    tabs: { more: "Más" },
+    profile: {
+      privacyData: "Privacidad y datos",
+      deleteAccount: "Eliminar mi cuenta",
+      sendDeleteRequest: "Enviar solicitud",
+      deleteRequested: "Solicitud enviada",
+      deleteTimeframe: "Completamos la eliminación en un plazo de 30 días y te avisamos cuando esté hecha.",
+    },
+    locationPermission: {
+      body: "Mientras IQS Flow está abierta, registra tu ubicación cuando trabajas. Tu supervisor y tus compañeros que usan la app pueden ver tu ubicación en el mapa.",
+    },
+  },
+  fr: {
+    tabs: { more: "Plus" },
+    profile: {
+      privacyData: "Confidentialité et données",
+      deleteAccount: "Supprimer mon compte",
+      sendDeleteRequest: "Envoyer la demande",
+      deleteRequested: "Demande envoyée",
+      deleteTimeframe: "Nous terminons la suppression sous 30 jours et vous prévenons lorsqu'elle est faite.",
+    },
+    locationPermission: {
+      body: "Quand IQS Flow est ouverte, elle enregistre votre position pendant le travail. Votre superviseur et vos collègues qui utilisent l'application peuvent voir votre position sur la carte.",
+    },
+  },
+};
+
+/** Write en/es/fr locale files; `overrides` is { lang: { "a.b": value } }. Returns the folder. */
+function writeLocales(dir, overrides = {}) {
+  const folder = path.join(dir, "locales");
+  mkdirSync(folder, { recursive: true });
+  for (const [lang, strings] of Object.entries(APP_TEXT)) {
+    const copy = structuredClone(strings);
+    for (const [key, value] of Object.entries(overrides[lang] ?? {})) {
+      const parts = key.split(".");
+      parts.slice(0, -1).reduce((o, k) => o[k], copy)[parts.at(-1)] = value;
+    }
+    writeFileSync(path.join(folder, `${lang}.json`), JSON.stringify(copy, null, 2));
+  }
+  return folder;
+}
+
 function check(site, ...flags) {
   const r = spawnSync(process.execPath, [SCRIPT, site, ...flags], { encoding: "utf8" });
   return { code: r.status, out: `${r.stdout}${r.stderr}` };
@@ -242,6 +301,70 @@ test("fails when the privacy policy promises only a response within 30 days", ()
   assert.match(r.out, /privacy: does not say when deletion is complete/);
 });
 
+// ---- finding: the audit history cannot be de-identified ---------------------------------
+
+test("fails when the pages promise de-identification without the audit history exception", () => {
+  const { site } = fixture({
+    [PRIVACY]: (t) => t.replace(/\s*<tr><td>Security audit history<\/td>[\s\S]*?<\/tr>/, ""),
+    [DELETE]: pipe(
+      (t) => t.replace(/\s*<li>One exception: our security audit history[\s\S]*?<\/li>/, ""),
+      (t) => t.replace(/\s*<li>Una excepci&oacute;n: nuestro historial de auditor&iacute;a[\s\S]*?<\/li>/, ""),
+      (t) => t.replace(/\s*<li>Une exception&nbsp;: notre historique d&rsquo;audit[\s\S]*?<\/li>/, ""),
+    ),
+  });
+  const r = check(site);
+  expectFailure(r, /privacy: section 08 has no row for the security audit history/);
+  for (const lang of ["English", "Spanish", "French"]) {
+    assert.match(r.out, new RegExp(`delete-account: ${lang} section does not say the security audit history keeps some details`));
+  }
+});
+
+// ---- finding: the app's own deletion and location text must match the pages -------------
+
+test("--app-locales passes when the app's text matches the pages", () => {
+  const { dir, site } = fixture();
+  const r = check(site, `--app-locales=${writeLocales(dir)}`);
+  assert.equal(r.code, 0, r.out);
+});
+
+test("--app-locales fails when the app promises only a review and reply within 30 days", () => {
+  const { dir, site } = fixture();
+  // The 1.1.0 strings on iqs-flow-mobile origin/claude/sdk57-store-release.
+  const locales = writeLocales(dir, {
+    en: { "profile.deleteTimeframe": "We will review your request and respond within 30 days." },
+    es: { "profile.deleteTimeframe": "Revisaremos tu solicitud y responderemos en un plazo de 30 días." },
+    fr: { "profile.deleteTimeframe": "Nous examinerons votre demande et répondrons sous 30 jours." },
+  });
+  const r = check(site, `--app-locales=${locales}`);
+  expectFailure(r, /app en\.json: profile\.deleteTimeframe \("We will review your request and respond within 30 days\."\) does not promise/);
+  assert.match(r.out, /app es\.json: profile\.deleteTimeframe/);
+  assert.match(r.out, /app fr\.json: profile\.deleteTimeframe/);
+});
+
+test("--app-locales fails when the app's location notice does not mention coworkers", () => {
+  const { dir, site } = fixture();
+  // The 1.1.0 English notice says only the supervisor can see it.
+  const locales = writeLocales(dir, {
+    en: {
+      "locationPermission.body":
+        "During an active shift it also updates your location every few minutes so your supervisor can see where work is happening.",
+    },
+  });
+  expectFailure(check(site, `--app-locales=${locales}`), /app en\.json: locationPermission\.body does not say coworkers can see your location/);
+});
+
+test("--app-locales fails when a deletion step label differs from the app", () => {
+  const { dir, site } = fixture();
+  const locales = writeLocales(dir, {
+    en: { "profile.deleteAccount": "Delete account" },
+    es: { "tabs.more": "Menú" },
+  });
+  const r = check(site, `--app-locales=${locales}`);
+  expectFailure(r, /delete-account: English steps do not show the app's label "Delete account" \(profile\.deleteAccount\)/);
+  assert.match(r.out, /privacy: section 09 does not show the app's label "Delete account"/);
+  assert.match(r.out, /delete-account: Spanish steps do not show the app's label "Menú" \(tabs\.more\)/);
+});
+
 // ---- finding: unconfirmed legal entity ---------------------------------------------------
 
 test("fails when a page names an entity type that is not confirmed", () => {
@@ -297,10 +420,16 @@ function publishReady(termsEdit = swap("IQS Flow, Inc.", ENTITY)) {
   return f;
 }
 
-test("--publish passes once every TODO is answered and every sign-off is set", () => {
+test("--publish passes once every TODO is answered, every sign-off is set and the app text matches", () => {
+  const { dir, site } = publishReady();
+  const r = check(site, "--publish", `--signoff=${writeSignoff(dir, ALL_SIGNED)}`, `--app-locales=${writeLocales(dir)}`);
+  assert.equal(r.code, 0, r.out);
+});
+
+test("--publish fails when the app's text is not compared", () => {
   const { dir, site } = publishReady();
   const r = check(site, "--publish", `--signoff=${writeSignoff(dir, ALL_SIGNED)}`);
-  assert.equal(r.code, 0, r.out);
+  expectFailure(r, /app: pass --app-locales=/);
 });
 
 for (const key of Object.keys(ALL_SIGNED)) {

@@ -63,9 +63,14 @@ Forms will not send locally (the `/api/forms/submit` route is wired by the produ
 
 ```bash
 node scripts/check-legal-pages.mjs              # everyday check
-node scripts/check-legal-pages.mjs --publish    # also fails while any TODO(Josh), draft notice or sign-off remains; run before tagging
+node scripts/check-legal-pages.mjs --app-locales=../iqs-flow-mobile/locales
+                                                # also compare the pages with the app's own text (labels, deletion promise, location notice)
+node scripts/check-legal-pages.mjs --publish --app-locales=<release locales>
+                                                # also fails while any TODO(Josh), draft notice or sign-off remains; run before tagging
 node --test scripts/check-legal-pages.test.mjs  # tests for the check itself
 ```
+
+`--app-locales` must point at the `locales/` folder of the mobile release that is on every phone. The check reads the deletion step labels (`tabs.more`, `profile.privacyData`, `profile.deleteAccount`, `profile.sendDeleteRequest`, `profile.deleteRequested`), the deletion timeframe (`profile.deleteTimeframe`) and the location notice (`locationPermission.body`) in English, Spanish and French, and fails when the pages and the app disagree. `--publish` requires it.
 
 Facts that nothing in the code can confirm live in `scripts/legal-signoff.json`: the exact legal entity, the date counsel reviewed the pages, proof that the deletion process is live, and the app version on every phone. `--publish` fails while any of them is `null`.
 
