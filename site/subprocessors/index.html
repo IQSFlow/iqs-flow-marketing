@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Subprocessors, IQS Flow</title>
+<meta name="description" content="The service providers that process personal information for IQS Flow, what each one does, and what data it handles."/>
+<link rel="icon" type="image/svg+xml" href="/assets/iqs-mark.svg"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,300;9..144,400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/assets/shared.css?v=6"/>
+<link rel="stylesheet" href="/assets/legal.css?v=1"/>
+</head>
+<body data-page="subprocessors">
+<div id="nav-slot"></div>
+
+<header class="ph">
+  <div class="ph-eyebrow">Legal &middot; Policy 03</div>
+  <h1>Sub<em>processors.</em></h1>
+  <p class="ph-sub">The companies that process personal information for IQS Flow, what each one does, and what data it handles.</p>
+</header>
+
+<div class="legal-wrap">
+  <aside class="legal-toc">
+    <div class="label">On this page</div>
+    <a href="#about">01 &middot; About this list</a>
+    <a href="#platform">02 &middot; Platform</a>
+    <a href="#app">03 &middot; Mobile app</a>
+    <a href="#website">04 &middot; Website</a>
+    <a href="#customer">05 &middot; Customer-enabled</a>
+    <a href="#other">06 &middot; No personal data</a>
+    <a href="#changes">07 &middot; Changes</a>
+  </aside>
+
+  <article class="legal-body">
+    <div class="legal-draft" role="note">
+      <b>Draft for sign-off.</b> This list is not published yet. Every item marked <span class="todo">TODO(Josh)</span> must be answered, and this notice removed, before the page is published.
+    </div>
+
+    <div class="legal-meta">
+      <span>Status <b>Draft</b></span>
+      <span>Last updated <b><span class="todo">TODO(Josh): date</span></b></span>
+    </div>
+
+    <h2 id="about">01 &middot; About this list.</h2>
+    <p>Integrity Quality Solutions LLC uses the service providers below to run IQS Flow. Each one processes data only to provide its service to us. For how we use information overall, see our <a href="/privacy/">privacy policy</a>.</p>
+    <p>We will update this page before we add a new subprocessor. Customers who want an email notice first can ask at <a href="mailto:privacy@iqsflow.com">privacy@iqsflow.com</a>. <span class="todo">TODO(Josh): confirm this notice commitment, and confirm a data processing agreement (or the provider&rsquo;s standard data terms) is accepted with each provider below.</span></p>
+
+    <h2 id="platform">02 &middot; Platform.</h2>
+    <p>These run the IQS Flow web dashboard, client portal, API and database.</p>
+    <div class="legal-table-wrap">
+      <table class="legal-table">
+        <thead>
+          <tr><th>Provider</th><th>Service</th><th>What we use it for</th><th>Data it handles</th><th>Location</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Google</td><td>Cloud Run</td><td>Runs the IQS Flow API and web dashboard.</td><td>All data sent to or from IQS Flow while it is being processed.</td><td>United States (us-central1)</td></tr>
+          <tr><td>Google</td><td>Cloud SQL for PostgreSQL</td><td>Main database.</td><td>Accounts, work records, location history, messages.</td><td>United States (us-central1)</td></tr>
+          <tr><td>Google</td><td>Cloud Storage</td><td>Stores photos, attachments and data exports.</td><td>Photos, attachments, exports.</td><td>United States <span class="todo">TODO(Josh): confirm bucket location</span></td></tr>
+          <tr><td>Google</td><td>Cloud Pub/Sub, Cloud Logging, Error Reporting</td><td>Internal processing of location check-ins, server logs and crash reports.</td><td>Location events, request logs (including IP address), error details and user IDs.</td><td>Google Cloud <span class="todo">TODO(Josh): confirm region</span></td></tr>
+          <tr><td>Google</td><td>Gemini API</td><td>AI photo scoring and AI text features, as described in section 05 of the privacy policy.</td><td>Inspection photos (without the worker&rsquo;s name), text typed into AI features, and related site, checklist and report details.</td><td>Google <span class="todo">TODO(Josh): confirm processing location and paid-tier data terms</span></td></tr>
+          <tr><td>Google</td><td>Cloud Translation</td><td>Translates screen text and entries into Spanish and French.</td><td>Text on screen or typed in, such as work order titles.</td><td>Google Cloud</td></tr>
+          <tr><td>Google</td><td>Cloud Vision</td><td>Reads the text on paper forms that administrators upload.</td><td>Uploaded form images.</td><td>Google Cloud</td></tr>
+          <tr><td>Google</td><td>Firebase Authentication</td><td>Email and Google account sign-in, and password reset.</td><td>Email address, name, sign-in events.</td><td>Google</td></tr>
+          <tr><td>Google</td><td>Gmail (Google Workspace)</td><td>Sends email from IQS Flow, such as invitations, password resets, alerts and reports.</td><td>Email address, name, message content.</td><td>Google</td></tr>
+          <tr><td>Google</td><td>Google Maps Platform</td><td>Address lookup and directions between sites.</td><td>Addresses and map coordinates.</td><td>Google</td></tr>
+          <tr><td>Stripe</td><td>Stripe Billing</td><td>Subscription billing for customer organizations.</td><td>Organization name, billing contact email, and payment details entered directly with Stripe.</td><td>Stripe <span class="todo">TODO(Josh): confirm Stripe billing is live in production</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="app">03 &middot; Mobile app.</h2>
+    <p>These deliver the IQS Flow app, its updates and its notifications.</p>
+    <div class="legal-table-wrap">
+      <table class="legal-table">
+        <thead>
+          <tr><th>Provider</th><th>Service</th><th>What we use it for</th><th>Data it handles</th><th>Location</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Expo</td><td>Expo Push Service</td><td>Delivers push notifications to the app.</td><td>Push token, notification title and text.</td><td><span class="todo">TODO(Josh): confirm</span></td></tr>
+          <tr><td>Apple</td><td>Apple Push Notification service</td><td>Delivers notifications to iPhones, passed on by Expo.</td><td>Push token, notification title and text.</td><td>Apple</td></tr>
+          <tr><td>Google</td><td>Firebase Cloud Messaging</td><td>Delivers notifications to Android phones, passed on by Expo.</td><td>Push token, notification title and text.</td><td>Google</td></tr>
+          <tr><td>Expo</td><td>EAS Update</td><td>Delivers app updates.</td><td>App version, platform, IP address.</td><td><span class="todo">TODO(Josh): confirm</span></td></tr>
+          <tr><td>Google</td><td>Google Maps SDK</td><td>Shows maps in the app.</td><td>Your phone&rsquo;s IP address and map activity. We do not send your name.</td><td>Google</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="website">04 &middot; Website (iqsflow.com).</h2>
+    <div class="legal-table-wrap">
+      <table class="legal-table">
+        <thead>
+          <tr><th>Provider</th><th>Service</th><th>What we use it for</th><th>Data it handles</th><th>Location</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Google</td><td>Cloud Storage and Cloud CDN</td><td>Hosts the website.</td><td>Standard request logs, such as IP address.</td><td>Google Cloud</td></tr>
+          <tr><td>Google</td><td>Cloud Functions</td><td>Handles website form submissions.</td><td>What you enter in the form.</td><td>United States (us-central1)</td></tr>
+          <tr><td>Google</td><td>Gmail (Google Workspace)</td><td>Delivers website form submissions to our team.</td><td>What you enter in the form.</td><td>Google</td></tr>
+          <tr><td>Google</td><td>reCAPTCHA</td><td>Blocks spam on website forms.</td><td>Device and browser information.</td><td>Google</td></tr>
+          <tr><td>Google</td><td>Google Fonts</td><td>Loads the website&rsquo;s fonts.</td><td>IP address and browser details.</td><td>Google</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="customer">05 &middot; Tools a customer connects.</h2>
+    <p>These receive data only if an administrator at a customer connects them. The customer chooses the destination and is responsible for it.</p>
+    <div class="legal-table-wrap">
+      <table class="legal-table">
+        <thead>
+          <tr><th>Tool</th><th>What it is used for</th><th>Data it receives</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Slack</td><td>Alerts posted to a customer&rsquo;s Slack channel.</td><td>Alert title and text.</td></tr>
+          <tr><td>Microsoft Teams</td><td>Alerts posted to a customer&rsquo;s Teams channel.</td><td>Alert title and text.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="other">06 &middot; Services that receive no personal data from us.</h2>
+    <ul>
+      <li><b>AeroDataBox (through RapidAPI):</b> flight schedules for airport sites. We send only airport codes and time ranges.</li>
+      <li><b>OpenStreetMap tile servers, or CARTO when enabled:</b> map images in the web dashboard. Your browser loads the images directly, so the provider sees your IP address and the map area on screen. We do not send them names or work records.</li>
+      <li><b>unpkg and cdnjs:</b> map pin images in the web dashboard. Your browser loads them directly, so the provider sees your IP address.</li>
+    </ul>
+
+    <h2 id="changes">07 &middot; Changes to this list.</h2>
+    <ul>
+      <li><b>Version 4.0 (draft):</b> first published list. Removed Amazon Web Services, Sentry and Twilio, which the previous privacy policy named but IQS Flow does not use. Added the Google, Expo and Apple services above.</li>
+    </ul>
+  </article>
+</div>
+
+<section class="cta-band">
+  <div class="cta-band-wrap" style="max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:40px;flex-wrap:wrap;">
+    <h2>Questions about your <em>data?</em></h2>
+    <div class="acts">
+      <a class="b1" href="/contact/">Contact us &rarr;</a>
+      <a class="b2" href="/privacy/">Privacy policy</a>
+    </div>
+  </div>
+</section>
+
+<div id="footer-slot"></div>
+<script src="/assets/shared.js?v=7"></script>
+</body>
+</html>

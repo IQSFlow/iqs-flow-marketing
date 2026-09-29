@@ -57,6 +57,15 @@ py -m http.server 8000 --directory site     # then open http://localhost:8000
 
 Forms will not send locally (the `/api/forms/submit` route is wired by the production load balancer to the Cloud Function). reCAPTCHA also no-ops unless a real site key is present in `config.js`.
 
+## Legal page check
+
+`/privacy/`, `/subprocessors/` and `/delete-account/` are the URLs the App Store and Google Play listings point to. A no-dependency check covers them (links, anchors, tag balance, no em dashes, correct legal entity, no unused vendors, the Spanish and French deletion steps):
+
+```bash
+node scripts/check-legal-pages.mjs              # everyday check
+node scripts/check-legal-pages.mjs --publish    # also fails while any TODO(Josh) or draft notice remains; run before tagging
+```
+
 ## Forms Cloud Function (`functions/forms-handler`)
 
 Gen 2 Cloud Function (`marketing-forms-handler`, Node 20, `us-central1`) that accepts form POSTs from iqsflow.com, verifies reCAPTCHA v3, validates the payload with Zod, and emails `sales@iqsflow.com` via the Gmail API using domain-wide delegation. The production load balancer URL map routes `iqsflow.com/api/forms/submit` to it.
