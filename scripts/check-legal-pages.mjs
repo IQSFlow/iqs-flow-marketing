@@ -81,8 +81,18 @@ const CLIENT_LOCATION = /location where (?:the|an|each) inspection was submitted
 // (lat/lon, capturedAt, userId, and the name unless the vendor turned crewNamesOn off)
 // for pings tied to the site (iqs-flow-api src/routes/live.ts).
 const CLIENT_LIVE_LOCATION = /\bclients?\b[^.]*\bcan (?:also )?see\b[^.]*\blive positions? of workers\b/i;
-// The crew-name setting hides names, never positions or inspection locations.
-const CLIENT_CANNOT_HIDE_LOCATION = /can hide names[^.]*\bbut not locations\b/i;
+// The crew-name setting hides names on inspection results and live positions, never
+// the positions or the inspection locations themselves. (Section 07 must not say the
+// employer can hide names everywhere: see CLIENT_REQUEST_ASSIGNEE.)
+const CLIENT_CANNOT_HIDE_LOCATION = /\b(?:cannot|can not|can(?:&rsquo;|'|’)t) hide (?:the |their )?locations\b|\bbut not locations\b/i;
+// The crew-name setting does not reach the client service-request and complaint
+// register: GET /api/client/service-requests and /:id return assignee { id, name }
+// without reading crewNamesOn (iqs-flow-api src/routes/client-requests.ts LIST_SELECT,
+// toListItem), and the client portal shows that name on /client-portal/tickets, each
+// request and each site's open requests. Remove this rule if the api starts applying
+// the setting there.
+const CLIENT_REQUEST_ASSIGNEE =
+  /\b(?:cannot|can not|can(?:&rsquo;|'|’)t) hide the name of the (?:person|worker) assigned to (?:a|each|their) service requests?\b/i;
 // The audit log is append-only in the database (migration 20260602182654_audit_log_immutable)
 // and holds names, emails and phone numbers, so a deletion cannot remove them.
 const AUDIT_HISTORY = /audit history/i;
@@ -292,8 +302,15 @@ else {
       fail("privacy", `${where} does not say your employer's clients can see the live position of workers at their sites`);
     }
   }
-  if (!CLIENT_CANNOT_HIDE_LOCATION.test(sectionBetween(claims, "share", "retain"))) {
-    fail("privacy", "section 07 does not say your employer can hide names from clients but not locations");
+  const shareClaims = sectionBetween(claims, "share", "retain");
+  if (!CLIENT_CANNOT_HIDE_LOCATION.test(shareClaims)) {
+    fail("privacy", "section 07 does not say your employer cannot hide locations from clients");
+  }
+  if (!CLIENT_REQUEST_ASSIGNEE.test(shareClaims)) {
+    fail(
+      "privacy",
+      "section 07 does not say your employer cannot hide the name of the person assigned to a client's service request or complaint (clients see it whatever the crew-name setting says)",
+    );
   }
 
   // Nothing strips photo EXIF: expo-image-picker copies the GPS tags on Android and

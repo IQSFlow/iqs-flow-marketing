@@ -253,11 +253,51 @@ test("a live-position disclosure that appears only in a TODO(Josh) note does not
 test("fails when the policy says the employer can hide locations from clients", () => {
   const { site } = fixture({
     [PRIVACY]: swap(
-      "Your employer can hide names, scores, notes and photos from its clients, but not locations:",
+      "Your employer can hide names, scores, notes and photos on inspection results, and names on live positions, from its clients. It cannot hide locations:",
       "Your employer can hide names, scores, notes, photos and locations from its clients:",
     ),
   });
-  expectFailure(check(site), /privacy: section 07 does not say your employer can hide names from clients but not locations/);
+  expectFailure(check(site), /privacy: section 07 does not say your employer cannot hide locations from clients/);
+});
+
+// GET /api/client/service-requests (and /:id) returns the assigned person's name without
+// reading crewNamesOn (iqs-flow-api src/routes/client-requests.ts), and the client portal
+// shows it, so "your employer can hide names from its clients" is not true everywhere.
+const SERVICE_REQUEST_NAME =
+  " They can also see the service requests and complaints that they file, or that are logged for them, about their own sites, including the name of the person assigned to each one. Your employer can hide names, scores, notes and photos on inspection results, and names on live positions, from its clients. It cannot hide locations: the submitted location is shown with every inspection a client can see, and live positions are shown even when names are hidden. It also cannot hide the name of the person assigned to a service request or complaint: clients see that name whatever your employer&rsquo;s name setting says.";
+
+test("fails when section 07 says the employer can hide names from clients everywhere", () => {
+  const { site } = fixture({
+    [PRIVACY]: swap(
+      SERVICE_REQUEST_NAME,
+      " Your employer can hide names, scores, notes and photos from its clients, but not locations: the submitted location is shown with every inspection a client can see, and live positions are shown even when names are hidden.",
+    ),
+  });
+  expectFailure(
+    check(site),
+    /privacy: section 07 does not say your employer cannot hide the name of the person assigned to a client's service request or complaint/,
+  );
+});
+
+test("a service-request name disclosure that appears only in a TODO(Josh) note does not count", () => {
+  const { site } = fixture({
+    [PRIVACY]: swap(
+      " It also cannot hide the name of the person assigned to a service request or complaint: clients see that name whatever your employer&rsquo;s name setting says.",
+      " <span class=\"todo\">TODO(Josh): your employer cannot hide the name of the person assigned to a service request.</span>",
+    ),
+  });
+  expectFailure(check(site), /privacy: section 07 does not say your employer cannot hide the name of the person assigned/);
+});
+
+test("does not require section 07 to say the employer can hide names from clients", () => {
+  const { site } = fixture({
+    [PRIVACY]: swap(
+      " Your employer can hide names, scores, notes and photos on inspection results, and names on live positions, from its clients. It cannot hide locations:",
+      " Your employer cannot hide locations:",
+    ),
+  });
+  const r = check(site);
+  assert.equal(r.code, 0, r.out);
 });
 
 // ---- minor findings: photos, phone storage, updates, AI, maps, retention ---------------
