@@ -218,6 +218,83 @@ test("fails when the policy leaves out that clients see where an inspection was 
   expectFailure(check(site), /privacy: section 07 does not say clients can see the location where an inspection was submitted/);
 });
 
+// ---- minor findings: photos, phone storage, updates, AI, maps, retention ---------------
+
+test("fails when the policy does not say a camera-saved location stays in uploaded photos", () => {
+  const { site } = fixture({
+    [PRIVACY]: (t) => t.replace(/\s*<li><b>Location in photos\.<\/b>[\s\S]*?<\/li>/, ""),
+  });
+  expectFailure(check(site), /privacy: section 04 does not say a location saved by the phone's camera stays in uploaded photos/);
+});
+
+test("fails when the policy says deleting the app removes everything from an iPhone", () => {
+  const { site } = fixture({
+    [PRIVACY]: (t) =>
+      t.replace(
+        /Deleting the app removes most of this from your phone, including any work that has not uploaded yet\.[\s\S]*?Signing out before you delete the app removes the sign-in session\./,
+        "Deleting the app removes these from your phone, including any work that has not uploaded yet.",
+      ),
+  });
+  const r = check(site);
+  expectFailure(r, /privacy: says deleting the app removes everything from the phone/);
+  assert.match(r.out, /privacy: section 04 does not say what can remain on an iPhone/);
+});
+
+test("fails when the policy leaves out the app's installation ID", () => {
+  const { site } = fixture({
+    [PRIVACY]: swap(
+      "Expo receives the app version, the platform, your IP address and the app&rsquo;s random installation ID.",
+      "Expo receives the app version, the platform and your IP address.",
+    ),
+  });
+  expectFailure(check(site), /privacy: section 04 does not say Expo receives the app's installation ID/);
+});
+
+test("fails when section 05 leaves out upload-time scoring or the client portal assistant", () => {
+  const { site } = fixture({
+    [PRIVACY]: pipe(
+      swap(
+        "When an evidence photo for an inspection is uploaded, and again when the inspection is submitted, we send the inspection&rsquo;s evidence photos to Gemini",
+        "When an inspection is submitted, we send its evidence photos (one photo per checklist item) to Gemini",
+      ),
+      (t) => t.replace(/\s*<li><b>Client portal assistant\.<\/b>[\s\S]*?<\/li>/, ""),
+    ),
+  });
+  const r = check(site);
+  expectFailure(r, /privacy: section 05 does not say photos are scored when they are uploaded/);
+  assert.match(r.out, /privacy: section 05 does not describe the client portal assistant/);
+});
+
+test("fails when the location retention row gives no period", () => {
+  const { site } = fixture({
+    [PRIVACY]: (t) =>
+      t.replace(
+        /<tr><td>Location check-ins<\/td>[\s\S]*?<\/tr>/,
+        '<tr><td>Location history</td><td><span class="todo">TODO(Josh): retention period</span></td></tr>',
+      ),
+  });
+  expectFailure(check(site), /privacy: section 08 does not give the 30-day period for location check-ins/);
+});
+
+test("fails when the subprocessors page leaves out Apple Maps, the installation ID, the assistant or the directions origin", () => {
+  const { site } = fixture({
+    [SUBS]: pipe(
+      (t) => t.replace(/\s*<tr><td>Apple<\/td><td>Apple Maps \(MapKit\)<\/td>[\s\S]*?<\/tr>/, ""),
+      swap(" and a random installation ID the app creates for update checks", ""),
+      (t) => t.replace(/ For the client portal assistant: [^<]*/, ""),
+      swap(
+        "<td>Address lookup, and directions from your phone&rsquo;s current location to a work site.</td><td>Addresses and map coordinates, including your phone&rsquo;s current location when the app asks for directions.</td>",
+        "<td>Address lookup and directions between sites.</td><td>Addresses and map coordinates.</td>",
+      ),
+    ),
+  });
+  const r = check(site);
+  expectFailure(r, /subprocessors: does not list Apple Maps/);
+  assert.match(r.out, /subprocessors: does not list installation ID/);
+  assert.match(r.out, /subprocessors: does not list client portal assistant/);
+  assert.match(r.out, /subprocessors: the Google Maps Platform row does not say directions start from the phone's current location/);
+});
+
 // ---- finding: "Profile" is not a label the app shows ---------------------------------
 
 test("fails when the English deletion steps say Profile instead of More", () => {

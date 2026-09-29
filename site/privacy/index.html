@@ -69,7 +69,7 @@
         <li>You can ask us to delete your account in the app (More, then Delete my account) or by email. We complete deletion within 30 days and tell you when it is done. <span class="todo">TODO(Josh): do not publish this promise until the deletion process in section 09 exists.</span></li>
       </ul>
     </div>
-    <p>If your organization has a signed agreement with us, that agreement controls how we handle your organization&rsquo;s data where it differs from this policy.</p>
+    <p>If your organization has a signed agreement with us, that agreement controls how we handle your organization&rsquo;s data where it differs from this policy. <span class="todo">TODO(Josh): have counsel review this sentence. Workers are not parties to that agreement, so it should not take away commitments this policy makes to them.</span></p>
 
     <h2 id="who">02 &middot; Who we are, and whose data this is.</h2>
     <p>IQS Flow is a product of <b>Integrity Quality Solutions</b> (&ldquo;IQS&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;). We publish the IQS Flow app on the Apple App Store and Google Play. <span class="todo">TODO(Josh): exact legal name and entity type (LLC, Inc. or other) as shown on the Apple seller record and the Google Play developer account. The code names only &ldquo;Integrity Quality Solutions&rdquo;, and the Terms page names a different company. Use one string on all three legal pages, in the site footer and on the Terms page, and set it as legalEntity in scripts/legal-signoff.json.</span></p>
@@ -83,7 +83,7 @@
     <ul>
       <li>Your name, role, the organization you belong to, and the sites and areas you are assigned to.</li>
       <li>Your email address and phone number, if your employer adds them. Many cleaners do not have an email address in IQS Flow.</li>
-      <li>Sign-in details. Cleaners sign in with their first and last name and a 4-digit code from their employer. Your employer may set this code to the last four digits of your Social Security number. We store only a scrambled, one-way version of the code (a bcrypt hash), never the digits themselves. Staff who sign in with an email address or a Google account do so through Google Firebase Authentication.</li>
+      <li>Sign-in details. Cleaners sign in with their first and last name and a 4-digit code from their employer. Your employer may set this code to the last four digits of your Social Security number. <span class="todo">TODO(Josh): with counsel, decide whether to keep this sentence. The worker sign-in is built around the last 4 digits of the SSN (prisma/schema.prisma last4Hash, src/routes/auth.ts), but the code-reset endpoint says it is not an SSN and some employers now assign numbers instead (src/routes/people.ts). The answer also sets how the App Store privacy label and the Play Data safety form classify it.</span> We store only a scrambled, one-way version of the code (a bcrypt hash), never the digits themselves. Staff who sign in with an email address or a Google account do so through Google Firebase Authentication.</li>
       <li>Your language and notification settings.</li>
     </ul>
 
@@ -98,11 +98,12 @@
     <h3>Location</h3>
     <ul>
       <li>The location of your phone when you use the app for work: when you clock in, start or finish a task or work order, submit a checklist, inspection or issue report, use the map, or look up the area you are in. For cleaners, the app also checks in about every 3 minutes during a scheduled shift. Section 04 explains exactly when.</li>
+      <li>The location saved in a photo, if your phone&rsquo;s camera saves one (see section 04).</li>
     </ul>
 
     <h3>Device and usage information</h3>
     <ul>
-      <li>The app version and update version, your phone&rsquo;s operating system and version, your language setting, and a push notification token.</li>
+      <li>The app version and update version, your phone&rsquo;s operating system and version, your language setting, a push notification token, and a random installation ID that the app&rsquo;s update system creates on your phone.</li>
       <li>Crash reports from the app. These include error details and your user ID so we can find and fix the problem.</li>
       <li>How features are used, for example which suggestion you pick in search, so we can make those features better.</li>
       <li>Standard server logs kept by our hosting provider, such as IP address, time and the address requested, for security and troubleshooting.</li>
@@ -126,7 +127,7 @@
           <tr><th>Permission</th><th>What it is used for</th></tr>
         </thead>
         <tbody>
-          <tr><td>Location (while using the app)</td><td>Records where you are when you clock in, start or finish a task or work order, or submit a checklist, inspection or issue report. For cleaners, during a scheduled shift and not on a break, the app also checks in about every 3 minutes while it is open so people at your employer, including coworkers who use the app, can see where work is happening on a live map. Location is also used to suggest the area you are in, to show where you are on the map and give directions, and to confirm work was done on site.</td></tr>
+          <tr><td>Location (while using the app)</td><td>Records where you are when you clock in, start or finish a task or work order, or submit a checklist, inspection or issue report. For cleaners, during a scheduled shift and not on a break, the app also checks in about every 3 minutes while it is open so people at your employer, including coworkers who use the app, can see where work is happening on a live map. Location is also used to suggest the area you are in, to show where you are on the map, to give directions from where you are to a work site, and to confirm work was done on site.</td></tr>
           <tr><td>Camera</td><td>Taking evidence photos for inspections, checklists, work orders and issue reports.</td></tr>
           <tr><td>Photos</td><td>Choosing an existing photo instead of taking a new one. The app only receives the photos you pick.</td></tr>
           <tr><td>Notifications</td><td>Alerts about tasks, work orders, messages and updates that involve you.</td></tr>
@@ -140,6 +141,7 @@
       <li>At the moment you clock in, start or finish a task or work order, submit a checklist, inspection or issue report, use the map, or when the app looks up the area you are in. This applies to every role (cleaners, supervisors and managers) whenever you do one of these things, not only during a scheduled shift.</li>
       <li>For cleaners who are clocked in, the app also checks in about every 3 minutes while it is open during the scheduled shift (from about 15 minutes before it starts to about 15 minutes after it ends), and not during a break. <span class="todo">TODO(Josh): publish only after app version 1.1.0, or an update with the same change, is on every phone, and set appVersionWithGates in scripts/legal-signoff.json. The current 1.0.1 app checks in whenever a shift is clocked in, including after the scheduled end.</span></li>
       <li>The app does not ask for background (&ldquo;Always&rdquo;) location. It never collects location when the app is closed or running in the background.</li>
+      <li><b>Location in photos.</b> If your phone&rsquo;s camera saves the location in its photos, that location stays in the photo file you upload. IQS Flow does not remove it, so the photo files that others can view or download, and the copies sent for AI photo scoring (section 05), include it. You can turn off location tagging in your phone&rsquo;s camera settings.</li>
       <li><b>Who can see it.</b> Supervisors, managers and administrators at your employer can see your location in the IQS Flow dashboard and on the app&rsquo;s map, based on the permissions your employer sets. Coworkers at your employer who use the app, including other cleaners, can see your name and the most recent location the app recorded for you today on the app&rsquo;s map. Your employer&rsquo;s clients can see the location where each inspection they can view was submitted (see <a href="#share">section 07</a>). A location attached to a finished task, checklist, inspection or work order stays with that record. <span class="todo">TODO(Josh): the app&rsquo;s own location notice, shown before the permission prompt (locationPermission.body in English, Spanish and French), says only that your supervisor can see your location. Either update that notice to say coworkers can see it too, or remove the cleaner role&rsquo;s access to the team map (GET /api/live), which is a product decision. Then re-check this paragraph, section 07, and the Google Play Data safety and prominent-disclosure answers against whichever is true.</span></li>
       <li><span class="todo">TODO(Josh): with counsel, decide who gives employees the notice that some state laws require before electronic monitoring (for example New York Civil Rights Law section 52-c, Connecticut General Statutes section 31-48d and Delaware Code title 19 section 705), and any California notice at collection for workers: the employer, IQS, or both. State the answer here or in the customer agreement.</span></li>
       <li>You can turn off location for IQS Flow in your phone settings at any time. Some features, such as confirming work on site, may not work without it.</li>
@@ -154,22 +156,23 @@
 
     <h3>What is stored on your phone</h3>
     <ul>
-      <li>Your sign-in session, kept in your phone&rsquo;s secure storage.</li>
-      <li>Work you do while offline, including photos, until it uploads.</li>
+      <li>Your IQS Flow sign-in session, kept in your phone&rsquo;s secure storage. If you sign in with an email address or a Google account, Google Firebase Authentication also keeps its own sign-in session in the app&rsquo;s storage.</li>
+      <li>Work you do while offline, including photos, until it uploads. A list of the photos waiting to upload is kept in secure storage.</li>
       <li>Saved translations and your settings.</li>
     </ul>
-    <p>Deleting the app removes these from your phone, including any work that has not uploaded yet. Deleting the app does not delete your account. To delete your account, see <a href="#delete">section 09</a>.</p>
+    <p>Deleting the app removes most of this from your phone, including any work that has not uploaded yet. On iPhone, what is in secure storage (the iOS Keychain) can remain after you delete the app: your IQS Flow sign-in session, until it expires, and the list of photos that were waiting to upload. Signing out before you delete the app removes the sign-in session. Deleting the app does not delete your account. To delete your account, see <a href="#delete">section 09</a>.</p>
 
     <h3>App updates and notifications</h3>
-    <p>The app gets updates through Expo, our app update provider. When the app checks for an update, Expo receives the app version, the platform and your IP address. Push notifications are delivered through Expo&rsquo;s push service, which passes them to Apple (on iPhone) or Google Firebase Cloud Messaging (on Android).</p>
+    <p>The app gets updates through Expo, our app update provider. When the app checks for an update, Expo receives the app version, the platform, your IP address and the app&rsquo;s random installation ID. Push notifications are delivered through Expo&rsquo;s push service, which passes them to Apple (on iPhone) or Google Firebase Cloud Messaging (on Android).</p>
 
     <h2 id="ai">05 &middot; AI features.</h2>
     <p>IQS Flow uses Google&rsquo;s Gemini AI models, through the Gemini API, for the features below. Photo scoring is on for all customer accounts.</p>
     <ul>
-      <li><b>Photo scoring.</b> When an inspection is submitted, we send its evidence photos (one photo per checklist item) to Gemini with a fixed instruction. Gemini suggests a cleanliness score from 0 to 100 and a one-sentence reason. We do not send your name with the photo.</li>
+      <li><b>Photo scoring.</b> When an evidence photo for an inspection is uploaded, and again when the inspection is submitted, we send the inspection&rsquo;s evidence photos to Gemini with a fixed instruction. Gemini suggests a cleanliness score from 0 to 100 and a one-sentence reason. We do not send your name with the photo. A photo file can include a location saved by your phone&rsquo;s camera (section 04).</li>
       <li><b>The score is only a suggestion.</b> It is shown to the people who review the inspection. It never passes or fails an inspection on its own.</li>
       <li><b>We keep the suggestion next to the human result</b> so we can measure how accurate it is and improve our scoring. <span class="todo">TODO(Josh): with counsel, say whether IQS will train its own model on these photos and scores (the code already stores each photo with its human and AI scores as a training sample), and whether customers can opt out. See the processor question in section 02.</span></li>
       <li><b>Text features.</b> Gemini also helps with search suggestions, the in-app help chat, building checklists and forms, matching forms to compliance standards, and written summaries in reports. For these we send the text you type and the related site, checklist or report details.</li>
+      <li><b>Client portal assistant.</b> People at a client organization can ask the assistant in the client portal about their facilities. With each question we send Gemini a summary of that organization&rsquo;s data: its vendors and their worker counts, its sites and compliance scores, the titles of open issues, its compliance programs, vendor spend and upcoming payments.</li>
       <li><b>Photos can show people.</b> When you take evidence photos, please keep people out of the frame where you can.</li>
     </ul>
     <p><span class="todo">TODO(Josh): confirm the Gemini API project is on a paid tier, where Google&rsquo;s terms say it does not use prompts or responses to improve its products. Until that is confirmed, this page must not say that Google does not train on this data.</span></p>
@@ -209,7 +212,8 @@
         </thead>
         <tbody>
           <tr><td>Work records and photos</td><td><span class="todo">TODO(Josh): retention period</span></td></tr>
-          <tr><td>Location history</td><td><span class="todo">TODO(Josh): retention period</span></td></tr>
+          <tr><td>Location check-ins</td><td>30 days, then deleted automatically. <span class="todo">TODO(Josh): the code deletes location check-ins older than 30 days in a daily cleanup job (POST /api/cron/cleanup), but on 2026-09-29 Cloud Scheduler ran that job only against the development API (iqs-flow-daily-cleanup). Production has no cleanup job, so production check-ins are never deleted today. Schedule it for production (iqs-flow-infra scheduler.tf daily_cleanup) and confirm it runs before publishing this row.</span></td></tr>
+          <tr><td>Locations saved with a record (an inspection, checklist, clock-in or work order)</td><td>As long as the record they belong to.</td></tr>
           <tr><td>Account details after the account is closed or deleted</td><td><span class="todo">TODO(Josh): retention period</span></td></tr>
           <tr><td>Security audit history</td><td>No end date. The database blocks every change to it and every deletion from it, so it keeps the names, email addresses and phone numbers recorded when accounts are created or changed, and the email address on a deletion request, even after an account is deleted. <span class="todo">TODO(Josh): with counsel, set a retention period for the audit history and decide whether to stop writing personal details into audit entries (for example, record user IDs only). As built, a deleted person&rsquo;s details in it cannot be removed or de-identified.</span></td></tr>
           <tr><td>Crash reports and server logs</td><td><span class="todo">TODO(Josh): retention period</span></td></tr>

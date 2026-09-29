@@ -62,12 +62,12 @@
           <tr><td>Google</td><td>Cloud SQL for PostgreSQL</td><td>Main database.</td><td>Accounts, work records, location history, messages.</td><td>United States (us-central1)</td></tr>
           <tr><td>Google</td><td>Cloud Storage</td><td>Stores photos, attachments and data exports.</td><td>Photos, attachments, exports.</td><td>United States <span class="todo">TODO(Josh): confirm bucket location</span></td></tr>
           <tr><td>Google</td><td>Cloud Pub/Sub, Cloud Logging, Error Reporting</td><td>Internal processing of location check-ins, server logs and crash reports.</td><td>Location events, request logs (including IP address), error details and user IDs.</td><td>Google Cloud <span class="todo">TODO(Josh): confirm region</span></td></tr>
-          <tr><td>Google</td><td>Gemini API</td><td>AI photo scoring and AI text features, as described in section 05 of the privacy policy.</td><td>Inspection photos (without the worker&rsquo;s name), text typed into AI features, and related site, checklist and report details.</td><td>Google <span class="todo">TODO(Josh): confirm processing location and paid-tier data terms</span></td></tr>
+          <tr><td>Google</td><td>Gemini API</td><td>AI photo scoring and AI text features, as described in section 05 of the privacy policy.</td><td>Inspection photos (without the worker&rsquo;s name; a photo file can include a location saved by the phone&rsquo;s camera), text typed into AI features, and related site, checklist and report details. For the client portal assistant: a summary of the client organization&rsquo;s vendors and worker counts, sites and compliance scores, open issue titles, compliance programs, vendor spend and upcoming payments.</td><td>Google <span class="todo">TODO(Josh): confirm processing location and paid-tier data terms</span></td></tr>
           <tr><td>Google</td><td>Cloud Translation</td><td>Translates screen text and entries into Spanish and French.</td><td>Text on screen or typed in, such as work order titles.</td><td>Google Cloud</td></tr>
           <tr><td>Google</td><td>Cloud Vision</td><td>Reads the text on paper forms that administrators upload.</td><td>Uploaded form images.</td><td>Google Cloud</td></tr>
           <tr><td>Google</td><td>Firebase Authentication</td><td>Email and Google account sign-in, and password reset.</td><td>Email address, name, sign-in events.</td><td>Google</td></tr>
           <tr><td>Google</td><td>Gmail (Google Workspace)</td><td>Sends email from IQS Flow, such as invitations, password resets, alerts and reports.</td><td>Email address, name, message content.</td><td>Google</td></tr>
-          <tr><td>Google</td><td>Google Maps Platform</td><td>Address lookup and directions between sites.</td><td>Addresses and map coordinates.</td><td>Google</td></tr>
+          <tr><td>Google</td><td>Google Maps Platform</td><td>Address lookup, and directions from your phone&rsquo;s current location to a work site.</td><td>Addresses and map coordinates, including your phone&rsquo;s current location when the app asks for directions.</td><td>Google</td></tr>
           <tr><td>Stripe</td><td>Stripe Billing</td><td>Subscription billing for customer organizations.</td><td>Organization name, billing contact email, and payment details entered directly with Stripe.</td><td>Stripe <span class="todo">TODO(Josh): confirm Stripe billing is live in production</span></td></tr>
         </tbody>
       </table>
@@ -84,8 +84,9 @@
           <tr><td>Expo</td><td>Expo Push Service</td><td>Delivers push notifications to the app.</td><td>Push token, notification title and text.</td><td><span class="todo">TODO(Josh): confirm</span></td></tr>
           <tr><td>Apple</td><td>Apple Push Notification service</td><td>Delivers notifications to iPhones, passed on by Expo.</td><td>Push token, notification title and text.</td><td>Apple</td></tr>
           <tr><td>Google</td><td>Firebase Cloud Messaging</td><td>Delivers notifications to Android phones, passed on by Expo.</td><td>Push token, notification title and text.</td><td>Google</td></tr>
-          <tr><td>Expo</td><td>EAS Update</td><td>Delivers app updates.</td><td>App version, platform, IP address.</td><td><span class="todo">TODO(Josh): confirm</span></td></tr>
-          <tr><td>Google</td><td>Google Maps SDK</td><td>Shows maps in the app.</td><td>Your phone&rsquo;s IP address and map activity. We do not send your name.</td><td>Google</td></tr>
+          <tr><td>Expo</td><td>EAS Update</td><td>Delivers app updates.</td><td>App version, platform, IP address and a random installation ID the app creates for update checks.</td><td><span class="todo">TODO(Josh): confirm</span></td></tr>
+          <tr><td>Google</td><td>Google Maps SDK for Android</td><td>Shows maps in the app on Android phones.</td><td>Your phone&rsquo;s IP address and map activity. We do not send your name.</td><td>Google</td></tr>
+          <tr><td>Apple</td><td>Apple Maps (MapKit)</td><td>Shows maps in the app on iPhone.</td><td>Your phone&rsquo;s IP address and the map area on screen. We do not send your name.</td><td>Apple</td></tr>
         </tbody>
       </table>
     </div>

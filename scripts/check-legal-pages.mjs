@@ -235,6 +235,32 @@ else {
     fail("privacy", "section 07 does not say clients can see the location where an inspection was submitted");
   }
 
+  // Nothing strips photo EXIF: expo-image-picker copies the GPS tags on Android and
+  // the API stores and serves the original file (and sends its bytes to Gemini).
+  if (!/location stays in the photo file/i.test(mobileSection)) {
+    fail("privacy", "section 04 does not say a location saved by the phone's camera stays in uploaded photos");
+  }
+  // The session token and photo-queue list are in expo-secure-store, which is the
+  // iOS Keychain and survives uninstall.
+  if (/Deleting the app removes these from your phone/i.test(privacy)) {
+    fail("privacy", "says deleting the app removes everything from the phone, but on iPhone the secure storage (Keychain) remains");
+  }
+  if (!/On iPhone,[^.]*\bremain/i.test(mobileSection)) {
+    fail("privacy", "section 04 does not say what can remain on an iPhone after the app is deleted");
+  }
+  // expo-updates sends a persistent EAS-Client-ID with every update check.
+  if (!/installation ID/i.test(mobileSection)) {
+    fail("privacy", "section 04 does not say Expo receives the app's installation ID");
+  }
+
+  // Gemini: photos are scored on upload as well as on submit (attachments.ts), and
+  // the client portal assistant sends an assembled data summary (ai.ts /api/ai/chat).
+  const aiSection = sectionBetween(privacy, "ai", "use");
+  if (!/\buploaded\b/i.test(aiSection)) fail("privacy", "section 05 does not say photos are scored when they are uploaded");
+  if (!/client portal assistant/i.test(aiSection)) {
+    fail("privacy", "section 05 does not describe the client portal assistant and the data summary it sends to Gemini");
+  }
+
   // Deletion: the in-app path and a completion commitment, not just a reply.
   const deletion = sectionBetween(privacy, "delete", "rights");
   if (!/within 30 days/.test(privacy)) fail("privacy", "does not state the 30-day deletion response time");
@@ -245,6 +271,10 @@ else {
   if (!/client account/i.test(deletion)) fail("privacy", "section 09 does not tell client accounts to use email");
 
   const retention = sectionBetween(privacy, "retain", "delete");
+  // The daily cleanup deletes location_events older than 30 days (src/routes/cron.ts).
+  if (!/<tr><td>Location check-ins<\/td>\s*<td>[^<]*\b30 days\b/i.test(retention)) {
+    fail("privacy", "section 08 does not give the 30-day period for location check-ins");
+  }
   // A row in the retention table, not just a passing mention.
   if (!/<tr><td>[^<]*audit history[^<]*<\/td>/i.test(retention)) {
     fail("privacy", "section 08 has no row for the security audit history, which keeps names and contact details after deletion");
@@ -260,8 +290,21 @@ else {
   const changesAt = subs.indexOf('id="changes"');
   const listed = changesAt === -1 ? subs : subs.slice(0, changesAt);
   if (UNUSED_VENDORS.test(listed)) fail("subprocessors", "lists AWS, Sentry or Twilio as a subprocessor");
-  for (const required of ["Cloud Run", "Cloud SQL", "Cloud Storage", "Gemini", "Gmail", "Firebase Cloud Messaging", "Expo Push Service", "Google Maps"]) {
+  for (const required of [
+    "Cloud Run", "Cloud SQL", "Cloud Storage", "Gemini", "Gmail", "Firebase Cloud Messaging", "Expo Push Service", "Google Maps",
+    // iPhone maps use MapKit (map.tsx provider is Google on Android only).
+    "Apple Maps",
+    // EAS Update receives a persistent EAS-Client-ID.
+    "installation ID",
+    // The client portal assistant sends Gemini an assembled data summary.
+    "client portal assistant",
+  ]) {
     if (!listed.includes(required)) fail("subprocessors", `does not list ${required}`);
+  }
+  // Directions send the phone's current coordinates to the Google Routes API
+  // (map.tsx /api/routes/between?origin=..., map-routes.ts).
+  if (!/<td>Google Maps Platform<\/td><td>[^<]*current location/i.test(listed)) {
+    fail("subprocessors", "the Google Maps Platform row does not say directions start from the phone's current location");
   }
 }
 
