@@ -4,7 +4,9 @@
  *   /privacy/          privacy policy (with the mobile app section)
  *   /subprocessors/    service providers that process personal data
  *   /delete-account/   account deletion instructions (Google Play requirement)
- * plus the site footer they render (assets/shared.js) and the /terms/ page they link to.
+ * plus the site footer they render (assets/shared.js), the /terms/ page they link to,
+ * every page's own copyright line, and the third-party hosts any page loads (each must
+ * be listed on /subprocessors/).
  *
  * No dependencies. The site has no build step, so this is its lint for these pages.
  *
@@ -61,6 +63,11 @@ const SIGNOFF_KEYS = {
 const UNUSED_VENDORS = /\bAWS\b|Amazon Web Services|\bSentry\b|\bTwilio\b/i;
 // Entity and DPO in the old policy that do not match the App Store seller.
 const STALE_IDENTITY = /IQS Flow, Inc\.|Marta Halverson/i;
+// The old entity alone, for the rest of the site. (The blog lists a contributor
+// named Marta Halverson; that is blog content, not a legal identity claim.)
+const STALE_ENTITY = /IQS Flow, Inc\./i;
+// A copyright line and the holder it names, e.g. "© 2026 INTEGRITY QUALITY SOLUTIONS".
+const COPYRIGHT = /(?:©|&copy;)\s*\d{4}\s+([^<\n`]+)/g;
 // "Only during scheduled shifts" is false: event locations (clock-in, task, checklist,
 // inspection, issue report, area lookup, map) are recorded for every role at any hour.
 // Only the cleaner 3-minute check-in is limited to the scheduled window.
@@ -501,21 +508,71 @@ if (terms) {
   }
 }
 
-// ---- other pages that still name the old entity (reported, not failed) -------
-function htmlFiles(dir) {
+// ---- the rest of the site ---------------------------------------------------------
+function siteFiles(dir, ext) {
   const out = [];
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) out.push(...htmlFiles(full));
-    else if (entry.name.endsWith(".html")) out.push(full);
+    if (entry.isDirectory()) out.push(...siteFiles(full, ext));
+    else if (ext.test(entry.name)) out.push(full);
   }
   return out;
 }
+const relToSite = (file) => path.relative(siteRoot, file).split(path.sep).join("/");
+const allFiles = existsSync(siteRoot) ? siteFiles(siteRoot, /\.(?:html|js|css)$/i) : [];
+
+// Every page's own copyright line must name the same company as the legal pages
+// (and, in publish mode, the confirmed legal entity). A page that still names
+// IQS Flow, Inc. anywhere fails in publish mode.
 const checked = new Set([...Object.values(PAGES), "terms/index.html"].map((p) => path.join(siteRoot, p)));
-if (existsSync(siteRoot)) {
-  for (const file of htmlFiles(siteRoot)) {
-    if (!checked.has(file) && STALE_IDENTITY.test(readFileSync(file, "utf8"))) {
-      note(path.relative(siteRoot, file).split(path.sep).join("/"), "names IQS Flow, Inc.; update it with the confirmed legal entity");
+for (const file of allFiles.filter((f) => f.endsWith(".html") && !checked.has(f))) {
+  const rel = relToSite(file);
+  const text = readFileSync(file, "utf8");
+  if (STALE_ENTITY.test(text)) {
+    (publishMode ? fail : note)(rel, "names IQS Flow, Inc., a different entity from the legal pages; use the confirmed legal entity");
+  }
+  for (const [, holder] of text.matchAll(COPYRIGHT)) checkEntity(`${rel} copyright`, holder.trim(), { ignoreCase: true });
+}
+
+// ---- third-party resources the website loads ----------------------------------------
+// Each one sees visitors' IP addresses (and may set cookies), so each provider must
+// be in the Website table on /subprocessors/. An unknown host fails until it is added
+// to THIRD_PARTY_HOSTS and to that table.
+const THIRD_PARTY_HOSTS = {
+  "fonts.googleapis.com": "Google Fonts",
+  "fonts.gstatic.com": "Google Fonts",
+  "www.google.com": "reCAPTCHA",
+  "www.gstatic.com": "reCAPTCHA",
+  "www.recaptcha.net": "reCAPTCHA",
+  "cdn.credly.com": "Credly",
+  "www.credly.com": "Credly",
+};
+const RESOURCE_PATTERNS = [
+  /<(?:script|iframe|img|link|source|video|audio|embed)\b[^>]*?\s(?:src|href)="https?:\/\/([^/"?#]+)/gi,
+  /\sdata-[a-z-]*host="https?:\/\/([^/"?#]+)/gi,
+  /\.src\s*=\s*["'`]https?:\/\/([^/"'`?#]+)/gi,
+  /url\(\s*["']?https?:\/\/([^/"')?#\s]+)/gi,
+  /@import\s+["']https?:\/\/([^/"'?#]+)/gi,
+];
+const FIRST_PARTY = /(?:^|\.)iqsflow\.com$/i;
+const loadedFrom = new Map(); // host -> first file that loads it
+for (const file of allFiles) {
+  const text = readFileSync(file, "utf8");
+  for (const re of RESOURCE_PATTERNS) {
+    for (const [, rawHost] of text.matchAll(re)) {
+      const host = rawHost.toLowerCase();
+      if (!FIRST_PARTY.test(host) && !loadedFrom.has(host)) loadedFrom.set(host, relToSite(file));
+    }
+  }
+}
+if (subs) {
+  const websiteTable = sectionBetween(subs, "website", "customer");
+  for (const [host, file] of loadedFrom) {
+    const vendor = THIRD_PARTY_HOSTS[host];
+    if (!vendor) {
+      fail("site", `${file} loads a resource from ${host}, which this check does not know; add the host to THIRD_PARTY_HOSTS and its provider to the Website table on /subprocessors/`);
+    } else if (!websiteTable.includes(vendor)) {
+      fail("subprocessors", `the Website table does not list ${vendor}, which ${file} loads from ${host}`);
     }
   }
 }

@@ -25,6 +25,8 @@ const DELETE = "delete-account/index.html";
 const SUBS = "subprocessors/index.html";
 const SHARED_JS = "assets/shared.js";
 const TERMS = "terms/index.html";
+const HOME = "index.html";
+const ABOUT = "about/index.html";
 
 const temps = [];
 after(() => {
@@ -483,12 +485,16 @@ const stripTodos = pipe(
 );
 const nameEntity = swap("Integrity Quality Solutions", ENTITY);
 /** Every TODO answered and the entity confirmed everywhere: only the sign-off file differs. */
-function publishReady(termsEdit = swap("IQS Flow, Inc.", ENTITY)) {
+function publishReady(
+  termsEdit = swap("IQS Flow, Inc.", ENTITY),
+  homeEdit = swap("© 2026 INTEGRITY QUALITY SOLUTIONS", `© 2026 ${ENTITY.toUpperCase()}`),
+) {
   const f = fixture({
     [PRIVACY]: pipe(stripTodos, nameEntity),
     [SUBS]: pipe(stripTodos, nameEntity),
     [DELETE]: pipe(stripTodos, nameEntity),
     [SHARED_JS]: pipe(swap("TODO(Josh)", "NOTE"), swap("INTEGRITY QUALITY SOLUTIONS", ENTITY.toUpperCase())),
+    [HOME]: homeEdit,
     [TERMS]: termsEdit,
   });
   for (const rel of [PRIVACY, SUBS, DELETE, SHARED_JS]) {
@@ -530,6 +536,45 @@ test("--publish fails while /terms/ still names IQS Flow, Inc.", () => {
   const r = check(site, "--publish", `--signoff=${writeSignoff(dir, ALL_SIGNED)}`);
   expectFailure(r, /terms: names IQS Flow, Inc\., a different entity/);
   assert.match(r.out, /terms: does not name the confirmed legal entity/);
+});
+
+test("--publish fails while the homepage copyright does not name the confirmed legal entity", () => {
+  const { dir, site } = publishReady(undefined, (t) => `${t}\n<!-- unchanged home -->`);
+  const r = check(site, "--publish", `--signoff=${writeSignoff(dir, ALL_SIGNED)}`, `--app-locales=${writeLocales(dir)}`);
+  expectFailure(r, /index\.html copyright: does not name the confirmed legal entity/);
+});
+
+// ---- finding: the rest of the site still named IQS Flow, Inc. ---------------------------
+
+test("fails when the homepage footer names IQS FLOW, INC.", () => {
+  const { site } = fixture({ [HOME]: swap("© 2026 INTEGRITY QUALITY SOLUTIONS", "© 2026 IQS FLOW, INC.") });
+  const r = check(site);
+  expectFailure(r, /index\.html copyright: does not name the company "Integrity Quality Solutions"/);
+  assert.match(r.out, /note {2}index\.html: names IQS Flow, Inc\./);
+  const published = check(site, "--publish");
+  assert.match(published.out, /FAIL {2}index\.html: names IQS Flow, Inc\., a different entity from the legal pages/);
+});
+
+test("fails when a page's copyright names an unconfirmed entity type", () => {
+  const { site } = fixture({ [HOME]: swap("© 2026 INTEGRITY QUALITY SOLUTIONS", "© 2026 INTEGRITY QUALITY SOLUTIONS LLC") });
+  expectFailure(check(site), /index\.html copyright: names the entity as "INTEGRITY QUALITY SOLUTIONS LLC"/);
+});
+
+// ---- finding: third-party resources the website loads must be listed --------------------
+
+test("fails when a page loads Credly and the subprocessors page does not list it", () => {
+  const { site } = fixture({
+    [SUBS]: (t) => t.replace(/\s*<tr><td>Credly<\/td>[\s\S]*?<\/tr>/, ""),
+  });
+  const r = check(site);
+  expectFailure(r, /subprocessors: the Website table does not list Credly, which about\/index\.html loads from cdn\.credly\.com/);
+});
+
+test("fails when a page loads a third-party host the check does not know", () => {
+  const { site } = fixture({
+    [ABOUT]: swap("</body>", '<script async src="https://cdn.example-analytics.com/t.js"></script>\n</body>'),
+  });
+  expectFailure(check(site), /site: about\/index\.html loads a resource from cdn\.example-analytics\.com, which this check does not know/);
 });
 
 // ---- existing checks still hold ---------------------------------------------------------
