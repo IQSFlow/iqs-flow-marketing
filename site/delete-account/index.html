@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Delete Your Account, IQS Flow</title>
-<meta name="description" content="How to ask Integrity Quality Solutions to delete your IQS Flow account, from the app or by email, and what happens next."/>
+<title>Account Deletion, IQS Flow</title>
+<meta name="description" content="Your employer creates and manages your IQS Flow account. What happens when you leave, and how an employer asks Integrity Quality Solutions to remove a former worker&rsquo;s personal details."/>
 <link rel="icon" type="image/svg+xml" href="/assets/iqs-mark.svg"/>
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png"/>
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png"/>
@@ -20,8 +20,8 @@
 
 <header class="ph">
   <div class="ph-eyebrow">Legal &middot; Account deletion</div>
-  <h1>Delete your <em>account.</em></h1>
-  <p class="ph-sub">How to ask Integrity Quality Solutions to delete your IQS Flow account and the data linked to it, from the app or by email.</p>
+  <h1>Account <em>deletion.</em></h1>
+  <p class="ph-sub">Your employer creates and manages your IQS Flow account. Here is what happens when you leave, and how your employer asks us to remove your personal details.</p>
 </header>
 
 <div class="legal-wrap">
@@ -39,45 +39,39 @@
 
     <!-- ============================== ENGLISH ============================== -->
     <section class="legal-lang-section" id="en" lang="en">
-      <h2 id="en-app">Delete your IQS Flow account.</h2>
-      <p>This page is for the <b>IQS Flow</b> app for iPhone and Android, published by <b>Integrity Quality Solutions</b>. <span class="todo">TODO(Josh): exact legal name and entity type (LLC, Inc. or other) as shown on the Apple seller record and the Google Play developer account. Use the same string in the Spanish and French sections below.</span></p>
+      <h2 id="en-app">Your employer manages your IQS Flow account.</h2>
+      <p>This page is for the <b>IQS Flow</b> app for iPhone and Android and the IQS Flow web dashboard, published by <b>Integrity Quality Solutions</b>. <span class="todo">TODO(Josh): exact legal name and entity type (LLC, Inc. or other) as shown on the Apple seller record and the Google Play developer account. Use the same string in the Spanish and French sections below.</span></p>
+      <p>IQS Flow is a work tool. Your employer creates your account in the IQS Flow admin console and manages it. There is no sign-up in the app, and you cannot delete your account yourself, in the app or by writing to us. If you want your account closed or your details removed, ask your employer. <span class="todo">TODO(Josh): the account policy of 2026-09-30 covers people whose employer is the company that uses IQS Flow. Decide who may ask for removal for people with a client account (people at a facility that our customer invited to IQS Flow), then say it here and in section 09 of the privacy policy.</span></p>
 
-      <h3 id="en-in-app">Option 1: In the app</h3>
-      <p><span class="todo">TODO(Josh): these steps exist only in app version 1.1.0, which is not released yet. The current 1.0.1 app has no Delete my account option. Publish only after 1.1.0, or an update with the same option, is on every phone, and set appVersionWithGates in scripts/legal-signoff.json.</span></p>
-      <ol class="legal-steps">
-        <li>Open IQS Flow and sign in.</li>
-        <li>Tap <b>More</b> (the menu tab at the bottom right).</li>
-        <li>Tap <b>Delete my account</b>. It is just below <b>Privacy &amp; data</b>.</li>
-        <li>Tap <b>Send request</b>. You will see &ldquo;Request sent&rdquo;.</li>
-      </ol>
-      <p>If you sign in with a client account, the app does not offer these steps. Use Option 2 instead.</p>
-
-      <h3 id="en-email">Option 2: By email</h3>
-      <p>Email <a href="mailto:privacy@iqsflow.com?subject=Delete%20my%20account">privacy@iqsflow.com</a> with the subject &ldquo;Delete my account&rdquo;. Please include:</p>
+      <h3 id="en-leave">When you leave your employer</h3>
       <ul>
-        <li>Your full name.</li>
-        <li>The company you work for (your employer).</li>
-        <li>The email address or phone number on your account, if you have one.</li>
-      </ul>
-      <p>Use this option if you cannot sign in, or if you no longer have the app. Before we delete anything, we may contact you or your employer to make sure the request really comes from you. <span class="todo">TODO(Josh): confirm privacy@iqsflow.com is monitored and who answers it.</span></p>
-
-      <h3 id="en-next">What happens next</h3>
-      <ul>
-        <li><b>We complete deletion within 30 days and tell you when it is done.</b> <span class="todo">TODO(Josh): do not publish this promise until (1) a request made in the app reaches IQS (today it only emails your employer&rsquo;s administrators and never reaches privacy@iqsflow.com), and (2) a written deletion runbook exists. Then confirm the 30 days and set deletionProcessLive in scripts/legal-signoff.json. Also decide how to confirm completion to cleaners who have no email address on file, for example through their employer. The app&rsquo;s own text must say the same thing: the 1.1.0 app says a privacy team member will review the request and promises only a reply within 30 days, not completed deletion (profile.deleteConfirm and profile.deleteTimeframe, in English, Spanish and French), and the API answers &ldquo;A tenant admin will review your request.&rdquo; Change them to match this page, then run the check with --app-locales.</span></li>
-        <li>We let your employer know, because your employer created your account.</li>
-        <li>We delete or de-identify your personal details, such as your name, phone number, sign-in code, push notification tokens and location history, except in the two kinds of records below. <span class="todo">TODO(Josh): no deletion runbook exists yet. Write it first, then make this list match it exactly. It must say how it handles the person&rsquo;s work orders (see the deleted work orders item below). Have counsel confirm IQS may delete a worker&rsquo;s data at the worker&rsquo;s request when the employer controls the records.</span></li>
-        <li><b>Kept: our security audit history.</b> It cannot be changed or deleted, so it keeps the name, email address and phone number recorded when your account was created or changed, and the email address on your deletion request. <span class="todo">TODO(Josh): the database blocks every change to and deletion from the audit history (the audit_logs append-only trigger), and creating or editing an account writes the name, email address and phone number into it. With counsel, either approve this exception and a retention period for it, or stop writing personal details into audit entries (for example, record user IDs only) and remove this item. Settle it before setting deletionProcessLive.</span></li>
-        <li><b>Kept: copies of deleted work orders.</b> When a work order is deleted, including when your employer&rsquo;s IQS Flow account is deleted, the database keeps a copy of it that cannot be changed or deleted. The copy includes the location saved with the work order, its description and notes, and the account IDs of the people who reported it or worked on it. Emergency reports cannot be deleted on their own. They can only be cancelled, and they stay as safety records until your employer&rsquo;s IQS Flow account is deleted, when a copy of each is kept in the same way. <span class="todo">TODO(Josh): as built (iqs-flow-api migration 20260928150000_next_batch, live since prod-v6.3.0), every work order deletion writes the whole row to the append-only work_order_deletions table, which has no end date and survives the deletion of the employer&rsquo;s account, and a non-test EMERGENCY work order cannot be deleted without a break-glass database setting, which only the account-deletion routes use. With counsel, either approve keeping these and set a retention period, or change the api so the copy keeps only details that do not identify anyone, then update this item. The deletion runbook must clear a person&rsquo;s details from a work order before any deletion, because the copy is taken of the row as it is when deleted. Settle it before setting deletionProcessLive.</span></li>
-        <li>Work records that your employer or its clients must keep, such as completed inspections, may be kept with your name removed. <span class="todo">TODO(Josh): state how long these records are kept.</span></li>
-        <li><span class="todo">TODO(Josh): state how long deleted data can remain in backups and logs.</span></li>
+        <li>Your employer turns off your account. From that moment, you can no longer sign in.</li>
+        <li>Records of your work, such as inspections, checklists, work orders, photos and clock-in times, stay as they are, with your name and the location recorded with your work. They are your employer&rsquo;s and its clients&rsquo; service records. <span class="todo">TODO(Josh): state how long these records are kept.</span></li>
+        <li>Your employer can ask us to remove your personal details, as described below.</li>
       </ul>
 
-      <h3 id="en-some">Deleting only some data</h3>
-      <p>If you want only some of your data deleted, such as your location history or photos, say so in your email. <span class="todo">TODO(Josh): confirm we offer partial deletion.</span></p>
+      <h3 id="en-remove">How an employer asks us to remove a former worker&rsquo;s details</h3>
+      <p>An administrator of the employer&rsquo;s IQS Flow account emails <a href="mailto:privacy@iqsflow.com?subject=Remove%20a%20former%20worker%27s%20details">privacy@iqsflow.com</a> with the person&rsquo;s full name and the company name on the IQS Flow account. We act only on requests from an active administrator of that employer&rsquo;s IQS Flow account, and only for people in that account. We complete the removal within 30 days of the request.</p>
+      <p>We remove:</p>
+      <ul>
+        <li>Contact details: the person&rsquo;s email address and phone number.</li>
+        <li>Sign-in details: their sign-in code (stored only as a one-way hash) and their email or Google sign-in.</li>
+        <li>Their push notification tokens.</li>
+        <li>Their location tracking history: the location check-ins the app recorded while they worked.</li>
+      </ul>
+      <p><span class="todo">TODO(Josh): write the removal runbook that matches this page (how IQS checks that a request comes from an active administrator of that employer&rsquo;s account and names a person in it, and exactly what IQS removes), then set deletionProcessLive in scripts/legal-signoff.json.</span></p>
+
+      <h3 id="en-kept">What removal does not change</h3>
+      <p>Work records stay as they are, as described above. Two other kinds of records also keep some details:</p>
+      <ul>
+        <li><b>Kept: our security audit history.</b> It cannot be changed or deleted, so it keeps the name, email address and phone number recorded when the account was created or changed. <span class="todo">TODO(Josh): the database blocks every change to and deletion from the audit history (the audit_logs append-only trigger), and creating or editing an account writes the name, email address and phone number into it. With counsel, either approve this exception and a retention period for it, or stop writing personal details into audit entries (for example, record user IDs only) and remove this item. Settle it before setting deletionProcessLive.</span></li>
+        <li><b>Kept: copies of deleted work orders.</b> When a work order is deleted, including when the employer&rsquo;s IQS Flow account is deleted, the database keeps a copy of it that cannot be changed or deleted. The copy includes the location saved with the work order, its description and notes, and the account IDs of the people who reported it or worked on it. Emergency reports cannot be deleted on their own. They can only be cancelled, and they stay as safety records until the employer&rsquo;s IQS Flow account is deleted, when a copy of each is kept in the same way. <span class="todo">TODO(Josh): as built (iqs-flow-api migration 20260928150000_next_batch, live since prod-v6.3.0), every work order deletion writes the whole row to the append-only work_order_deletions table, which has no end date and survives the deletion of the employer&rsquo;s account, and a non-test EMERGENCY work order cannot be deleted without a break-glass database setting, which only the account-deletion routes use. With counsel, either approve keeping these and set a retention period, or change the api so the copy keeps only details that do not identify anyone, then update this item.</span></li>
+        <li><span class="todo">TODO(Josh): state how long removed data can remain in backups and logs.</span></li>
+      </ul>
 
       <h3 id="en-note">Good to know</h3>
       <ul>
-        <li>Deleting the app from your phone does not delete your account.</li>
+        <li>Deleting the app from your phone does not delete your account or your work records.</li>
         <li>For more about the data IQS Flow collects, read our <a href="/privacy/">privacy policy</a>.</li>
       </ul>
     </section>
@@ -85,43 +79,37 @@
     <!-- ============================== ESPANOL ============================== -->
     <section class="legal-lang-section" id="es" lang="es">
       <p><span class="todo">TODO(Josh): have a native speaker review this translation, and update it with the answers to the TODO items in the English version.</span></p>
-      <h2 id="es-app">Eliminar tu cuenta de IQS Flow.</h2>
-      <p>Esta p&aacute;gina es para la app <b>IQS Flow</b> para iPhone y Android, publicada por <b>Integrity Quality Solutions</b>.</p>
+      <h2 id="es-app">Tu empleador administra tu cuenta de IQS Flow.</h2>
+      <p>Esta p&aacute;gina es para la app <b>IQS Flow</b> para iPhone y Android y el panel web de IQS Flow, publicados por <b>Integrity Quality Solutions</b>.</p>
+      <p>IQS Flow es una herramienta de trabajo. Tu empleador crea tu cuenta en la consola de administraci&oacute;n de IQS Flow y la administra. No hay registro en la app, y t&uacute; no puedes eliminar tu cuenta, ni en la app ni escribi&eacute;ndonos. Si quieres que cierren tu cuenta o que se eliminen tus datos, p&iacute;deselo a tu empleador.</p>
 
-      <h3 id="es-in-app">Opci&oacute;n 1: En la app</h3>
-      <ol class="legal-steps">
-        <li>Abre IQS Flow e inicia sesi&oacute;n.</li>
-        <li>Toca <b>M&aacute;s</b> (la pesta&ntilde;a del men&uacute;, abajo a la derecha).</li>
-        <li>Toca <b>Eliminar mi cuenta</b>. Est&aacute; justo debajo de <b>Privacidad y datos</b>.</li>
-        <li>Toca <b>Enviar solicitud</b>. Ver&aacute;s &ldquo;Solicitud enviada&rdquo;.</li>
-      </ol>
-      <p>Si inicias sesi&oacute;n con una cuenta de cliente, la app no ofrece estos pasos. Usa la opci&oacute;n 2.</p>
-
-      <h3 id="es-email">Opci&oacute;n 2: Por correo electr&oacute;nico</h3>
-      <p>Escribe a <a href="mailto:privacy@iqsflow.com?subject=Eliminar%20mi%20cuenta">privacy@iqsflow.com</a> con el asunto &ldquo;Eliminar mi cuenta&rdquo;. Incluye:</p>
+      <h3 id="es-leave">Cuando dejas a tu empleador</h3>
       <ul>
-        <li>Tu nombre completo.</li>
-        <li>La empresa para la que trabajas (tu empleador).</li>
-        <li>El correo electr&oacute;nico o el n&uacute;mero de tel&eacute;fono de tu cuenta, si tienes uno.</li>
-      </ul>
-      <p>Usa esta opci&oacute;n si no puedes iniciar sesi&oacute;n o si ya no tienes la app. Antes de eliminar algo, es posible que te contactemos a ti o a tu empleador para confirmar que la solicitud es tuya.</p>
-
-      <h3 id="es-next">Qu&eacute; pasa despu&eacute;s</h3>
-      <ul>
-        <li><b>Completamos la eliminaci&oacute;n en un plazo de 30 d&iacute;as y te avisamos cuando est&eacute; hecha.</b></li>
-        <li>Avisamos a tu empleador, porque tu empleador cre&oacute; tu cuenta.</li>
-        <li>Eliminamos o anonimizamos tus datos personales, como tu nombre, n&uacute;mero de tel&eacute;fono, c&oacute;digo de acceso, tokens de notificaciones e historial de ubicaci&oacute;n, salvo en los dos tipos de registros que se indican a continuaci&oacute;n.</li>
-        <li><b>Se conserva: nuestro historial de auditor&iacute;a de seguridad.</b> No se puede modificar ni eliminar, por lo que conserva el nombre, el correo electr&oacute;nico y el n&uacute;mero de tel&eacute;fono registrados cuando se cre&oacute; o se modific&oacute; tu cuenta, y el correo electr&oacute;nico de tu solicitud de eliminaci&oacute;n.</li>
-        <li><b>Se conservan: copias de &oacute;rdenes de trabajo eliminadas.</b> Cuando se elimina una orden de trabajo, incluso cuando se elimina la cuenta de IQS Flow de tu empleador, la base de datos conserva una copia que no se puede modificar ni eliminar. La copia incluye la ubicaci&oacute;n guardada con la orden de trabajo, su descripci&oacute;n y sus notas, y los identificadores de cuenta de las personas que la reportaron o trabajaron en ella. Los reportes de emergencia no se pueden eliminar por separado. Solo se pueden cancelar, y se conservan como registros de seguridad hasta que se elimina la cuenta de IQS Flow de tu empleador; entonces se conserva una copia de cada uno de la misma manera.</li>
-        <li>Los registros de trabajo que tu empleador o sus clientes deben conservar, como las inspecciones completadas, pueden conservarse sin tu nombre.</li>
+        <li>Tu empleador desactiva tu cuenta. Desde ese momento ya no puedes iniciar sesi&oacute;n.</li>
+        <li>Los registros de tu trabajo, como inspecciones, listas de verificaci&oacute;n, &oacute;rdenes de trabajo, fotos y horas de entrada, se conservan tal como est&aacute;n, con tu nombre y la ubicaci&oacute;n registrada con tu trabajo. Son los registros de servicio de tu empleador y de sus clientes.</li>
+        <li>Tu empleador puede pedirnos que eliminemos tus datos personales, como se explica a continuaci&oacute;n.</li>
       </ul>
 
-      <h3 id="es-some">Eliminar solo algunos datos</h3>
-      <p>Si solo quieres eliminar algunos de tus datos, como el historial de ubicaci&oacute;n o las fotos, ind&iacute;calo en tu correo.</p>
+      <h3 id="es-remove">C&oacute;mo nos pide un empleador que eliminemos los datos de un ex trabajador</h3>
+      <p>Un administrador de la cuenta de IQS Flow del empleador escribe a <a href="mailto:privacy@iqsflow.com?subject=Eliminar%20los%20datos%20de%20un%20ex%20trabajador">privacy@iqsflow.com</a> con el nombre completo de la persona y el nombre de la empresa en la cuenta de IQS Flow. Solo atendemos solicitudes de un administrador activo de la cuenta de IQS Flow de ese empleador, y solo para personas de esa cuenta. Completamos la eliminaci&oacute;n en un plazo de 30 d&iacute;as desde la solicitud.</p>
+      <p>Eliminamos:</p>
+      <ul>
+        <li>Datos de contacto: el correo electr&oacute;nico y el n&uacute;mero de tel&eacute;fono de la persona.</li>
+        <li>Datos de acceso: su c&oacute;digo de acceso (guardado solo como un hash de un solo sentido) y su inicio de sesi&oacute;n con correo electr&oacute;nico o con Google.</li>
+        <li>Sus tokens de notificaciones push.</li>
+        <li>Su historial de seguimiento de ubicaci&oacute;n: los registros de ubicaci&oacute;n que la app guard&oacute; mientras trabajaba.</li>
+      </ul>
+
+      <h3 id="es-kept">Lo que la eliminaci&oacute;n no cambia</h3>
+      <p>Los registros de trabajo se conservan tal como est&aacute;n, como se explica arriba. Otros dos tipos de registros tambi&eacute;n conservan algunos datos:</p>
+      <ul>
+        <li><b>Se conserva: nuestro historial de auditor&iacute;a de seguridad.</b> No se puede modificar ni eliminar, por lo que conserva el nombre, el correo electr&oacute;nico y el n&uacute;mero de tel&eacute;fono registrados cuando se cre&oacute; o se modific&oacute; la cuenta.</li>
+        <li><b>Se conservan: copias de &oacute;rdenes de trabajo eliminadas.</b> Cuando se elimina una orden de trabajo, incluso cuando se elimina la cuenta de IQS Flow del empleador, la base de datos conserva una copia que no se puede modificar ni eliminar. La copia incluye la ubicaci&oacute;n guardada con la orden de trabajo, su descripci&oacute;n y sus notas, y los identificadores de cuenta de las personas que la reportaron o trabajaron en ella. Los reportes de emergencia no se pueden eliminar por separado. Solo se pueden cancelar, y se conservan como registros de seguridad hasta que se elimina la cuenta de IQS Flow del empleador; entonces se conserva una copia de cada uno de la misma manera.</li>
+      </ul>
 
       <h3 id="es-note">Bueno saber</h3>
       <ul>
-        <li>Borrar la app de tu tel&eacute;fono no elimina tu cuenta.</li>
+        <li>Borrar la app de tu tel&eacute;fono no elimina tu cuenta ni los registros de tu trabajo.</li>
         <li>Para saber m&aacute;s sobre los datos que recoge IQS Flow, lee nuestra <a href="/privacy/">pol&iacute;tica de privacidad</a> (en ingl&eacute;s).</li>
       </ul>
     </section>
@@ -129,43 +117,37 @@
     <!-- ============================== FRANCAIS ============================== -->
     <section class="legal-lang-section" id="fr" lang="fr">
       <p><span class="todo">TODO(Josh): have a native speaker review this translation, and update it with the answers to the TODO items in the English version.</span></p>
-      <h2 id="fr-app">Supprimer votre compte IQS Flow.</h2>
-      <p>Cette page concerne l&rsquo;application <b>IQS Flow</b> pour iPhone et Android, publi&eacute;e par <b>Integrity Quality Solutions</b>.</p>
+      <h2 id="fr-app">Votre employeur g&egrave;re votre compte IQS Flow.</h2>
+      <p>Cette page concerne l&rsquo;application <b>IQS Flow</b> pour iPhone et Android et le tableau de bord web IQS Flow, publi&eacute;s par <b>Integrity Quality Solutions</b>.</p>
+      <p>IQS Flow est un outil de travail. Votre employeur cr&eacute;e votre compte dans la console d&rsquo;administration IQS Flow et le g&egrave;re. Il n&rsquo;y a pas d&rsquo;inscription dans l&rsquo;application, et vous ne pouvez pas supprimer votre compte vous-m&ecirc;me, ni dans l&rsquo;application ni en nous &eacute;crivant. Si vous voulez que votre compte soit ferm&eacute; ou vos donn&eacute;es supprim&eacute;es, demandez-le &agrave; votre employeur.</p>
 
-      <h3 id="fr-in-app">Option 1&nbsp;: dans l&rsquo;application</h3>
-      <ol class="legal-steps">
-        <li>Ouvrez IQS Flow et connectez-vous.</li>
-        <li>Touchez <b>Plus</b> (l&rsquo;onglet du menu, en bas &agrave; droite).</li>
-        <li>Touchez <b>Supprimer mon compte</b>. Cette option se trouve juste sous <b>Confidentialit&eacute; et donn&eacute;es</b>.</li>
-        <li>Touchez <b>Envoyer la demande</b>. Le message &laquo;&nbsp;Demande envoy&eacute;e&nbsp;&raquo; s&rsquo;affiche.</li>
-      </ol>
-      <p>Si vous vous connectez avec un compte client, l&rsquo;application ne propose pas ces &eacute;tapes. Utilisez l&rsquo;option 2.</p>
-
-      <h3 id="fr-email">Option 2&nbsp;: par e-mail</h3>
-      <p>&Eacute;crivez &agrave; <a href="mailto:privacy@iqsflow.com?subject=Supprimer%20mon%20compte">privacy@iqsflow.com</a> avec l&rsquo;objet &laquo;&nbsp;Supprimer mon compte&nbsp;&raquo;. Indiquez&nbsp;:</p>
+      <h3 id="fr-leave">Quand vous quittez votre employeur</h3>
       <ul>
-        <li>Votre nom complet.</li>
-        <li>L&rsquo;entreprise pour laquelle vous travaillez (votre employeur).</li>
-        <li>L&rsquo;adresse e-mail ou le num&eacute;ro de t&eacute;l&eacute;phone de votre compte, si vous en avez un.</li>
-      </ul>
-      <p>Utilisez cette option si vous ne pouvez pas vous connecter ou si vous n&rsquo;avez plus l&rsquo;application. Avant de supprimer quoi que ce soit, nous pouvons vous contacter, vous ou votre employeur, pour v&eacute;rifier que la demande vient bien de vous.</p>
-
-      <h3 id="fr-next">Et ensuite</h3>
-      <ul>
-        <li><b>Nous terminons la suppression sous 30 jours et vous pr&eacute;venons lorsqu&rsquo;elle est faite.</b></li>
-        <li>Nous pr&eacute;venons votre employeur, car c&rsquo;est lui qui a cr&eacute;&eacute; votre compte.</li>
-        <li>Nous supprimons ou anonymisons vos donn&eacute;es personnelles, comme votre nom, votre num&eacute;ro de t&eacute;l&eacute;phone, votre code de connexion, vos jetons de notification et votre historique de position, sauf dans les deux types de dossiers ci-dessous.</li>
-        <li><b>Conserv&eacute;&nbsp;: notre historique d&rsquo;audit de s&eacute;curit&eacute;.</b> Il ne peut &ecirc;tre ni modifi&eacute; ni supprim&eacute;. Il conserve donc le nom, l&rsquo;adresse e-mail et le num&eacute;ro de t&eacute;l&eacute;phone enregistr&eacute;s lors de la cr&eacute;ation ou de la modification de votre compte, ainsi que l&rsquo;adresse e-mail de votre demande de suppression.</li>
-        <li><b>Conserv&eacute;es&nbsp;: les copies des ordres de travail supprim&eacute;s.</b> Lorsqu&rsquo;un ordre de travail est supprim&eacute;, y compris lorsque le compte IQS Flow de votre employeur est supprim&eacute;, la base de donn&eacute;es en conserve une copie qui ne peut &ecirc;tre ni modifi&eacute;e ni supprim&eacute;e. Cette copie comprend la position enregistr&eacute;e avec l&rsquo;ordre de travail, sa description et ses notes, ainsi que les identifiants de compte des personnes qui l&rsquo;ont signal&eacute; ou y ont travaill&eacute;. Les signalements d&rsquo;urgence ne peuvent pas &ecirc;tre supprim&eacute;s individuellement. Ils peuvent seulement &ecirc;tre annul&eacute;s, et ils sont conserv&eacute;s comme dossiers de s&eacute;curit&eacute; jusqu&rsquo;&agrave; la suppression du compte IQS Flow de votre employeur&nbsp;; une copie de chacun est alors conserv&eacute;e de la m&ecirc;me fa&ccedil;on.</li>
-        <li>Les dossiers de travail que votre employeur ou ses clients doivent conserver, comme les inspections termin&eacute;es, peuvent &ecirc;tre conserv&eacute;s sans votre nom.</li>
+        <li>Votre employeur d&eacute;sactive votre compte. &Agrave; partir de ce moment, vous ne pouvez plus vous connecter.</li>
+        <li>Les dossiers de votre travail, comme les inspections, les listes de contr&ocirc;le, les ordres de travail, les photos et les heures d&rsquo;arriv&eacute;e, restent tels quels, avec votre nom et la position enregistr&eacute;e avec votre travail. Ce sont les dossiers de service de votre employeur et de ses clients.</li>
+        <li>Votre employeur peut nous demander de supprimer vos donn&eacute;es personnelles, comme indiqu&eacute; ci-dessous.</li>
       </ul>
 
-      <h3 id="fr-some">Supprimer seulement certaines donn&eacute;es</h3>
-      <p>Si vous voulez supprimer seulement certaines de vos donn&eacute;es, comme votre historique de position ou vos photos, pr&eacute;cisez-le dans votre e-mail.</p>
+      <h3 id="fr-remove">Comment un employeur nous demande de supprimer les donn&eacute;es d&rsquo;un ancien employ&eacute;</h3>
+      <p>Un administrateur du compte IQS Flow de l&rsquo;employeur &eacute;crit &agrave; <a href="mailto:privacy@iqsflow.com?subject=Supprimer%20les%20donn%C3%A9es%20d%27un%20ancien%20employ%C3%A9">privacy@iqsflow.com</a> en indiquant le nom complet de la personne et le nom de l&rsquo;entreprise sur le compte IQS Flow. Nous ne traitons que les demandes d&rsquo;un administrateur actif du compte IQS Flow de cet employeur, et seulement pour des personnes de ce compte. Nous terminons la suppression sous 30 jours &agrave; compter de la demande.</p>
+      <p>Nous supprimons&nbsp;:</p>
+      <ul>
+        <li>Les coordonn&eacute;es&nbsp;: l&rsquo;adresse e-mail et le num&eacute;ro de t&eacute;l&eacute;phone de la personne.</li>
+        <li>Les donn&eacute;es de connexion&nbsp;: son code de connexion (conserv&eacute; uniquement sous forme de hachage irr&eacute;versible) et sa connexion par e-mail ou par Google.</li>
+        <li>Ses jetons de notification push.</li>
+        <li>Son historique de suivi de position&nbsp;: les relev&eacute;s de position que l&rsquo;application a enregistr&eacute;s pendant son travail.</li>
+      </ul>
+
+      <h3 id="fr-kept">Ce que la suppression ne change pas</h3>
+      <p>Les dossiers de travail restent tels quels, comme indiqu&eacute; ci-dessus. Deux autres types de dossiers conservent aussi certaines donn&eacute;es&nbsp;:</p>
+      <ul>
+        <li><b>Conserv&eacute;&nbsp;: notre historique d&rsquo;audit de s&eacute;curit&eacute;.</b> Il ne peut &ecirc;tre ni modifi&eacute; ni supprim&eacute;. Il conserve donc le nom, l&rsquo;adresse e-mail et le num&eacute;ro de t&eacute;l&eacute;phone enregistr&eacute;s lors de la cr&eacute;ation ou de la modification du compte.</li>
+        <li><b>Conserv&eacute;es&nbsp;: les copies des ordres de travail supprim&eacute;s.</b> Lorsqu&rsquo;un ordre de travail est supprim&eacute;, y compris lorsque le compte IQS Flow de l&rsquo;employeur est supprim&eacute;, la base de donn&eacute;es en conserve une copie qui ne peut &ecirc;tre ni modifi&eacute;e ni supprim&eacute;e. Cette copie comprend la position enregistr&eacute;e avec l&rsquo;ordre de travail, sa description et ses notes, ainsi que les identifiants de compte des personnes qui l&rsquo;ont signal&eacute; ou y ont travaill&eacute;. Les signalements d&rsquo;urgence ne peuvent pas &ecirc;tre supprim&eacute;s individuellement. Ils peuvent seulement &ecirc;tre annul&eacute;s, et ils sont conserv&eacute;s comme dossiers de s&eacute;curit&eacute; jusqu&rsquo;&agrave; la suppression du compte IQS Flow de l&rsquo;employeur&nbsp;; une copie de chacun est alors conserv&eacute;e de la m&ecirc;me fa&ccedil;on.</li>
+      </ul>
 
       <h3 id="fr-note">&Agrave; savoir</h3>
       <ul>
-        <li>Supprimer l&rsquo;application de votre t&eacute;l&eacute;phone ne supprime pas votre compte.</li>
+        <li>Supprimer l&rsquo;application de votre t&eacute;l&eacute;phone ne supprime ni votre compte ni les dossiers de votre travail.</li>
         <li>Pour en savoir plus sur les donn&eacute;es recueillies par IQS Flow, lisez notre <a href="/privacy/">politique de confidentialit&eacute;</a> (en anglais).</li>
       </ul>
     </section>

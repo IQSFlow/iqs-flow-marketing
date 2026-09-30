@@ -3,7 +3,8 @@
  * Checks the public legal pages that the App Store and Google Play listings link to:
  *   /privacy/          privacy policy (with the mobile app section)
  *   /subprocessors/    service providers that process personal data
- *   /delete-account/   account deletion instructions (Google Play requirement)
+ *   /delete-account/   who removes an account and its personal details (the employer
+ *                      asks IQS; the app has no sign-up and no self-deletion)
  * plus the site footer they render (assets/shared.js), the /terms/ page they link to,
  * every page's own copyright line, and the third-party hosts any page loads (each must
  * be listed on /subprocessors/).
@@ -56,8 +57,10 @@ const TYPED_ENTITY =
 const SIGNOFF_KEYS = {
   legalEntity: "the exact legal name and entity type on the Apple seller record and Google Play developer account",
   counselReviewedOn: "the date counsel approved the privacy, subprocessors and delete-account pages",
-  deletionProcessLive: "in-app deletion requests must reach privacy@iqsflow.com and a written deletion runbook must exist that covers the audit history and deleted work orders",
-  appVersionWithGates: "the app version on every phone with the scheduled-shift location gate and the Delete my account option",
+  deletionProcessLive:
+    "a written removal runbook must exist for employer requests to privacy@iqsflow.com, matching /delete-account/, that covers the audit history and deleted work orders",
+  appVersionWithGates:
+    "the app version on every phone with the scheduled-shift location gate, the location notice, and the employer-managed account explanation in place of Delete my account",
 };
 // Named in the old policy but not used anywhere in the IQS Flow code.
 const UNUSED_VENDORS = /\bAWS\b|Amazon Web Services|\bSentry\b|\bTwilio\b/i;
@@ -120,6 +123,81 @@ const KEPT_AFTER_DELETION = {
     soleException: /\bune exception\b|\bla seule exception\b/i,
   },
 };
+// Accounts are the employer's (Josh's account policy, 2026-09-30). The employer creates
+// and manages every account in the admin console; the app has no sign-up and no
+// self-deletion. A worker who leaves is turned off (sign-in blocked at once). Their work
+// records stay exactly as they are, with their name and the GPS recorded with the work.
+// Their contact details, sign-in code (last-4 hash), Firebase login, push tokens and
+// location tracking history are removed only when an active ADMIN of that vendor tenant
+// asks at privacy@iqsflow.com, for a member of that tenant, within 30 days.
+//   selfService   wording that offers a worker self-deletion (the old in-app steps, or
+//                 "ask us to delete your account")
+//   noSelfDelete  says you cannot delete your account yourself
+//   adminOnly     only an active administrator of the employer's account can ask...
+//   ownAccount    ...and only for people in that account
+//   completed     the removal is complete within 30 days (not just a reply)
+//   removed       each detail removed on the employer's request (checked in the list)
+//   keptWithName  work records stay as they are, with the name and the recorded location
+//   nameRemoved   the old promise that work records are kept without the name
+const ACCOUNT_POLICY = {
+  en: {
+    selfService: /\b(?:tap|touch)\b[^.]*\bDelete my account\b|\bSend request\b|\bask us to delete your account\b/i,
+    noSelfDelete: /\bcannot delete your account yourself\b/i,
+    adminOnly: /\bonly on requests from an active administrator\b/i,
+    ownAccount: /\bonly for people in that account\b/i,
+    completed: /\bcomplete the removal within 30 days\b/i,
+    replyOnly: /\brespond within 30 days\b/i,
+    removed: {
+      "contact details": /\bemail address and phone number\b/i,
+      "the sign-in code": /\bsign-in code\b/i,
+      "push notification tokens": /\bpush notification tokens\b/i,
+      "location tracking history": /\blocation tracking history\b/i,
+    },
+    keptWithName:
+      /\bstay as they are, with (?:your|their|the worker(?:&rsquo;|'|’)s) name and the location recorded with (?:your|their) work\b/i,
+    nameRemoved: /\bwith (?:your|their|the worker(?:&rsquo;|'|’)s) (?:name|personal details) removed\b|\bwithout (?:your|their) name\b/i,
+  },
+  es: {
+    selfService: /\btoca\b[^.]*\bEliminar mi cuenta\b|\bEnviar solicitud\b|\bpedirnos que eliminemos tu cuenta\b/i,
+    noSelfDelete: /\bno puedes eliminar tu cuenta\b/i,
+    adminOnly: /\bsolo atendemos solicitudes de un administrador activo\b/i,
+    ownAccount: /\bsolo para personas de esa cuenta\b/i,
+    completed: /\bcompletamos la eliminaci(?:&oacute;|ó)n en un plazo de 30 d(?:&iacute;|í)as\b/i,
+    replyOnly: /\brespondemos en un plazo de 30\b/i,
+    removed: {
+      "contact details": /\bcorreo electr(?:&oacute;|ó)nico y el n(?:&uacute;|ú)mero de tel(?:&eacute;|é)fono\b/i,
+      "the sign-in code": /\bc(?:&oacute;|ó)digo de acceso\b/i,
+      "push notification tokens": /\btokens de notificaciones\b/i,
+      "location tracking history": /\bhistorial de seguimiento de ubicaci(?:&oacute;|ó)n\b/i,
+    },
+    keptWithName:
+      /\bse conservan tal como est(?:&aacute;|á)n, con (?:tu|su) nombre y la ubicaci(?:&oacute;|ó)n registrada con (?:tu|su) trabajo\b/i,
+    nameRemoved: /\bsin (?:tu|su) nombre\b/i,
+  },
+  fr: {
+    selfService: /\btouchez\b[^.]*\bSupprimer mon compte\b|\bEnvoyer la demande\b|\bnous demander de supprimer votre compte\b/i,
+    noSelfDelete: /\bne pouvez pas supprimer votre compte vous-m(?:&ecirc;|ê)me\b/i,
+    adminOnly: /\bne traitons que les demandes d(?:&rsquo;|'|’)un administrateur actif\b/i,
+    ownAccount: /\bseulement pour des personnes de ce compte\b/i,
+    completed: /\bnous terminons la suppression sous 30 jours\b/i,
+    replyOnly: /\bnous r(?:&eacute;|é)pondons sous 30 jours\b/i,
+    removed: {
+      "contact details": /\badresse e-mail et le num(?:&eacute;|é)ro de t(?:&eacute;|é)l(?:&eacute;|é)phone\b/i,
+      "the sign-in code": /\bcode de connexion\b/i,
+      "push notification tokens": /\bjetons de notification\b/i,
+      "location tracking history": /\bhistorique de suivi de position\b/i,
+    },
+    keptWithName:
+      /\brestent tels quels, avec (?:votre|son|le) nom et la position enregistr(?:&eacute;|é)e avec (?:votre|son) travail\b/i,
+    nameRemoved: /\bsans (?:votre|son) nom\b/i,
+  },
+};
+// Most providers use data only to run their service for us, but these work under the
+// provider's own terms and privacy policy, so a page that makes the "only for us" claim
+// must name them in the same paragraph or list item as an exception.
+const ONLY_FOR_US = /\bonly to provide (?:its|their) services? to us\b/i;
+const OWN_TERMS = /\bown terms\b/i;
+const OWN_TERMS_SERVICES = ["reCAPTCHA", "Google Fonts", "Google Maps", "Apple Maps", "Credly"];
 const EM_DASH = /—|&mdash;|&#8212;|&#x2014;/i;
 const VOID = new Set(["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"]);
 
@@ -172,6 +250,50 @@ function sectionBetween(html, startId, endId) {
  * a disclosure that only appears inside one does not count.
  */
 const withoutTodos = (html) => html.replace(/<span class="todo">[\s\S]*?<\/span>/g, "");
+
+/** Paragraphs and list items, for rules that need a claim and its qualifier side by side. */
+const blocks = (html) => [...html.matchAll(/<(li|p)\b[^>]*>[\s\S]*?<\/\1>/g)].map((m) => m[0]);
+
+/** "Providers use data only to provide their service to us" must name the own-terms services. */
+function checkOnlyForUs(page, html) {
+  for (const block of blocks(withoutTodos(html))) {
+    if (!ONLY_FOR_US.test(block)) continue;
+    const missing = OWN_TERMS.test(block) ? OWN_TERMS_SERVICES.filter((s) => !block.includes(s)) : OWN_TERMS_SERVICES;
+    if (!missing.length) continue;
+    const one = missing.length === 1;
+    fail(
+      page,
+      `says service providers use data only to provide their service to us, but does not say that ${missing.join(", ")} ${one ? "works" : "work"} under ${one ? "its" : "their"} own terms`,
+    );
+  }
+}
+
+/**
+ * The account policy as one page, or one language of a page, states it. `removalHtml` is
+ * the part that lists what is removed (so other lists, such as the audit history, which
+ * also names the email address and phone number, do not count as the removal list).
+ */
+function checkAccountPolicy(page, where, lang, html, removalHtml = html) {
+  const rule = ACCOUNT_POLICY[lang];
+  const claims = withoutTodos(html);
+  const removal = withoutTodos(removalHtml);
+  if (!rule.noSelfDelete.test(claims)) {
+    fail(page, `${where} does not say you cannot delete your account yourself (your employer manages it)`);
+  }
+  if (!claims.includes("privacy@iqsflow.com")) fail(page, `${where} does not say the employer asks at privacy@iqsflow.com`);
+  if (!rule.adminOnly.test(claims) || !rule.ownAccount.test(claims)) {
+    fail(page, `${where} does not say only an active administrator of the employer's account can ask, and only for people in that account`);
+  }
+  if (!rule.completed.test(claims)) fail(page, `${where} does not say when the removal is complete (within 30 days of the request)`);
+  if (rule.replyOnly.test(claims)) fail(page, `${where} gives only a response time, not a completion time`);
+  for (const [item, re] of Object.entries(rule.removed)) {
+    if (!re.test(removal)) fail(page, `${where} does not list ${item} among the details removed on the employer's request`);
+  }
+  if (!rule.keptWithName.test(claims)) {
+    fail(page, `${where} does not say work records stay as they are, with the worker's name and the location recorded with their work`);
+  }
+  if (rule.nameRemoved.test(claims)) fail(page, `${where} says work records are kept without the worker's name, but they keep it`);
+}
 
 /** Tiny tag-balance check: catches unclosed or crossed elements in hand-written HTML. */
 function checkTagBalance(page, html) {
@@ -339,14 +461,36 @@ else {
     fail("privacy", "section 05 does not describe the client portal assistant and the data summary it sends to Gemini");
   }
 
-  // Deletion: the in-app path and a completion commitment, not just a reply.
+  // The web dashboard asks the browser for its location on the Start inspection page and
+  // sends it with the new run as gpsLatitude/gpsLongitude (iqs-flow-web
+  // src/app/dashboard/inspections/runs/new/StartInspectionForm.tsx captureGps), so it is
+  // saved with the inspection like a location from the app.
+  const collectBlocks = blocks(withoutTodos(sectionBetween(privacy, "collect", "mobile")));
+  const saysWebLocation = collectBlocks.some(
+    (b) =>
+      /\bweb dashboard\b/i.test(b) &&
+      /\bbrowser\b[^.]*\blocation\b/i.test(b) &&
+      /\bstart(?:s|ing)? an inspection\b/i.test(b) &&
+      /\bsaved with the inspection\b/i.test(b),
+  );
+  if (!saysWebLocation) {
+    fail(
+      "privacy",
+      "section 03 does not say the web dashboard asks your browser for your location when you start an inspection and saves it with the inspection",
+    );
+  }
+  checkOnlyForUs("privacy", privacy);
+
+  // Accounts are the employer's: no self-deletion, removal of personal details only at
+  // an active administrator's request, completed within 30 days, work records kept with
+  // the worker's name and location (ACCOUNT_POLICY).
   const deletion = sectionBetween(privacy, "delete", "rights");
-  if (!/within 30 days/.test(privacy)) fail("privacy", "does not state the 30-day deletion response time");
-  if (!/complete deletion within 30 days/i.test(privacy)) fail("privacy", "does not say when deletion is complete (\"complete deletion within 30 days\")");
-  if (/respond within 30 days/i.test(privacy)) fail("privacy", "gives only a response time (\"respond within 30 days\"); say when deletion is complete");
-  if (/<b>Profile<\/b>|\(Profile,/.test(privacy)) fail("privacy", "tells people to tap Profile, but the app's tab is labelled More");
-  if (!/tap <b>More<\/b>/i.test(deletion)) fail("privacy", "section 09 does not tell people to tap More");
-  if (!/client account/i.test(deletion)) fail("privacy", "section 09 does not tell client accounts to use email");
+  if (!/within 30 days/.test(privacy)) fail("privacy", "does not state the 30-day removal time");
+  if (/respond within 30 days/i.test(privacy)) fail("privacy", "gives only a response time (\"respond within 30 days\"); say when the removal is complete");
+  if (ACCOUNT_POLICY.en.selfService.test(withoutTodos(privacy))) {
+    fail("privacy", "tells people they can delete their own account (in the app or by asking us), but accounts are removed only at the employer's request");
+  }
+  checkAccountPolicy("privacy", "section 09", "en", deletion);
 
   const retention = sectionBetween(privacy, "retain", "delete");
   // The daily cleanup deletes location_events older than 30 days (src/routes/cron.ts).
@@ -383,6 +527,10 @@ else {
   const changesAt = subs.indexOf('id="changes"');
   const listed = changesAt === -1 ? subs : subs.slice(0, changesAt);
   if (UNUSED_VENDORS.test(listed)) fail("subprocessors", "lists AWS, Sentry or Twilio as a subprocessor");
+  // A provider must have a row: naming it in a paragraph (such as the own-terms
+  // exception in section 01) does not list it.
+  const tables = (listed.match(/<table\b[\s\S]*?<\/table>/g) ?? []).join("\n");
+  checkOnlyForUs("subprocessors", subs);
   for (const required of [
     "Cloud Run", "Cloud SQL", "Cloud Storage", "Gemini", "Gmail", "Firebase Cloud Messaging", "Expo Push Service", "Google Maps",
     // iPhone maps use MapKit (map.tsx provider is Google on Android only).
@@ -392,7 +540,7 @@ else {
     // The client portal assistant sends Gemini an assembled data summary.
     "client portal assistant",
   ]) {
-    if (!listed.includes(required)) fail("subprocessors", `does not list ${required}`);
+    if (!tables.includes(required)) fail("subprocessors", `does not list ${required}`);
   }
   // Directions send the phone's current coordinates to the Google Routes API
   // (map.tsx /api/routes/between?origin=..., map-routes.ts).
@@ -402,59 +550,33 @@ else {
 }
 
 // ---- account deletion ---------------------------------------------------------
-/** The English, Spanish and French sections of /delete-account/, for the app-text check. */
-let deleteSections = {};
+// Accounts are the employer's, so this page explains who removes what (ACCOUNT_POLICY)
+// instead of giving a worker self-deletion steps.
 const del = read(PAGES.deleteAccount);
 if (!del) fail("delete-account", `missing ${PAGES.deleteAccount}`);
 else {
   checkCommon("delete-account", del);
-  // "More" is the tab label in the app (tabs.more); no screen shows "Profile".
-  for (const required of ["IQS Flow", "<b>More</b>", "Delete my account", "Send request", "privacy@iqsflow.com", "within 30 days"]) {
+  for (const required of ["IQS Flow", "privacy@iqsflow.com", "within 30 days"]) {
     if (!del.includes(required)) fail("delete-account", `does not mention "${required}"`);
   }
-  if (del.includes("<b>Profile</b>")) fail("delete-account", "tells people to tap Profile, but the app's tab is labelled More");
 
   const section = (lang) => del.match(new RegExp(`<section[^>]*lang="${lang}"[^>]*>([\\s\\S]*?)<\\/section>`))?.[1] ?? null;
-  const en = section("en");
-  const es = section("es");
-  const fr = section("fr");
-  if (!es || !es.includes("Eliminar mi cuenta") || !es.includes("30 d&iacute;as")) {
-    fail("delete-account", "missing the Spanish section with the in-app steps and 30-day timeframe");
-  }
-  if (!fr || !fr.includes("Supprimer mon compte") || !fr.includes("30 jours")) {
-    fail("delete-account", "missing the French section with the in-app steps and 30-day timeframe");
-  }
-
   const LANGS = [
-    {
-      name: "English", lang: "en", text: en,
-      tab: "<b>More</b>", wrongTab: "<b>Profile</b>", client: /client account/i,
-      complete: /complete deletion within 30 days/i, replyOnly: /respond within 30 days/i,
-      audit: AUDIT_HISTORY,
-    },
-    {
-      name: "Spanish", lang: "es", text: es,
-      tab: "<b>M&aacute;s</b>", wrongTab: "<b>Perfil</b>", client: /cuenta de cliente/i,
-      complete: /Completamos la eliminaci&oacute;n en un plazo de 30 d&iacute;as/, replyOnly: /Respondemos en un plazo de 30/,
-      audit: /historial de auditor(?:&iacute;|í)a/i,
-    },
-    {
-      name: "French", lang: "fr", text: fr,
-      tab: "<b>Plus</b>", wrongTab: "<b>Profil</b>", client: /compte client/i,
-      complete: /Nous terminons la suppression sous 30 jours/, replyOnly: /Nous r&eacute;pondons sous 30 jours/,
-      audit: /historique d(?:&rsquo;|'|’)audit/i,
-    },
+    { name: "English", lang: "en", text: section("en"), audit: AUDIT_HISTORY },
+    { name: "Spanish", lang: "es", text: section("es"), audit: /historial de auditor(?:&iacute;|í)a/i },
+    { name: "French", lang: "fr", text: section("fr"), audit: /historique d(?:&rsquo;|'|’)audit/i },
   ];
   for (const l of LANGS) {
     if (!l.text) {
       fail("delete-account", `missing the ${l.name} section`);
       continue;
     }
-    if (!l.text.includes(l.tab)) fail("delete-account", `${l.name} steps do not say to tap ${l.tab} (the app's tab label)`);
-    if (l.text.includes(l.wrongTab)) fail("delete-account", `${l.name} steps say ${l.wrongTab}, a label the app does not show`);
-    if (!l.client.test(l.text)) fail("delete-account", `${l.name} section does not tell client accounts to use email`);
-    if (!l.complete.test(l.text)) fail("delete-account", `${l.name} section does not say when deletion is complete`);
-    if (l.replyOnly.test(l.text)) fail("delete-account", `${l.name} section gives only a response time, not a completion time`);
+    const where = `${l.name} section`;
+    if (ACCOUNT_POLICY[l.lang].selfService.test(withoutTodos(l.text))) {
+      fail("delete-account", `${where} tells people they can delete their own account (in the app or by asking us), but accounts are removed only at the employer's request`);
+    }
+    // The removal list sits between the "-remove" and "-kept" headings of each language.
+    checkAccountPolicy("delete-account", where, l.lang, l.text, sectionBetween(l.text, `${l.lang}-remove`, `${l.lang}-kept`));
     if (!l.audit.test(l.text)) {
       fail("delete-account", `${l.name} section does not say the security audit history keeps some details (it cannot be changed or deleted)`);
     }
@@ -468,12 +590,11 @@ else {
       fail("delete-account", `${l.name} section presents one store as the only thing kept after deletion, but deleted work orders are kept too`);
     }
   }
-  deleteSections = { en, es, fr };
 }
 
 // ---- the app's own text (--app-locales) -----------------------------------------
-// The pages quote the app's labels and repeat its promises, so they must match the
-// strings on the release that is on every phone (iqs-flow-mobile locales/*.json).
+// The pages repeat the app's location notice and its account rules, so they must match
+// the strings on the release that is on every phone (iqs-flow-mobile locales/*.json).
 const NAMED_ENTITIES = {
   amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " ", middot: "·",
   rsquo: "'", lsquo: "'", ldquo: '"', rdquo: '"', laquo: "«", raquo: "»",
@@ -498,30 +619,14 @@ function plainText(html) {
     .replace(/\s+/g, " ");
 }
 const APP_LANGS = {
-  en: {
-    name: "English",
-    complete: /\b(?:delet|complet)\w*\b[^.]*\bwithin 30 days\b/i,
-    replyOnly: /\brespond within 30 days\b/i,
-    coworkers: /\bco-?workers?\b/i,
-    clients: /\bclients?\b/i,
-  },
-  es: {
-    name: "Spanish",
-    complete: /(?:elimin|complet)\w*[^.]*30 d[ií]as/i,
-    replyOnly: /responderemos en un plazo de 30/i,
-    coworkers: /compa[ñn]er[oa]s/i,
-    clients: /\bclientes?\b/i,
-  },
-  fr: {
-    name: "French",
-    complete: /(?:supprim|termin)\w*[^.]*30 jours/i,
-    replyOnly: /r[ée]pondrons sous 30 jours/i,
-    coworkers: /coll[èe]gues/i,
-    clients: /\bclients?\b/i,
-  },
+  en: { coworkers: /\bco-?workers?\b/i, clients: /\bclients?\b/i },
+  es: { coworkers: /compa[ñn]er[oa]s/i, clients: /\bclientes?\b/i },
+  fr: { coworkers: /coll[èe]gues/i, clients: /\bclients?\b/i },
 };
-// Labels a person follows to delete their account, as the app shows them.
-const APP_LABEL_KEYS = ["tabs.more", "profile.privacyData", "profile.deleteAccount", "profile.sendDeleteRequest", "profile.deleteRequested"];
+// The in-app deletion request (the Send request button of the 1.1.0 Delete my account
+// screen). The account policy of 2026-09-30 replaces it with an explanation, so a release
+// that still has it contradicts /delete-account/.
+const APP_SELF_DELETE_KEY = "profile.sendDeleteRequest";
 const lookup = (obj, key) => key.split(".").reduce((o, k) => (o && typeof o === "object" ? o[k] : undefined), obj);
 
 function checkAppText(dir) {
@@ -551,24 +656,12 @@ function checkAppText(dir) {
       return plainText(v).trim();
     };
 
-    const section = deleteSections[lang] ? plainText(deleteSections[lang]) : null;
-    for (const key of APP_LABEL_KEYS) {
-      const label = text(key);
-      if (label && section !== null && !section.includes(label)) {
-        fail("delete-account", `${rule.name} steps do not show the app's label "${label}" (${key})`);
-      }
-    }
-    if (lang === "en" && privacy) {
-      const deletion = plainText(sectionBetween(privacy, "delete", "rights"));
-      for (const key of ["tabs.more", "profile.deleteAccount", "profile.sendDeleteRequest"]) {
-        const label = text(key);
-        if (label && !deletion.includes(label)) fail("privacy", `section 09 does not show the app's label "${label}" (${key})`);
-      }
-    }
-
-    const timeframe = text("profile.deleteTimeframe");
-    if (timeframe && (!rule.complete.test(timeframe) || rule.replyOnly.test(timeframe))) {
-      fail(where, `profile.deleteTimeframe ("${timeframe}") does not promise what /delete-account/ promises: deletion completed within 30 days`);
+    const selfDelete = lookup(strings, APP_SELF_DELETE_KEY);
+    if (typeof selfDelete === "string" && selfDelete.trim()) {
+      fail(
+        where,
+        `still has ${APP_SELF_DELETE_KEY} ("${plainText(selfDelete).trim()}"), the in-app deletion request, but /delete-account/ says accounts are removed only at the employer's request; remove the option and its text from the app`,
+      );
     }
 
     const notice = text("locationPermission.body");

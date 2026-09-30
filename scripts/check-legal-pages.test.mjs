@@ -68,42 +68,20 @@ function writeSignoff(dir, values) {
 
 // The app's own strings (iqs-flow-mobile locales/*.json), written the way the pages
 // need them to read. Tests override single keys to put back what the app says today.
+// The app has no deletion strings here: accounts are the employer's (account policy of
+// 2026-09-30), so the app shows an explanation instead of a Delete my account option.
 const APP_TEXT = {
   en: {
-    tabs: { more: "More" },
-    profile: {
-      privacyData: "Privacy & data",
-      deleteAccount: "Delete my account",
-      sendDeleteRequest: "Send request",
-      deleteRequested: "Request sent",
-      deleteTimeframe: "We complete deletion within 30 days and tell you when it is done.",
-    },
     locationPermission: {
       body: "While IQS Flow is open, it records your location when you do work. Your supervisor, coworkers who use the app, and your employer's clients at their own sites can see your location.",
     },
   },
   es: {
-    tabs: { more: "Más" },
-    profile: {
-      privacyData: "Privacidad y datos",
-      deleteAccount: "Eliminar mi cuenta",
-      sendDeleteRequest: "Enviar solicitud",
-      deleteRequested: "Solicitud enviada",
-      deleteTimeframe: "Completamos la eliminación en un plazo de 30 días y te avisamos cuando esté hecha.",
-    },
     locationPermission: {
       body: "Mientras IQS Flow está abierta, registra tu ubicación cuando trabajas. Tu supervisor, tus compañeros que usan la app y los clientes de tu empleador en sus propios sitios pueden ver tu ubicación.",
     },
   },
   fr: {
-    tabs: { more: "Plus" },
-    profile: {
-      privacyData: "Confidentialité et données",
-      deleteAccount: "Supprimer mon compte",
-      sendDeleteRequest: "Envoyer la demande",
-      deleteRequested: "Demande envoyée",
-      deleteTimeframe: "Nous terminons la suppression sous 30 jours et vous prévenons lorsqu'elle est faite.",
-    },
     locationPermission: {
       body: "Quand IQS Flow est ouverte, elle enregistre votre position pendant le travail. Votre superviseur, vos collègues qui utilisent l'application et les clients de votre employeur sur leurs propres sites peuvent voir votre position.",
     },
@@ -118,7 +96,7 @@ function writeLocales(dir, overrides = {}) {
     const copy = structuredClone(strings);
     for (const [key, value] of Object.entries(overrides[lang] ?? {})) {
       const parts = key.split(".");
-      parts.slice(0, -1).reduce((o, k) => o[k], copy)[parts.at(-1)] = value;
+      parts.slice(0, -1).reduce((o, k) => (o[k] ??= {}), copy)[parts.at(-1)] = value;
     }
     writeFileSync(path.join(folder, `${lang}.json`), JSON.stringify(copy, null, 2));
   }
@@ -171,7 +149,7 @@ test("fails when the policy says location is used only during scheduled shifts",
 test("fails when the summary says the app collects location during scheduled shifts", () => {
   const { site } = fixture({
     [PRIVACY]: swap(
-      "photos, and the location of your phone when you use the app for work.",
+      "photos, the location of your phone when you use the app for work, and the location of your browser when you start an inspection in the web dashboard.",
       "photos, and location during scheduled shifts.",
     ),
   });
@@ -377,87 +355,231 @@ test("fails when the subprocessors page leaves out Apple Maps, the installation 
   assert.match(r.out, /subprocessors: the Google Maps Platform row does not say directions start from the phone's current location/);
 });
 
-// ---- finding: "Profile" is not a label the app shows ---------------------------------
+// ---- finding: the web dashboard saves the browser's location with an inspection --------
+// iqs-flow-web StartInspectionForm.tsx asks the browser for its location on the Start
+// inspection page and sends it as gpsLatitude/gpsLongitude when the run is created.
 
-test("fails when the English deletion steps say Profile instead of More", () => {
+const WEB_LOCATION_ITEM = /\s*<li>In the web dashboard, the page for starting an inspection asks your browser for your location\.[\s\S]*?<\/li>/;
+
+test("fails when the policy leaves out that the web dashboard saves the browser's location with an inspection", () => {
+  const { site } = fixture({ [PRIVACY]: (t) => t.replace(WEB_LOCATION_ITEM, "") });
+  expectFailure(
+    check(site),
+    /privacy: section 03 does not say the web dashboard asks your browser for your location when you start an inspection and saves it with the inspection/,
+  );
+});
+
+test("a web dashboard location disclosure that appears only in a TODO(Josh) note does not count", () => {
   const { site } = fixture({
-    [DELETE]: swap("<li>Tap <b>More</b> (the menu tab at the bottom right).</li>", "<li>Tap <b>Profile</b>.</li>"),
+    [PRIVACY]: (t) =>
+      t.replace(
+        WEB_LOCATION_ITEM,
+        '<li><span class="todo">TODO(Josh): in the web dashboard, the page for starting an inspection asks your browser for your location, and when you start an inspection it is saved with the inspection.</span></li>',
+      ),
+  });
+  expectFailure(check(site), /privacy: section 03 does not say the web dashboard asks your browser for your location/);
+});
+
+// ---- finding: not every provider uses data only to provide its service to us -----------
+// reCAPTCHA, Google Fonts, Google Maps, Apple Maps and the Credly badge work under the
+// provider's own terms and privacy policy.
+
+test("fails when a page says every service provider uses data only to provide its service to us", () => {
+  const { site } = fixture({
+    [PRIVACY]: (t) =>
+      t.replace(/Most of them may use the data only to provide their service to us\.[\s\S]*?on our About page\./, "They may use the data only to provide their service to us."),
+    [SUBS]: (t) =>
+      t.replace(/Most of them may use the data only to provide their service to us\.[\s\S]*?on our About page\./, "Each one processes data only to provide its service to us."),
   });
   const r = check(site);
-  expectFailure(r, /delete-account: English steps say <b>Profile<\/b>, a label the app does not show/);
-  assert.match(r.out, /delete-account: English steps do not say to tap <b>More<\/b>/);
+  expectFailure(r, /privacy: says service providers use data only to provide their service to us, but does not say that reCAPTCHA, Google Fonts, Google Maps, Apple Maps, Credly work under their own terms/);
+  assert.match(r.out, /subprocessors: says service providers use data only to provide their service to us, but does not say that reCAPTCHA, Google Fonts, Google Maps, Apple Maps, Credly work under their own terms/);
 });
 
-test("fails when the Spanish deletion steps say Perfil instead of Más", () => {
+test("fails when the own-terms exception leaves out one of those services", () => {
   const { site } = fixture({
-    [DELETE]: swap("Toca <b>M&aacute;s</b> (la pesta&ntilde;a del men&uacute;, abajo a la derecha).", "Toca <b>Perfil</b>."),
+    [PRIVACY]: swap("Google Maps and Apple Maps, and the Credly badge on our About page.", "Google Maps and Apple Maps."),
   });
-  expectFailure(check(site), /delete-account: Spanish steps say <b>Perfil<\/b>/);
+  expectFailure(check(site), /privacy: says service providers use data only to provide their service to us, but does not say that Credly works under its own terms/);
 });
 
-test("fails when the French deletion steps say Profil instead of Plus", () => {
-  const { site } = fixture({
-    [DELETE]: swap("Touchez <b>Plus</b> (l&rsquo;onglet du menu, en bas &agrave; droite).", "Touchez <b>Profil</b>."),
-  });
-  expectFailure(check(site), /delete-account: French steps say <b>Profil<\/b>/);
-});
+// ---- account policy of 2026-09-30: the employer manages every account ------------------
+// The employer creates and manages accounts in the admin console; the app has no sign-up
+// and no self-deletion. A worker who leaves is turned off; their work records stay with
+// their name and GPS; their contact details, sign-in code, email or Google sign-in, push
+// tokens and location tracking history are removed only when an active ADMIN of that
+// employer asks at privacy@iqsflow.com, within 30 days.
 
-test("fails when the privacy policy deletion steps say Profile", () => {
+test("fails when the pages put back the in-app deletion steps a worker follows", () => {
   const { site } = fixture({
     [PRIVACY]: pipe(
-      swap("tap <b>More</b> (the menu tab at the bottom right)", "tap <b>Profile</b>"),
-      swap("(More, then Delete my account)", "(Profile, then Delete my account)"),
+      swap(
+        "Your employer can ask us to remove your personal details, and we do so within 30 days (section 09).",
+        "You can ask us to delete your account in the app (More, then Delete my account) or by email.",
+      ),
+      swap(
+        "you cannot delete your account yourself, in the app or by writing to us.",
+        "you can delete your account: tap <b>More</b>, tap <b>Delete my account</b>, then tap <b>Send request</b>.",
+      ),
+    ),
+    [DELETE]: pipe(
+      swap(
+        "you cannot delete your account yourself, in the app or by writing to us.",
+        "you can delete your account: tap <b>More</b>, tap <b>Delete my account</b>, then tap <b>Send request</b>.",
+      ),
+      swap(
+        "t&uacute; no puedes eliminar tu cuenta, ni en la app ni escribi&eacute;ndonos.",
+        "puedes eliminar tu cuenta: toca <b>M&aacute;s</b>, toca <b>Eliminar mi cuenta</b> y luego <b>Enviar solicitud</b>.",
+      ),
+      swap(
+        "vous ne pouvez pas supprimer votre compte vous-m&ecirc;me, ni dans l&rsquo;application ni en nous &eacute;crivant.",
+        "vous pouvez supprimer votre compte&nbsp;: touchez <b>Plus</b>, touchez <b>Supprimer mon compte</b>, puis <b>Envoyer la demande</b>.",
+      ),
     ),
   });
   const r = check(site);
-  expectFailure(r, /privacy: tells people to tap Profile/);
-  assert.match(r.out, /privacy: section 09 does not tell people to tap More/);
+  expectFailure(r, /privacy: tells people they can delete their own account/);
+  assert.match(r.out, /privacy: section 09 does not say you cannot delete your account yourself/);
+  for (const lang of ["English", "Spanish", "French"]) {
+    assert.match(r.out, new RegExp(`delete-account: ${lang} section tells people they can delete their own account`));
+    assert.match(r.out, new RegExp(`delete-account: ${lang} section does not say you cannot delete your account yourself`));
+  }
 });
 
-test("fails when client accounts are not told to use email", () => {
+test("fails when the pages leave out that only an active administrator of the employer can ask", () => {
   const { site } = fixture({
-    [DELETE]: swap("<p>If you sign in with a client account, the app does not offer these steps. Use Option 2 instead.</p>", ""),
     [PRIVACY]: swap(
-      "<li><b>Client accounts:</b> if you sign in with a client account, the app does not offer these steps. Use email instead.</li>",
+      " We act only on requests from an active administrator of that employer&rsquo;s IQS Flow account, and only for people in that account.",
       "",
     ),
+    [DELETE]: pipe(
+      swap(
+        " We act only on requests from an active administrator of that employer&rsquo;s IQS Flow account, and only for people in that account.",
+        "",
+      ),
+      swap(" Solo atendemos solicitudes de un administrador activo de la cuenta de IQS Flow de ese empleador, y solo para personas de esa cuenta.", ""),
+      swap(
+        " Nous ne traitons que les demandes d&rsquo;un administrateur actif du compte IQS Flow de cet employeur, et seulement pour des personnes de ce compte.",
+        "",
+      ),
+    ),
   });
   const r = check(site);
-  expectFailure(r, /delete-account: English section does not tell client accounts to use email/);
-  assert.match(r.out, /privacy: section 09 does not tell client accounts to use email/);
+  expectFailure(r, /privacy: section 09 does not say only an active administrator of the employer's account can ask, and only for people in that account/);
+  for (const lang of ["English", "Spanish", "French"]) {
+    assert.match(r.out, new RegExp(`delete-account: ${lang} section does not say only an active administrator of the employer's account can ask`));
+  }
 });
 
-// ---- finding: a response time is not a completion time --------------------------------
+test("an administrator-only rule that appears only in a TODO(Josh) note does not count", () => {
+  const { site } = fixture({
+    [DELETE]: swap(
+      " We act only on requests from an active administrator of that employer&rsquo;s IQS Flow account, and only for people in that account.",
+      ' <span class="todo">TODO(Josh): we act only on requests from an active administrator, and only for people in that account.</span>',
+    ),
+  });
+  expectFailure(check(site), /delete-account: English section does not say only an active administrator of the employer's account can ask/);
+});
+
+test("fails when the pages say work records are kept without the worker's name", () => {
+  const { site } = fixture({
+    [PRIVACY]: swap(
+      "Records of your work stay as they are, with your name and the location recorded with your work.",
+      "Work records that your employer or its clients need may be kept with your name removed.",
+    ),
+    [DELETE]: pipe(
+      swap(
+        "stay as they are, with your name and the location recorded with your work.",
+        "may be kept with your name removed.",
+      ),
+      swap(
+        "se conservan tal como est&aacute;n, con tu nombre y la ubicaci&oacute;n registrada con tu trabajo.",
+        "pueden conservarse sin tu nombre.",
+      ),
+      swap(
+        "restent tels quels, avec votre nom et la position enregistr&eacute;e avec votre travail.",
+        "peuvent &ecirc;tre conserv&eacute;s sans votre nom.",
+      ),
+    ),
+  });
+  const r = check(site);
+  expectFailure(r, /privacy: section 09 does not say work records stay as they are, with the worker's name and the location recorded with their work/);
+  assert.match(r.out, /privacy: section 09 says work records are kept without the worker's name/);
+  for (const lang of ["English", "Spanish", "French"]) {
+    assert.match(r.out, new RegExp(`delete-account: ${lang} section does not say work records stay as they are`));
+    assert.match(r.out, new RegExp(`delete-account: ${lang} section says work records are kept without the worker's name`));
+  }
+});
+
+test("fails when the removal list leaves out a detail the employer can have removed", () => {
+  const { site } = fixture({
+    [PRIVACY]: swap(
+      "Your employer can ask us to remove your email address and phone number, your sign-in code, your email or Google sign-in, your push notification tokens and your location tracking history.",
+      "Your employer can ask us to remove some of your details.",
+    ),
+    // The audit history item further down still names "email address and phone number";
+    // it must not count as the removal list.
+    [DELETE]: pipe(
+      (t) => t.replace(/\s*<li>Contact details: [\s\S]*?<\/li>/, ""),
+      (t) => t.replace(/\s*<li>Sign-in details: [\s\S]*?<\/li>/, ""),
+      (t) => t.replace(/\s*<li>Their push notification tokens\.<\/li>/, ""),
+      (t) => t.replace(/\s*<li>Their location tracking history: [\s\S]*?<\/li>/, ""),
+      (t) => t.replace(/\s*<li>Datos de contacto: [\s\S]*?<\/li>/, ""),
+      (t) => t.replace(/\s*<li>Su historial de seguimiento de ubicaci&oacute;n: [\s\S]*?<\/li>/, ""),
+      (t) => t.replace(/\s*<li>Ses jetons de notification push\.<\/li>/, ""),
+      (t) => t.replace(/\s*<li>Les donn&eacute;es de connexion&nbsp;: [\s\S]*?<\/li>/, ""),
+    ),
+  });
+  const r = check(site);
+  for (const item of ["contact details", "the sign-in code", "push notification tokens", "location tracking history"]) {
+    assert.match(r.out, new RegExp(`privacy: section 09 does not list ${item} among the details removed on the employer's request`));
+    assert.match(r.out, new RegExp(`delete-account: English section does not list ${item} among the details removed`));
+  }
+  assert.match(r.out, /delete-account: Spanish section does not list contact details among the details removed/);
+  assert.match(r.out, /delete-account: Spanish section does not list location tracking history among the details removed/);
+  assert.match(r.out, /delete-account: French section does not list push notification tokens among the details removed/);
+  assert.match(r.out, /delete-account: French section does not list the sign-in code among the details removed/);
+  assert.equal(r.code, 1);
+});
+
+test("fails when the pages do not say removal is requested at privacy@iqsflow.com", () => {
+  const { site } = fixture({
+    [DELETE]: (t) => t.replace(/<section class="legal-lang-section" id="es"[\s\S]*?<\/section>/, (es) => es.split("privacy@iqsflow.com").join("nosotros")),
+  });
+  expectFailure(check(site), /delete-account: Spanish section does not say the employer asks at privacy@iqsflow\.com/);
+});
+
+// ---- a response time is not a completion time ---------------------------------------------
 
 test("fails when the deletion page promises only a response within 30 days", () => {
   const { site } = fixture({
     [DELETE]: pipe(
-      swap("<b>We complete deletion within 30 days and tell you when it is done.</b>", "<b>We respond within 30 days.</b>"),
+      swap("We complete the removal within 30 days of the request.", "We respond within 30 days."),
       swap(
-        "<b>Completamos la eliminaci&oacute;n en un plazo de 30 d&iacute;as y te avisamos cuando est&eacute; hecha.</b>",
-        "<b>Respondemos en un plazo de 30 d&iacute;as.</b>",
+        "Completamos la eliminaci&oacute;n en un plazo de 30 d&iacute;as desde la solicitud.",
+        "Respondemos en un plazo de 30 d&iacute;as.",
       ),
       swap(
-        "<b>Nous terminons la suppression sous 30 jours et vous pr&eacute;venons lorsqu&rsquo;elle est faite.</b>",
-        "<b>Nous r&eacute;pondons sous 30 jours.</b>",
+        "Nous terminons la suppression sous 30 jours &agrave; compter de la demande.",
+        "Nous r&eacute;pondons sous 30 jours.",
       ),
     ),
   });
   const r = check(site);
   for (const lang of ["English", "Spanish", "French"]) {
     assert.match(r.out, new RegExp(`delete-account: ${lang} section gives only a response time`));
-    assert.match(r.out, new RegExp(`delete-account: ${lang} section does not say when deletion is complete`));
+    assert.match(r.out, new RegExp(`delete-account: ${lang} section does not say when the removal is complete`));
   }
   assert.equal(r.code, 1);
 });
 
 test("fails when the privacy policy promises only a response within 30 days", () => {
   const { site } = fixture({
-    [PRIVACY]: swap("We complete deletion within 30 days and tell you when it is done.", "We respond within 30 days."),
+    [PRIVACY]: swap("We complete the removal within 30 days of the request.", "We respond within 30 days."),
   });
   const r = check(site);
   expectFailure(r, /privacy: gives only a response time/);
-  assert.match(r.out, /privacy: does not say when deletion is complete/);
+  assert.match(r.out, /privacy: section 09 does not say when the removal is complete/);
 });
 
 // ---- finding: the audit history cannot be de-identified ---------------------------------
@@ -488,7 +610,7 @@ test("fails when the pages say the audit history is the only thing kept after de
     [PRIVACY]: pipe(
       (t) => t.replace(/\s*<tr><td>Copies of deleted work orders<\/td>[\s\S]*?<\/tr>/, ""),
       swap(
-        "Two kinds of records keep some of your details even then, as listed above: the security audit history, and copies of deleted work orders. Emergency reports cannot be deleted on their own.",
+        "Two kinds of records also keep some of your details even after they are removed, as listed above: the security audit history, and copies of deleted work orders. Emergency reports cannot be deleted on their own.",
         "The security audit history is the exception: it keeps the details listed above.",
       ),
     ),
@@ -549,18 +671,19 @@ test("--app-locales passes when the app's text matches the pages", () => {
   assert.equal(r.code, 0, r.out);
 });
 
-test("--app-locales fails when the app promises only a review and reply within 30 days", () => {
+test("--app-locales fails when the app still offers the in-app deletion request", () => {
   const { dir, site } = fixture();
-  // The 1.1.0 strings on iqs-flow-mobile origin/claude/sdk57-store-release.
+  // The 1.1.0 strings on iqs-flow-mobile origin/claude/sdk57-store-release, which the
+  // account policy of 2026-09-30 replaces with an explanation.
   const locales = writeLocales(dir, {
-    en: { "profile.deleteTimeframe": "We will review your request and respond within 30 days." },
-    es: { "profile.deleteTimeframe": "Revisaremos tu solicitud y responderemos en un plazo de 30 días." },
-    fr: { "profile.deleteTimeframe": "Nous examinerons votre demande et répondrons sous 30 jours." },
+    en: { "profile.sendDeleteRequest": "Send request" },
+    es: { "profile.sendDeleteRequest": "Enviar solicitud" },
+    fr: { "profile.sendDeleteRequest": "Envoyer la demande" },
   });
   const r = check(site, `--app-locales=${locales}`);
-  expectFailure(r, /app en\.json: profile\.deleteTimeframe \("We will review your request and respond within 30 days\."\) does not promise/);
-  assert.match(r.out, /app es\.json: profile\.deleteTimeframe/);
-  assert.match(r.out, /app fr\.json: profile\.deleteTimeframe/);
+  expectFailure(r, /app en\.json: still has profile\.sendDeleteRequest \("Send request"\), the in-app deletion request/);
+  assert.match(r.out, /app es\.json: still has profile\.sendDeleteRequest/);
+  assert.match(r.out, /app fr\.json: still has profile\.sendDeleteRequest/);
 });
 
 test("--app-locales fails when the app's location notice does not mention coworkers", () => {
@@ -586,18 +709,6 @@ test("--app-locales fails when the app's location notice does not mention the em
   expectFailure(r, /app en\.json: locationPermission\.body does not say your employer's clients can see your live position/);
   assert.match(r.out, /app es\.json: locationPermission\.body does not say your employer's clients/);
   assert.match(r.out, /app fr\.json: locationPermission\.body does not say your employer's clients/);
-});
-
-test("--app-locales fails when a deletion step label differs from the app", () => {
-  const { dir, site } = fixture();
-  const locales = writeLocales(dir, {
-    en: { "profile.deleteAccount": "Delete account" },
-    es: { "tabs.more": "Menú" },
-  });
-  const r = check(site, `--app-locales=${locales}`);
-  expectFailure(r, /delete-account: English steps do not show the app's label "Delete account" \(profile\.deleteAccount\)/);
-  assert.match(r.out, /privacy: section 09 does not show the app's label "Delete account"/);
-  assert.match(r.out, /delete-account: Spanish steps do not show the app's label "Menú" \(tabs\.more\)/);
 });
 
 // ---- finding: unconfirmed legal entity ---------------------------------------------------

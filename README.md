@@ -59,20 +59,22 @@ Forms will not send locally (the `/api/forms/submit` route is wired by the produ
 
 ## Legal page check
 
-`/privacy/`, `/subprocessors/` and `/delete-account/` are the URLs the App Store and Google Play listings point to. A no-dependency check covers them (links, anchors, tag balance, no em dashes, no unconfirmed legal entity in the pages, the site footer or any page's copyright line, every third-party host the site loads listed on `/subprocessors/`, no unused vendors, location wording that matches the app, who can see a worker's location (coworkers on the app map, and the employer's clients, who get live positions at their sites; a disclosure only inside a TODO(Josh) note does not count), the in-app deletion steps with the app's real tab label in English, Spanish and French, a deletion completion time, and what is kept after deletion (the security audit history, copies of deleted work orders, and emergency reports) in all three languages):
+`/privacy/`, `/subprocessors/` and `/delete-account/` are the URLs the App Store and Google Play listings point to. A no-dependency check covers them (links, anchors, tag balance, no em dashes, no unconfirmed legal entity in the pages, the site footer or any page's copyright line, every third-party host the site loads listed on `/subprocessors/`, no unused vendors, the services that work under their own terms named wherever a page says providers use data only for us, location wording that matches the app and the web dashboard (which saves the browser's location with an inspection), who can see a worker's location (coworkers on the app map, and the employer's clients, who get live positions at their sites), and what is kept after a removal (the security audit history, copies of deleted work orders, and emergency reports). A disclosure only inside a TODO(Josh) note does not count.
+
+It also holds the pages to the account policy of 2026-09-30, in English, Spanish and French: the employer creates and manages every account, so the pages must not offer a worker self-deletion; they must say only an active administrator of the employer's account can ask at privacy@iqsflow.com, and only for people in that account; that the removal is complete within 30 days; which details are removed (contact details, sign-in code, email or Google sign-in, push tokens, location tracking history); and that work records stay as they are, with the worker's name and the location recorded with their work:
 
 ```bash
 node scripts/check-legal-pages.mjs              # everyday check
 node scripts/check-legal-pages.mjs --app-locales=../iqs-flow-mobile/locales
-                                                # also compare the pages with the app's own text (labels, deletion promise, location notice)
+                                                # also compare the pages with the app's own text (location notice, no in-app deletion request)
 node scripts/check-legal-pages.mjs --publish --app-locales=<release locales>
                                                 # also fails while any TODO(Josh), draft notice or sign-off remains; run before tagging
 node --test scripts/check-legal-pages.test.mjs  # tests for the check itself
 ```
 
-`--app-locales` must point at the `locales/` folder of the mobile release that is on every phone. The check reads the deletion step labels (`tabs.more`, `profile.privacyData`, `profile.deleteAccount`, `profile.sendDeleteRequest`, `profile.deleteRequested`), the deletion timeframe (`profile.deleteTimeframe`) and the location notice (`locationPermission.body`) in English, Spanish and French, and fails when the pages and the app disagree. `--publish` requires it.
+`--app-locales` must point at the `locales/` folder of the mobile release that is on every phone. The check reads the location notice (`locationPermission.body`) in English, Spanish and French and fails when it leaves out who the pages say can see your location. It also fails while the app still has the in-app deletion request (`profile.sendDeleteRequest`), because the pages say only the employer can have an account's details removed. `--publish` requires it.
 
-Facts that nothing in the code can confirm live in `scripts/legal-signoff.json`: the exact legal entity, the date counsel reviewed the pages, proof that the deletion process is live, and the app version on every phone. `--publish` fails while any of them is `null`.
+Facts that nothing in the code can confirm live in `scripts/legal-signoff.json`: the exact legal entity, the date counsel reviewed the pages, proof that the removal process (runbook) is live, and the app version on every phone. `--publish` fails while any of them is `null`.
 
 ## Forms Cloud Function (`functions/forms-handler`)
 
