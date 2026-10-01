@@ -24,7 +24,9 @@
  *
  * Facts that nothing in the code can confirm (the legal entity, counsel review, the
  * deletion process, the app version on the fleet) live in scripts/legal-signoff.json.
- * --publish fails while any of them is null.
+ * --publish fails while any of them is null. One more, locationCleanupOnProd, is needed
+ * only while /privacy/ gives location check-ins a retention period: a cleanup job must be
+ * confirmed to delete them on production first.
  *
  * Run it with --publish before pushing a v3.x tag that ships these pages.
  * Tests: node --test scripts/check-legal-pages.test.mjs
@@ -64,6 +66,13 @@ const SIGNOFF_KEYS = {
   appVersionWithGates:
     "the app version on every phone with the scheduled-shift location gate, the location notice, and the employer-managed account explanation in place of Delete my account",
 };
+// Needed only while section 08 of /privacy/ gives location check-ins a period (TIMED_DELETION).
+const LOCATION_CLEANUP_KEY = "locationCleanupOnProd";
+// A retention period or automatic deletion, e.g. "30 days, then deleted automatically."
+const TIMED_DELETION = /\b\d+\s*(?:days?|weeks?|months?|years?)\b|\bautomatic(?:ally)?\b|\bdeleted after\b/i;
+// A minimum age ("under 13", "ages 18 and up") or the "do not knowingly collect" commitment.
+const CHILDREN_AGE_CLAIM =
+  /\b(?:under|below|younger than) (?:the age of )?\d{1,2}\b|\bages? (?:of )?\d{1,2}\b|\b\d{1,2} (?:years? (?:old|of age)|and (?:up|over|older))\b|\bknowingly collect\b/i;
 // Named in the old policy but not used anywhere in the IQS Flow code.
 const UNUSED_VENDORS = /\bAWS\b|Amazon Web Services|\bSentry\b|\bTwilio\b/i;
 // Entity and DPO in the old policy that do not match the App Store seller.
@@ -598,10 +607,35 @@ else {
     );
   }
 
+  // Children. Counsel has not set the minimum age or the collection commitment, so until
+  // counselReviewedOn is set the draft states neither outside a TODO(Josh) note.
+  if (!isSet(signoff.counselReviewedOn) && CHILDREN_AGE_CLAIM.test(flat(children))) {
+    fail(
+      "privacy",
+      `section 13 states a minimum age or a commitment about collecting children's information, but counsel has not set them (keep them in a TODO(Josh) note until counselReviewedOn is set in ${signoffName})`,
+    );
+  }
+
   const retention = sectionBetween(privacy, "retain", "delete");
-  // The daily cleanup deletes location_events older than 30 days (src/routes/cron.ts).
-  if (!/<tr><td>Location check-ins<\/td>\s*<td>[^<]*\b30 days\b/i.test(retention)) {
-    fail("privacy", "section 08 does not give the 30-day period for location check-ins");
+  // The daily cleanup deletes location_events older than 30 days (iqs-flow-api
+  // src/routes/cron.ts POST /api/cron/cleanup), but Cloud Scheduler runs it only against
+  // the development API (iqs-flow-daily-cleanup; no production job on 2026-10-01), so
+  // production check-ins are never deleted. The row may give a period only once
+  // locationCleanupOnProd confirms a production job deletes them. Until then it is a
+  // TODO(Josh); once that is answered, the row must say how long they are kept.
+  const locationRow = retention.match(/<tr><td>Location check-ins<\/td>\s*<td>([\s\S]*?)<\/td>\s*<\/tr>/i)?.[1];
+  if (locationRow === undefined) fail("privacy", "section 08 has no row for location check-ins");
+  else {
+    const rowClaims = flat(withoutTodos(locationRow)).trim();
+    if (TIMED_DELETION.test(rowClaims) && !isSet(signoff[LOCATION_CLEANUP_KEY])) {
+      fail(
+        "sign-off",
+        `${LOCATION_CLEANUP_KEY} is not set in ${signoffName}, but /privacy/ section 08 says location check-ins are deleted after a set time; confirm a production cleanup job deletes them first`,
+      );
+    }
+    if (!rowClaims && !/TODO\(Josh\)/.test(locationRow)) {
+      fail("privacy", "section 08 does not say how long location check-ins are kept");
+    }
   }
   // A row in the retention table, not just a passing mention.
   if (!/<tr><td>[^<]*audit history[^<]*<\/td>/i.test(retention)) {
@@ -884,6 +918,9 @@ for (const [key, why] of Object.entries(SIGNOFF_KEYS)) {
   if (isSet(signoff[key])) continue;
   if (publishMode) fail("sign-off", `${key} is not set in ${signoffName} (${why})`);
   else note("sign-off", `${key} not set yet`);
+}
+if (!isSet(signoff[LOCATION_CLEANUP_KEY])) {
+  note("sign-off", `${LOCATION_CLEANUP_KEY} not set yet (needed before section 08 of /privacy/ may give location check-ins a period)`);
 }
 
 console.log(`Checked legal pages in ${siteRoot}${publishMode ? " (publish mode)" : ""}`);

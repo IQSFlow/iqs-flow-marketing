@@ -325,7 +325,7 @@ test("fails when section 05 leaves out upload-time scoring or the client portal 
   assert.match(r.out, /privacy: section 05 does not describe the client portal assistant/);
 });
 
-test("fails when the location retention row gives no period", () => {
+test("fails when section 08 has no row for location check-ins", () => {
   const { site } = fixture({
     [PRIVACY]: (t) =>
       t.replace(
@@ -333,7 +333,31 @@ test("fails when the location retention row gives no period", () => {
         '<tr><td>Location history</td><td><span class="todo">TODO(Josh): retention period</span></td></tr>',
       ),
   });
-  expectFailure(check(site), /privacy: section 08 does not give the 30-day period for location check-ins/);
+  expectFailure(check(site), /privacy: section 08 has no row for location check-ins/);
+});
+
+// ---- finding: location check-ins are not deleted on production ---------------------------
+// The daily cleanup that deletes check-ins older than 30 days runs only against the
+// development API, so section 08 may give that period only once a sign-off confirms a
+// production job deletes them.
+
+const LOCATION_ROW = /(<tr><td>Location check-ins<\/td><td>)[\s\S]*?(<\/td><\/tr>)/;
+const locationRetention = (cell) => (t) => t.replace(LOCATION_ROW, `$1${cell}$2`);
+
+test("fails when section 08 says location check-ins are deleted after 30 days and no production cleanup is confirmed", () => {
+  const { site } = fixture({ [PRIVACY]: locationRetention("30 days, then deleted automatically.") });
+  expectFailure(check(site), /sign-off: locationCleanupOnProd is not set in legal-signoff\.json, but \/privacy\/ section 08 says location check-ins are deleted/);
+});
+
+test("section 08 may give the 30-day period once locationCleanupOnProd confirms the production cleanup", () => {
+  const { dir, site } = fixture({ [PRIVACY]: locationRetention("30 days, then deleted automatically.") });
+  const r = check(site, `--signoff=${writeSignoff(dir, { locationCleanupOnProd: "2026-10-01" })}`);
+  assert.equal(r.code, 0, r.out);
+});
+
+test("fails when the location check-ins row gives no period and no TODO(Josh) holds it open", () => {
+  const { site } = fixture({ [PRIVACY]: locationRetention("") });
+  expectFailure(check(site), /privacy: section 08 does not say how long location check-ins are kept/);
 });
 
 test("fails when the subprocessors page leaves out Apple Maps, the installation ID, the assistant or the directions origin", () => {
@@ -755,6 +779,23 @@ test("fails when section 13 promises that we delete a child's information oursel
   assert.match(r.out, /privacy: section 13 does not say to tell us at privacy@iqsflow\.com and that we work with the employer that created the account/);
 });
 
+// Counsel has not set the minimum age or the collection commitment, so the draft states
+// neither outside a TODO(Josh) note until counselReviewedOn is set.
+const CHILDREN_OPENING = /IQS Flow is a workplace tool, and it is not meant for children\. <span class="todo">TODO\(Josh\)[^<]*<\/span>/;
+const OLD_CHILDREN_OPENING =
+  "IQS Flow is a workplace tool. It is not meant for children, and we do not knowingly collect information from children under 13.";
+
+test("fails when section 13 states a minimum age before counsel has set one", () => {
+  const { site } = fixture({ [PRIVACY]: (t) => t.replace(CHILDREN_OPENING, OLD_CHILDREN_OPENING) });
+  expectFailure(check(site), /privacy: section 13 states a minimum age or a commitment about collecting children's information/);
+});
+
+test("section 13 may state the minimum age once counsel has reviewed the pages", () => {
+  const { dir, site } = fixture({ [PRIVACY]: (t) => t.replace(CHILDREN_OPENING, OLD_CHILDREN_OPENING) });
+  const r = check(site, `--signoff=${writeSignoff(dir, { counselReviewedOn: "2026-10-01" })}`);
+  assert.equal(r.code, 0, r.out);
+});
+
 test("a children commitment that appears only in a TODO(Josh) note does not count", () => {
   const { site } = fixture({
     [PRIVACY]: swap(CHILDREN_LINE, "contact us. <span class=\"todo\">TODO(Josh): we work with the employer that created the account; privacy@iqsflow.com.</span>"),
@@ -958,6 +999,8 @@ const ALL_SIGNED = {
   counselReviewedOn: "2026-10-01",
   deletionProcessLive: "2026-10-01",
   appVersionWithGates: "1.1.0",
+  // Needed only because publishReady() gives location check-ins a 30-day period.
+  locationCleanupOnProd: "2026-10-01",
 };
 const stripTodos = pipe(
   (t) => t.replace(/<div class="legal-draft"[^>]*>[\s\S]*?<\/div>/, ""),
@@ -970,7 +1013,7 @@ function publishReady(
   homeEdit = swap("© 2026 INTEGRITY QUALITY SOLUTIONS", `© 2026 ${ENTITY.toUpperCase()}`),
 ) {
   const f = fixture({
-    [PRIVACY]: pipe(stripTodos, nameEntity),
+    [PRIVACY]: pipe(stripTodos, nameEntity, locationRetention("30 days, then deleted automatically.")),
     [SUBS]: pipe(stripTodos, nameEntity),
     [DELETE]: pipe(stripTodos, nameEntity),
     [SHARED_JS]: pipe(swap("TODO(Josh)", "NOTE"), swap("INTEGRITY QUALITY SOLUTIONS", ENTITY.toUpperCase())),
@@ -987,6 +1030,14 @@ test("--publish passes once every TODO is answered, every sign-off is set and th
   const { dir, site } = publishReady();
   const r = check(site, "--publish", `--signoff=${writeSignoff(dir, ALL_SIGNED)}`, `--app-locales=${writeLocales(dir)}`);
   assert.equal(r.code, 0, r.out);
+});
+
+test("--publish fails when the location check-ins row gives no period once its TODO is gone", () => {
+  const { dir, site } = publishReady();
+  const file = path.join(site, PRIVACY);
+  writeFileSync(file, locationRetention("")(readFileSync(file, "utf8")));
+  const r = check(site, "--publish", `--signoff=${writeSignoff(dir, ALL_SIGNED)}`, `--app-locales=${writeLocales(dir)}`);
+  expectFailure(r, /privacy: section 08 does not say how long location check-ins are kept/);
 });
 
 test("--publish fails when the app's text is not compared", () => {
