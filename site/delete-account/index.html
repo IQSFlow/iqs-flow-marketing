@@ -45,21 +45,24 @@
 
       <h3 id="en-leave">When you leave your employer</h3>
       <ul>
-        <li>Your employer turns off your account. From that moment, you can no longer sign in.</li>
+        <li>Your employer deactivates your account. From that moment, you can no longer sign in.</li>
         <li>Records of your work, such as inspections, checklists, work orders, photos and clock-in times, stay as they are, with your name and the location recorded with your work. They are your employer&rsquo;s and its clients&rsquo; service records. <span class="todo">TODO(Josh): state how long these records are kept.</span></li>
         <li>Your employer can ask us to remove your personal details, as described below.</li>
       </ul>
 
       <h3 id="en-remove">How an employer asks us to remove a former worker&rsquo;s details</h3>
-      <p>An administrator of the employer&rsquo;s IQS Flow account emails <a href="mailto:privacy@iqsflow.com?subject=Remove%20a%20former%20worker%27s%20details">privacy@iqsflow.com</a> with the person&rsquo;s full name and the company name on the IQS Flow account. We act only on requests from an active administrator of that employer&rsquo;s IQS Flow account, and only for people in that account. We complete the removal within 30 days of the request.</p>
+      <p>An administrator of the employer&rsquo;s IQS Flow account files the request from <b>Admin &gt; Privacy</b> in the IQS Flow console. We act only on requests from an active administrator of that employer&rsquo;s IQS Flow account, and only for people in that account. The employer deactivates the person&rsquo;s account first, and we remove nothing while it is still active. We complete the removal within 30 days of the request. The 30 days start on the day the request is filed.</p>
+      <p>If an administrator emails <a href="mailto:privacy@iqsflow.com">privacy@iqsflow.com</a> instead, we reply asking them to file the request from <b>Admin &gt; Privacy</b>, so that we can verify it.</p>
+      <p>An administrator cannot file a request for their own details. Another administrator in their account must file it.</p>
       <p>We remove:</p>
       <ul>
         <li>Contact details: the person&rsquo;s email address and phone number.</li>
         <li>Sign-in details: their sign-in code (stored only as a one-way hash) and their email or Google sign-in.</li>
         <li>Their push notification tokens.</li>
-        <li>Their location tracking history: the location check-ins the app recorded while they worked.</li>
+        <li>Their location tracking history: the location check-ins the app recorded while they worked for that employer.</li>
       </ul>
-      <p><span class="todo">TODO(Josh): write the removal runbook that matches this page (how IQS checks that a request comes from an active administrator of that employer&rsquo;s account and names a person in it, and exactly what IQS removes), then set deletionProcessLive in scripts/legal-signoff.json.</span></p>
+      <p>Everything in this list except the location check-ins belongs to the person&rsquo;s one IQS Flow login, so it is removed for every employer the person worked for. Location check-ins are removed only from the account of the employer that asked. If the person also worked for another employer that uses IQS Flow, the records that employer holds about them, such as its location check-ins, stay until that employer&rsquo;s administrator asks.</p>
+      <p><span class="todo">TODO(Josh): the removal runbook (iqs-flow-api docs/runbooks/former-worker-data-removal.md, branch claude/employer-managed-accounts) describes this process: the Admin &gt; Privacy request, how IQS checks that it comes from an active administrator of that employer&rsquo;s account and names a deactivated person in it, and exactly what IQS removes. Once it is merged and the request form is live on prod, set deletionProcessLive in scripts/legal-signoff.json.</span></p>
 
       <h3 id="en-kept">What removal does not change</h3>
       <p>Work records stay as they are, as described above. Two other kinds of records also keep some details:</p>
@@ -91,14 +94,17 @@
       </ul>
 
       <h3 id="es-remove">C&oacute;mo nos pide un empleador que eliminemos los datos de un ex trabajador</h3>
-      <p>Un administrador de la cuenta de IQS Flow del empleador escribe a <a href="mailto:privacy@iqsflow.com?subject=Eliminar%20los%20datos%20de%20un%20ex%20trabajador">privacy@iqsflow.com</a> con el nombre completo de la persona y el nombre de la empresa en la cuenta de IQS Flow. Solo atendemos solicitudes de un administrador activo de la cuenta de IQS Flow de ese empleador, y solo para personas de esa cuenta. Completamos la eliminaci&oacute;n en un plazo de 30 d&iacute;as desde la solicitud.</p>
+      <p>Un administrador de la cuenta de IQS Flow del empleador presenta la solicitud desde <b>Admin &gt; Privacy</b> en la consola de IQS Flow. Solo atendemos solicitudes de un administrador activo de la cuenta de IQS Flow de ese empleador, y solo para personas de esa cuenta. El empleador desactiva primero la cuenta de la persona, y no eliminamos nada mientras siga activa. Completamos la eliminaci&oacute;n en un plazo de 30 d&iacute;as desde la solicitud. Los 30 d&iacute;as empiezan a contar el d&iacute;a en que se presenta la solicitud.</p>
+      <p>Si un administrador escribe a <a href="mailto:privacy@iqsflow.com">privacy@iqsflow.com</a> en su lugar, le respondemos pidi&eacute;ndole que presente la solicitud desde <b>Admin &gt; Privacy</b>, para que podamos verificarla.</p>
+      <p>Un administrador no puede presentar una solicitud para sus propios datos. Debe presentarla otro administrador de su cuenta.</p>
       <p>Eliminamos:</p>
       <ul>
         <li>Datos de contacto: el correo electr&oacute;nico y el n&uacute;mero de tel&eacute;fono de la persona.</li>
         <li>Datos de acceso: su c&oacute;digo de acceso (guardado solo como un hash de un solo sentido) y su inicio de sesi&oacute;n con correo electr&oacute;nico o con Google.</li>
         <li>Sus tokens de notificaciones push.</li>
-        <li>Su historial de seguimiento de ubicaci&oacute;n: los registros de ubicaci&oacute;n que la app guard&oacute; mientras trabajaba.</li>
+        <li>Su historial de seguimiento de ubicaci&oacute;n: los registros de ubicaci&oacute;n que la app guard&oacute; mientras trabajaba para ese empleador.</li>
       </ul>
+      <p>Todo lo de esta lista, salvo los registros de ubicaci&oacute;n, pertenece al &uacute;nico inicio de sesi&oacute;n de la persona en IQS Flow, por lo que se elimina para todos los empleadores para los que trabaj&oacute;. Los registros de ubicaci&oacute;n se eliminan solo de la cuenta del empleador que lo pidi&oacute;. Si la persona tambi&eacute;n trabaj&oacute; para otro empleador que usa IQS Flow, los registros que ese empleador tiene sobre ella, como sus registros de ubicaci&oacute;n, se conservan hasta que el administrador de ese empleador lo pida.</p>
 
       <h3 id="es-kept">Lo que la eliminaci&oacute;n no cambia</h3>
       <p>Los registros de trabajo se conservan tal como est&aacute;n, como se explica arriba. Otros dos tipos de registros tambi&eacute;n conservan algunos datos:</p>
@@ -129,14 +135,17 @@
       </ul>
 
       <h3 id="fr-remove">Comment un employeur nous demande de supprimer les donn&eacute;es d&rsquo;un ancien employ&eacute;</h3>
-      <p>Un administrateur du compte IQS Flow de l&rsquo;employeur &eacute;crit &agrave; <a href="mailto:privacy@iqsflow.com?subject=Supprimer%20les%20donn%C3%A9es%20d%27un%20ancien%20employ%C3%A9">privacy@iqsflow.com</a> en indiquant le nom complet de la personne et le nom de l&rsquo;entreprise sur le compte IQS Flow. Nous ne traitons que les demandes d&rsquo;un administrateur actif du compte IQS Flow de cet employeur, et seulement pour des personnes de ce compte. Nous terminons la suppression sous 30 jours &agrave; compter de la demande.</p>
+      <p>Un administrateur du compte IQS Flow de l&rsquo;employeur d&eacute;pose la demande depuis <b>Admin &gt; Privacy</b> dans la console IQS Flow. Nous ne traitons que les demandes d&rsquo;un administrateur actif du compte IQS Flow de cet employeur, et seulement pour des personnes de ce compte. L&rsquo;employeur d&eacute;sactive d&rsquo;abord le compte de la personne, et nous ne supprimons rien tant qu&rsquo;il est encore actif. Nous terminons la suppression sous 30 jours &agrave; compter de la demande. Les 30 jours commencent le jour o&ugrave; la demande est d&eacute;pos&eacute;e.</p>
+      <p>Si un administrateur &eacute;crit &agrave; <a href="mailto:privacy@iqsflow.com">privacy@iqsflow.com</a> &agrave; la place, nous lui r&eacute;pondons en lui demandant de d&eacute;poser la demande depuis <b>Admin &gt; Privacy</b>, afin de pouvoir la v&eacute;rifier.</p>
+      <p>Un administrateur ne peut pas d&eacute;poser de demande pour ses propres donn&eacute;es. Un autre administrateur de son compte doit la d&eacute;poser.</p>
       <p>Nous supprimons&nbsp;:</p>
       <ul>
         <li>Les coordonn&eacute;es&nbsp;: l&rsquo;adresse e-mail et le num&eacute;ro de t&eacute;l&eacute;phone de la personne.</li>
         <li>Les donn&eacute;es de connexion&nbsp;: son code de connexion (conserv&eacute; uniquement sous forme de hachage irr&eacute;versible) et sa connexion par e-mail ou par Google.</li>
         <li>Ses jetons de notification push.</li>
-        <li>Son historique de suivi de position&nbsp;: les relev&eacute;s de position que l&rsquo;application a enregistr&eacute;s pendant son travail.</li>
+        <li>Son historique de suivi de position&nbsp;: les relev&eacute;s de position que l&rsquo;application a enregistr&eacute;s pendant son travail pour cet employeur.</li>
       </ul>
+      <p>Tout ce qui figure dans cette liste, sauf les relev&eacute;s de position, appartient &agrave; l&rsquo;identifiant IQS Flow unique de la personne&nbsp;: tout cela est donc supprim&eacute; pour tous les employeurs pour lesquels elle a travaill&eacute;. Les relev&eacute;s de position ne sont supprim&eacute;s que du compte de l&rsquo;employeur qui l&rsquo;a demand&eacute;. Si la personne a aussi travaill&eacute; pour un autre employeur qui utilise IQS Flow, les dossiers que cet employeur d&eacute;tient sur elle, comme ses relev&eacute;s de position, sont conserv&eacute;s jusqu&rsquo;&agrave; ce que l&rsquo;administrateur de cet employeur le demande.</p>
 
       <h3 id="fr-kept">Ce que la suppression ne change pas</h3>
       <p>Les dossiers de travail restent tels quels, comme indiqu&eacute; ci-dessus. Deux autres types de dossiers conservent aussi certaines donn&eacute;es&nbsp;:</p>

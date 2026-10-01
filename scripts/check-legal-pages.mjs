@@ -3,8 +3,10 @@
  * Checks the public legal pages that the App Store and Google Play listings link to:
  *   /privacy/          privacy policy (with the mobile app section)
  *   /subprocessors/    service providers that process personal data
- *   /delete-account/   who removes an account and its personal details (the employer
- *                      asks IQS; the app has no sign-up and no self-deletion)
+ *   /delete-account/   who removes an account and its personal details (the employer's
+ *                      administrator files the request from Admin > Privacy; the app has
+ *                      no sign-up and no self-deletion). This is the URL to give when a
+ *                      store asks for an account deletion or data removal link.
  * plus the site footer they render (assets/shared.js), the /terms/ page they link to,
  * every page's own copyright line, and the third-party hosts any page loads (each must
  * be listed on /subprocessors/).
@@ -58,7 +60,7 @@ const SIGNOFF_KEYS = {
   legalEntity: "the exact legal name and entity type on the Apple seller record and Google Play developer account",
   counselReviewedOn: "the date counsel approved the privacy, subprocessors and delete-account pages",
   deletionProcessLive:
-    "a written removal runbook must exist for employer requests to privacy@iqsflow.com, matching /delete-account/, that covers the audit history and deleted work orders",
+    "a written removal runbook must exist for employer requests filed from Admin > Privacy, matching /delete-account/, that covers the audit history and deleted work orders",
   appVersionWithGates:
     "the app version on every phone with the scheduled-shift location gate, the location notice, and the employer-managed account explanation in place of Delete my account",
 };
@@ -125,26 +127,54 @@ const KEPT_AFTER_DELETION = {
 };
 // Accounts are the employer's (Josh's account policy, 2026-09-30). The employer creates
 // and manages every account in the admin console; the app has no sign-up and no
-// self-deletion. A worker who leaves is turned off (sign-in blocked at once). Their work
+// self-deletion. A worker who leaves is deactivated (sign-in blocked at once). Their work
 // records stay exactly as they are, with their name and the GPS recorded with the work.
 // Their contact details, sign-in code (last-4 hash), Firebase login, push tokens and
 // location tracking history are removed only when an active ADMIN of that vendor tenant
-// asks at privacy@iqsflow.com, for a member of that tenant, within 30 days.
-//   selfService   wording that offers a worker self-deletion (the old in-app steps, or
-//                 "ask us to delete your account")
-//   noSelfDelete  says you cannot delete your account yourself
-//   adminOnly     only an active administrator of the employer's account can ask...
-//   ownAccount    ...and only for people in that account
-//   completed     the removal is complete within 30 days (not just a reply)
-//   removed       each detail removed on the employer's request (checked in the list)
-//   keptWithName  work records stay as they are, with the name and the recorded location
-//   nameRemoved   the old promise that work records are kept without the name
+// asks, for a member of that tenant, within 30 days.
+// There is one filing path (iqs-flow-api docs/runbooks/former-worker-data-removal.md):
+// the admin files from Admin > Privacy in the IQS Flow console (POST
+// /api/privacy/delete-request), and the 30 days run from filing. An admin who emails
+// privacy@iqsflow.com instead is asked to file there, so the request is verified. The
+// person is deactivated first. An admin cannot file for themselves (403
+// CANNOT_REQUEST_FOR_SELF): another admin in their account must, and no page sends them
+// to privacy@ for it. A request covers the requesting employer's records and the
+// person's one login; records another employer holds stay until that employer asks.
+//   selfService       wording that offers a worker self-deletion (the old in-app steps,
+//                     or "ask us to delete your account")
+//   noSelfDelete      says you cannot delete your account yourself
+//   adminOnly         only an active administrator of the employer's account can ask...
+//   ownAccount        ...and only for people in that account
+//   filesInConsole    the administrator files the request from Admin > Privacy
+//   emailAnswered     an email to privacy@iqsflow.com is answered with a request to file
+//                     there (checked in one paragraph or list item with the address)
+//   emailFiling       the old instruction to send the request by email
+//   deactivatedFirst  the employer deactivates the person first
+//   selfRequest       an administrator cannot file for their own details; another
+//                     administrator in their account must
+//   otherEmployers    records another employer holds stay until that employer asks
+//   completed         the removal is complete within 30 days (not just a reply)
+//   fromFiling        the 30 days start on the day the request is filed
+//   removed           each detail removed on the employer's request (checked in the list)
+//   keptWithName      work records stay as they are, with the name and the recorded location
+//   nameRemoved       the old promise that work records are kept without the name
+// Rules marked "flat" below are tested with the tags removed (entities kept), so bold
+// menu names such as <b>Admin &gt; Privacy</b> read as plain text.
+const ADMIN_PRIVACY = String.raw`Admin (?:&gt;|>) Privacy`;
 const ACCOUNT_POLICY = {
   en: {
     selfService: /\b(?:tap|touch)\b[^.]*\bDelete my account\b|\bSend request\b|\bask us to delete your account\b/i,
     noSelfDelete: /\bcannot delete your account yourself\b/i,
     adminOnly: /\bonly on requests from an active administrator\b/i,
     ownAccount: /\bonly for people in that account\b/i,
+    // flat
+    filesInConsole: new RegExp(String.raw`\bfiles the request from ${ADMIN_PRIVACY} in the IQS Flow console\b`, "i"),
+    emailAnswered: new RegExp(String.raw`\bwe reply asking them to file the request from ${ADMIN_PRIVACY}`, "i"),
+    emailFiling: /\bremoval requests go here\b|\basks by emailing\b|\bemails privacy@iqsflow\.com with\b/i,
+    deactivatedFirst: /\bdeactivates? (?:the person(?:&rsquo;|'|’)s|your|their) account first\b/i,
+    selfRequest: /\bcannot file a request for their own details\.\s*Another administrator in their account must file it\b/i,
+    otherEmployers: /\banother employer\b[^.]*\bstay until that employer(?:&rsquo;|'|’)s administrator asks\b/i,
+    fromFiling: /\bthe 30 days start on the day the request is filed\b/i,
     completed: /\bcomplete the removal within 30 days\b/i,
     replyOnly: /\brespond within 30 days\b/i,
     removed: {
@@ -162,6 +192,13 @@ const ACCOUNT_POLICY = {
     noSelfDelete: /\bno puedes eliminar tu cuenta\b/i,
     adminOnly: /\bsolo atendemos solicitudes de un administrador activo\b/i,
     ownAccount: /\bsolo para personas de esa cuenta\b/i,
+    filesInConsole: new RegExp(String.raw`\bpresenta la solicitud desde ${ADMIN_PRIVACY} en la consola de IQS Flow\b`, "i"),
+    emailAnswered: new RegExp(String.raw`\ble respondemos pidi(?:&eacute;|é)ndole que presente la solicitud desde ${ADMIN_PRIVACY}`, "i"),
+    emailFiling: /\bescribe a privacy@iqsflow\.com con\b/i,
+    deactivatedFirst: /\bdesactiva primero la cuenta\b/i,
+    selfRequest: /\bno puede presentar una solicitud para sus propios datos\.\s*Debe presentarla otro administrador de su cuenta\b/i,
+    otherEmployers: /\botro empleador\b[^.]*\bse conservan hasta que el administrador de ese empleador lo pida\b/i,
+    fromFiling: /\blos 30 d(?:&iacute;|í)as empiezan a contar el d(?:&iacute;|í)a en que se presenta la solicitud\b/i,
     completed: /\bcompletamos la eliminaci(?:&oacute;|ó)n en un plazo de 30 d(?:&iacute;|í)as\b/i,
     replyOnly: /\brespondemos en un plazo de 30\b/i,
     removed: {
@@ -179,6 +216,18 @@ const ACCOUNT_POLICY = {
     noSelfDelete: /\bne pouvez pas supprimer votre compte vous-m(?:&ecirc;|ê)me\b/i,
     adminOnly: /\bne traitons que les demandes d(?:&rsquo;|'|’)un administrateur actif\b/i,
     ownAccount: /\bseulement pour des personnes de ce compte\b/i,
+    filesInConsole: new RegExp(String.raw`\bd(?:&eacute;|é)pose la demande depuis ${ADMIN_PRIVACY} dans la console IQS Flow\b`, "i"),
+    emailAnswered: new RegExp(
+      String.raw`\bnous lui r(?:&eacute;|é)pondons en lui demandant de d(?:&eacute;|é)poser la demande depuis ${ADMIN_PRIVACY}`,
+      "i",
+    ),
+    emailFiling: /(?:&eacute;|é)crit (?:&agrave;|à) privacy@iqsflow\.com en indiquant\b/i,
+    deactivatedFirst: /\bd(?:&eacute;|é)sactive d(?:&rsquo;|'|’)abord le compte\b/i,
+    selfRequest:
+      /\bne peut pas d(?:&eacute;|é)poser de demande pour ses propres donn(?:&eacute;|é)es\.\s*Un autre administrateur de son compte doit la d(?:&eacute;|é)poser\b/i,
+    otherEmployers:
+      /\bun autre employeur\b[^.]*\bsont conserv(?:&eacute;|é)s jusqu(?:&rsquo;|'|’)(?:&agrave;|à) ce que l(?:&rsquo;|'|’)administrateur de cet employeur le demande\b/i,
+    fromFiling: /\bles 30 jours commencent le jour o(?:&ugrave;|ù) la demande est d(?:&eacute;|é)pos(?:&eacute;|é)e\b/i,
     completed: /\bnous terminons la suppression sous 30 jours\b/i,
     replyOnly: /\bnous r(?:&eacute;|é)pondons sous 30 jours\b/i,
     removed: {
@@ -254,6 +303,26 @@ const withoutTodos = (html) => html.replace(/<span class="todo">[\s\S]*?<\/span>
 /** Paragraphs and list items, for rules that need a claim and its qualifier side by side. */
 const blocks = (html) => [...html.matchAll(/<(li|p)\b[^>]*>[\s\S]*?<\/\1>/g)].map((m) => m[0]);
 
+/** HTML with the tags removed and the entities kept, for the "flat" ACCOUNT_POLICY rules. */
+const flat = (html) => html.replace(/<[^>]+>/g, "").replace(/\s+/g, " ");
+
+// An administrator's own details (en / es / fr). A paragraph or list item that talks about
+// them must not send the administrator to privacy@iqsflow.com: the api answers
+// CANNOT_REQUEST_FOR_SELF, and another administrator in their account must file it.
+const OWN_DETAILS = /\b(?:their|your) own details\b|\bfor (?:themselves|yourself)\b|\bpropios datos\b|\bpropres donn(?:&eacute;|é)es\b/i;
+
+/** No paragraph or list item tells an administrator to email us about their own details. */
+function checkNoSelfEmail(page, html) {
+  for (const block of blocks(withoutTodos(html))) {
+    if (OWN_DETAILS.test(flat(block)) && /privacy@iqsflow\.com|mailto:/i.test(block)) {
+      fail(
+        page,
+        "tells an administrator to email privacy@iqsflow.com about their own details; another administrator in their account must file the request",
+      );
+    }
+  }
+}
+
 /** "Providers use data only to provide their service to us" must name the own-terms services. */
 function checkOnlyForUs(page, html) {
   for (const block of blocks(withoutTodos(html))) {
@@ -277,14 +346,32 @@ function checkAccountPolicy(page, where, lang, html, removalHtml = html) {
   const rule = ACCOUNT_POLICY[lang];
   const claims = withoutTodos(html);
   const removal = withoutTodos(removalHtml);
+  const text = flat(claims);
   if (!rule.noSelfDelete.test(claims)) {
     fail(page, `${where} does not say you cannot delete your account yourself (your employer manages it)`);
   }
-  if (!claims.includes("privacy@iqsflow.com")) fail(page, `${where} does not say the employer asks at privacy@iqsflow.com`);
   if (!rule.adminOnly.test(claims) || !rule.ownAccount.test(claims)) {
     fail(page, `${where} does not say only an active administrator of the employer's account can ask, and only for people in that account`);
   }
+  if (!rule.filesInConsole.test(text)) {
+    fail(page, `${where} does not say the administrator files the request from Admin > Privacy in the IQS Flow console`);
+  }
+  const answered = blocks(claims).some((b) => b.includes("privacy@iqsflow.com") && rule.emailAnswered.test(flat(b)));
+  if (!answered) {
+    fail(page, `${where} does not say an email to privacy@iqsflow.com is answered with a request to file it from Admin > Privacy`);
+  }
+  if (rule.emailFiling.test(text)) {
+    fail(page, `${where} tells the employer to send the removal request by email, but it is filed from Admin > Privacy`);
+  }
+  if (!rule.deactivatedFirst.test(text)) fail(page, `${where} does not say the employer deactivates the person first`);
+  if (!rule.selfRequest.test(text)) {
+    fail(page, `${where} does not say an administrator cannot file for their own details (another administrator in their account must file it)`);
+  }
+  if (!rule.otherEmployers.test(text)) {
+    fail(page, `${where} does not say records another employer holds stay until that employer's administrator asks`);
+  }
   if (!rule.completed.test(claims)) fail(page, `${where} does not say when the removal is complete (within 30 days of the request)`);
+  if (!rule.fromFiling.test(text)) fail(page, `${where} does not say the 30 days start on the day the request is filed`);
   if (rule.replyOnly.test(claims)) fail(page, `${where} gives only a response time, not a completion time`);
   for (const [item, re] of Object.entries(rule.removed)) {
     if (!re.test(removal)) fail(page, `${where} does not list ${item} among the details removed on the employer's request`);
@@ -491,6 +578,25 @@ else {
     fail("privacy", "tells people they can delete their own account (in the app or by asking us), but accounts are removed only at the employer's request");
   }
   checkAccountPolicy("privacy", "section 09", "en", deletion);
+  // One filing path everywhere on the page (section 15 is where people look for the inbox).
+  if (ACCOUNT_POLICY.en.emailFiling.test(flat(withoutTodos(privacy)))) {
+    fail("privacy", "tells employers to send removal requests by email, but they are filed from Admin > Privacy");
+  }
+  checkNoSelfEmail("privacy", privacy);
+
+  // Children. Every account is created by an employer, so a report of a child's
+  // information goes to privacy@iqsflow.com and is handled with the employer that created
+  // the account; the old promise that we delete it ourselves is not the process.
+  const children = withoutTodos(sectionBetween(privacy, "children", "changes"));
+  if (/\bwe (?:will|can|would) (?:delete|remove) (?:it|them)\b/i.test(flat(children))) {
+    fail("privacy", "section 13 promises that we delete a child's information ourselves, but we work with the employer that created the account");
+  }
+  if (!children.includes("privacy@iqsflow.com") || !/\bwork with the employer that created the account\b/i.test(flat(children))) {
+    fail(
+      "privacy",
+      "section 13 does not say to tell us at privacy@iqsflow.com and that we work with the employer that created the account to remove a child's information",
+    );
+  }
 
   const retention = sectionBetween(privacy, "retain", "delete");
   // The daily cleanup deletes location_events older than 30 days (src/routes/cron.ts).
@@ -559,6 +665,7 @@ else {
   for (const required of ["IQS Flow", "privacy@iqsflow.com", "within 30 days"]) {
     if (!del.includes(required)) fail("delete-account", `does not mention "${required}"`);
   }
+  checkNoSelfEmail("delete-account", del);
 
   const section = (lang) => del.match(new RegExp(`<section[^>]*lang="${lang}"[^>]*>([\\s\\S]*?)<\\/section>`))?.[1] ?? null;
   const LANGS = [

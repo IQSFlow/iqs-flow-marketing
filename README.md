@@ -59,9 +59,21 @@ Forms will not send locally (the `/api/forms/submit` route is wired by the produ
 
 ## Legal page check
 
-`/privacy/`, `/subprocessors/` and `/delete-account/` are the URLs the App Store and Google Play listings point to. A no-dependency check covers them (links, anchors, tag balance, no em dashes, no unconfirmed legal entity in the pages, the site footer or any page's copyright line, every third-party host the site loads listed on `/subprocessors/`, no unused vendors, the services that work under their own terms named wherever a page says providers use data only for us, location wording that matches the app and the web dashboard (which saves the browser's location with an inspection), who can see a worker's location (coworkers on the app map, and the employer's clients, who get live positions at their sites), and what is kept after a removal (the security audit history, copies of deleted work orders, and emergency reports). A disclosure only inside a TODO(Josh) note does not count.
+`/privacy/`, `/subprocessors/` and `/delete-account/` are the URLs the App Store and Google Play listings point to. When a store asks for an account deletion or data removal URL (the Google Play Data safety form, App Store Connect, or a reviewer's question), give **https://www.iqsflow.com/delete-account/**. It is one page in English, Spanish and French that explains the employer process: the app has no sign-up, the employer deactivates a worker who leaves, and the employer's administrator files a removal request from Admin > Privacy in the IQS Flow console. The store review notes in iqs-flow-api (`docs/app-review-notes.md`) give the same URL.
 
-It also holds the pages to the account policy of 2026-09-30, in English, Spanish and French: the employer creates and manages every account, so the pages must not offer a worker self-deletion; they must say only an active administrator of the employer's account can ask at privacy@iqsflow.com, and only for people in that account; that the removal is complete within 30 days; which details are removed (contact details, sign-in code, email or Google sign-in, push tokens, location tracking history); and that work records stay as they are, with the worker's name and the location recorded with their work:
+A no-dependency check covers these pages (links, anchors, tag balance, no em dashes, no unconfirmed legal entity in the pages, the site footer or any page's copyright line, every third-party host the site loads listed on `/subprocessors/`, no unused vendors, the services that work under their own terms named wherever a page says providers use data only for us, location wording that matches the app and the web dashboard (which saves the browser's location with an inspection), who can see a worker's location (coworkers on the app map, and the employer's clients, who get live positions at their sites), and what is kept after a removal (the security audit history, copies of deleted work orders, and emergency reports). A disclosure only inside a TODO(Josh) note does not count.
+
+It also holds the pages to the account policy of 2026-09-30, in English, Spanish and French, and to the one filing path in the api runbook (iqs-flow-api `docs/runbooks/former-worker-data-removal.md`): the employer creates and manages every account, so the pages must not offer a worker self-deletion. They must say:
+
+- only an active administrator of the employer's account can ask, and only for people in that account;
+- the administrator files the request from Admin > Privacy in the IQS Flow console, and an email to privacy@iqsflow.com is answered with a request to file it there (no page may tell the employer to send the request by email);
+- the employer deactivates the person first;
+- an administrator cannot file for their own details: another administrator in their account must file it (no page may send them to privacy@iqsflow.com for this);
+- the removal is complete within 30 days, and the 30 days start on the day the request is filed;
+- which details are removed (contact details, sign-in code, email or Google sign-in, push tokens, location tracking history), and that records another employer holds stay until that employer's administrator asks;
+- work records stay as they are, with the worker's name and the location recorded with their work.
+
+The Children section of `/privacy/` must tell people to report a child's information to privacy@iqsflow.com and say we work with the employer that created the account to remove it, not promise that we delete it ourselves. Run it like this:
 
 ```bash
 node scripts/check-legal-pages.mjs              # everyday check

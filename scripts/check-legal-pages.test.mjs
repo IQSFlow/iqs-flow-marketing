@@ -542,11 +542,224 @@ test("fails when the removal list leaves out a detail the employer can have remo
   assert.equal(r.code, 1);
 });
 
-test("fails when the pages do not say removal is requested at privacy@iqsflow.com", () => {
+// The address must sit with the answer an emailed request gets (file it from Admin > Privacy).
+test("fails when the pages do not name privacy@iqsflow.com where they say what an emailed request gets", () => {
   const { site } = fixture({
     [DELETE]: (t) => t.replace(/<section class="legal-lang-section" id="es"[\s\S]*?<\/section>/, (es) => es.split("privacy@iqsflow.com").join("nosotros")),
   });
-  expectFailure(check(site), /delete-account: Spanish section does not say the employer asks at privacy@iqsflow\.com/);
+  expectFailure(
+    check(site),
+    /delete-account: Spanish section does not say an email to privacy@iqsflow\.com is answered with a request to file it from Admin > Privacy/,
+  );
+});
+
+// ---- one filing path (decision D2, iqs-flow-api docs/runbooks/former-worker-data-removal.md) --
+// The employer's administrator files from Admin > Privacy in the IQS Flow console (POST
+// /api/privacy/delete-request), which records the request and starts the 30 days. An
+// administrator who emails privacy@iqsflow.com is asked to file there, so it is verified.
+
+const FILE_PRIVACY =
+  "An administrator of your employer&rsquo;s IQS Flow account files the request from <b>Admin &gt; Privacy</b> in the IQS Flow console.";
+const FILE_DELETE = {
+  en: "An administrator of the employer&rsquo;s IQS Flow account files the request from <b>Admin &gt; Privacy</b> in the IQS Flow console.",
+  es: "Un administrador de la cuenta de IQS Flow del empleador presenta la solicitud desde <b>Admin &gt; Privacy</b> en la consola de IQS Flow.",
+  fr: "Un administrateur du compte IQS Flow de l&rsquo;employeur d&eacute;pose la demande depuis <b>Admin &gt; Privacy</b> dans la console IQS Flow.",
+};
+const INBOX_LINE =
+  "Privacy questions go here. Employers file removal requests from Admin &gt; Privacy in the IQS Flow console (see <a href=\"#delete\">section 09</a>).";
+const LANG_NAMES = { en: "English", es: "Spanish", fr: "French" };
+
+test("fails when the pages tell the employer to email the removal request instead of filing it from Admin > Privacy", () => {
+  // The wording before the filing path was settled.
+  const { site } = fixture({
+    [PRIVACY]: pipe(
+      swap(
+        FILE_PRIVACY,
+        "An administrator of your employer&rsquo;s IQS Flow account asks by emailing <a href=\"mailto:privacy@iqsflow.com\">privacy@iqsflow.com</a>.",
+      ),
+      swap(INBOX_LINE, "Privacy questions and employers&rsquo; removal requests go here."),
+    ),
+    [DELETE]: pipe(
+      swap(
+        FILE_DELETE.en,
+        "An administrator of the employer&rsquo;s IQS Flow account emails <a href=\"mailto:privacy@iqsflow.com\">privacy@iqsflow.com</a> with the person&rsquo;s full name and the company name on the IQS Flow account.",
+      ),
+      swap(
+        FILE_DELETE.es,
+        "Un administrador de la cuenta de IQS Flow del empleador escribe a <a href=\"mailto:privacy@iqsflow.com\">privacy@iqsflow.com</a> con el nombre completo de la persona y el nombre de la empresa en la cuenta de IQS Flow.",
+      ),
+      swap(
+        FILE_DELETE.fr,
+        "Un administrateur du compte IQS Flow de l&rsquo;employeur &eacute;crit &agrave; <a href=\"mailto:privacy@iqsflow.com\">privacy@iqsflow.com</a> en indiquant le nom complet de la personne et le nom de l&rsquo;entreprise sur le compte IQS Flow.",
+      ),
+    ),
+  });
+  const r = check(site);
+  expectFailure(r, /privacy: section 09 does not say the administrator files the request from Admin > Privacy in the IQS Flow console/);
+  assert.match(r.out, /privacy: section 09 tells the employer to send the removal request by email, but it is filed from Admin > Privacy/);
+  assert.match(r.out, /privacy: tells employers to send removal requests by email, but they are filed from Admin > Privacy/);
+  for (const lang of Object.values(LANG_NAMES)) {
+    assert.match(r.out, new RegExp(`delete-account: ${lang} section does not say the administrator files the request from Admin > Privacy`));
+    assert.match(r.out, new RegExp(`delete-account: ${lang} section tells the employer to send the removal request by email`));
+  }
+});
+
+test("fails when the contact section says removal requests go to privacy@iqsflow.com", () => {
+  const { site } = fixture({
+    [PRIVACY]: swap(INBOX_LINE, "Privacy questions and employers&rsquo; removal requests go here."),
+  });
+  const r = check(site);
+  expectFailure(r, /privacy: tells employers to send removal requests by email, but they are filed from Admin > Privacy/);
+  assert.doesNotMatch(r.out, /privacy: section 09/);
+});
+
+test("a filing path that appears only in a TODO(Josh) note does not count", () => {
+  const { site } = fixture({
+    [DELETE]: swap(FILE_DELETE.en, `<span class="todo">TODO(Josh): ${FILE_DELETE.en.replace(/<\/?b>/g, "")}</span>`),
+  });
+  expectFailure(check(site), /delete-account: English section does not say the administrator files the request from Admin > Privacy/);
+});
+
+test("fails when the pages leave out that an emailed request is answered with a request to file it from Admin > Privacy", () => {
+  const { site } = fixture({
+    [PRIVACY]: (t) => t.replace(/\s*<li><b>Requests by email\.<\/b>[\s\S]*?<\/li>/, ""),
+    [DELETE]: pipe(
+      (t) => t.replace(/\s*<p>If an administrator emails [\s\S]*?<\/p>/, ""),
+      (t) => t.replace(/\s*<p>Si un administrador escribe a [\s\S]*?<\/p>/, ""),
+      (t) => t.replace(/\s*<p>Si un administrateur &eacute;crit &agrave; [\s\S]*?<\/p>/, ""),
+    ),
+  });
+  const r = check(site);
+  expectFailure(r, /privacy: section 09 does not say an email to privacy@iqsflow\.com is answered with a request to file it from Admin > Privacy/);
+  for (const lang of Object.values(LANG_NAMES)) {
+    assert.match(r.out, new RegExp(`delete-account: ${lang} section does not say an email to privacy@iqsflow\\.com is answered`));
+  }
+});
+
+test("fails when the pages leave out that the 30 days start on the day the request is filed", () => {
+  const { site } = fixture({
+    [PRIVACY]: swap(" The 30 days start on the day the request is filed.", ""),
+    [DELETE]: pipe(
+      swap(" The 30 days start on the day the request is filed.", ""),
+      swap(" Los 30 d&iacute;as empiezan a contar el d&iacute;a en que se presenta la solicitud.", ""),
+      swap(" Les 30 jours commencent le jour o&ugrave; la demande est d&eacute;pos&eacute;e.", ""),
+    ),
+  });
+  const r = check(site);
+  expectFailure(r, /privacy: section 09 does not say the 30 days start on the day the request is filed/);
+  for (const lang of Object.values(LANG_NAMES)) {
+    assert.match(r.out, new RegExp(`delete-account: ${lang} section does not say the 30 days start on the day the request is filed`));
+  }
+});
+
+test("fails when the pages leave out that the employer deactivates the person first", () => {
+  const { site } = fixture({
+    [PRIVACY]: swap(" Your employer must deactivate your account first, and we remove nothing while it is still active.", ""),
+    [DELETE]: pipe(
+      swap(" The employer deactivates the person&rsquo;s account first, and we remove nothing while it is still active.", ""),
+      swap(" El empleador desactiva primero la cuenta de la persona, y no eliminamos nada mientras siga activa.", ""),
+      swap(
+        " L&rsquo;employeur d&eacute;sactive d&rsquo;abord le compte de la personne, et nous ne supprimons rien tant qu&rsquo;il est encore actif.",
+        "",
+      ),
+    ),
+  });
+  const r = check(site);
+  expectFailure(r, /privacy: section 09 does not say the employer deactivates the person first/);
+  for (const lang of Object.values(LANG_NAMES)) {
+    assert.match(r.out, new RegExp(`delete-account: ${lang} section does not say the employer deactivates the person first`));
+  }
+});
+
+// Decision D1: a request covers the requesting employer's records and the person's one
+// login. Records another employer holds stay until that employer's administrator asks.
+test("fails when the pages leave out that another employer's records stay until that employer asks", () => {
+  const { site } = fixture({
+    [PRIVACY]: swap(
+      " If you also worked for another employer that uses IQS Flow, the records that employer holds about you, such as its location check-ins, stay until that employer&rsquo;s administrator asks.",
+      "",
+    ),
+    [DELETE]: pipe(
+      swap(
+        " If the person also worked for another employer that uses IQS Flow, the records that employer holds about them, such as its location check-ins, stay until that employer&rsquo;s administrator asks.",
+        "",
+      ),
+      swap(
+        " Si la persona tambi&eacute;n trabaj&oacute; para otro empleador que usa IQS Flow, los registros que ese empleador tiene sobre ella, como sus registros de ubicaci&oacute;n, se conservan hasta que el administrador de ese empleador lo pida.",
+        "",
+      ),
+      swap(
+        " Si la personne a aussi travaill&eacute; pour un autre employeur qui utilise IQS Flow, les dossiers que cet employeur d&eacute;tient sur elle, comme ses relev&eacute;s de position, sont conserv&eacute;s jusqu&rsquo;&agrave; ce que l&rsquo;administrateur de cet employeur le demande.",
+        "",
+      ),
+    ),
+  });
+  const r = check(site);
+  expectFailure(r, /privacy: section 09 does not say records another employer holds stay until that employer's administrator asks/);
+  for (const lang of Object.values(LANG_NAMES)) {
+    assert.match(r.out, new RegExp(`delete-account: ${lang} section does not say records another employer holds stay`));
+  }
+});
+
+// ---- an administrator's own details (decision D3) ----------------------------------------
+// POST /api/privacy/delete-request answers CANNOT_REQUEST_FOR_SELF: another administrator in
+// the account must file it. No page sends the administrator to privacy@iqsflow.com for it.
+
+test("fails when the pages leave out that an administrator cannot file for their own details", () => {
+  const { site } = fixture({
+    [PRIVACY]: (t) => t.replace(/\s*<li><b>An administrator&rsquo;s own details\.<\/b>[\s\S]*?<\/li>/, ""),
+    [DELETE]: pipe(
+      swap("\n      <p>An administrator cannot file a request for their own details. Another administrator in their account must file it.</p>", ""),
+      swap("\n      <p>Un administrador no puede presentar una solicitud para sus propios datos. Debe presentarla otro administrador de su cuenta.</p>", ""),
+      swap(
+        "\n      <p>Un administrateur ne peut pas d&eacute;poser de demande pour ses propres donn&eacute;es. Un autre administrateur de son compte doit la d&eacute;poser.</p>",
+        "",
+      ),
+    ),
+  });
+  const r = check(site);
+  expectFailure(r, /privacy: section 09 does not say an administrator cannot file for their own details/);
+  for (const lang of Object.values(LANG_NAMES)) {
+    assert.match(r.out, new RegExp(`delete-account: ${lang} section does not say an administrator cannot file for their own details`));
+  }
+});
+
+test("fails when a page tells an administrator to email privacy@iqsflow.com about their own details", () => {
+  // The api's first CANNOT_REQUEST_FOR_SELF message ended "or write to privacy@iqsflow.com".
+  const { site } = fixture({
+    [PRIVACY]: swap(
+      "Another administrator in their account must file it.</li>",
+      "Another administrator in their account must file it, or they can write to <a href=\"mailto:privacy@iqsflow.com\">privacy@iqsflow.com</a>.</li>",
+    ),
+    [DELETE]: swap(
+      "Debe presentarla otro administrador de su cuenta.</p>",
+      "Debe presentarla otro administrador de su cuenta, o puede escribir a <a href=\"mailto:privacy@iqsflow.com\">privacy@iqsflow.com</a>.</p>",
+    ),
+  });
+  const r = check(site);
+  expectFailure(r, /privacy: tells an administrator to email privacy@iqsflow\.com about their own details/);
+  assert.match(r.out, /delete-account: tells an administrator to email privacy@iqsflow\.com about their own details/);
+});
+
+// ---- children (decision D4) -----------------------------------------------------------------
+// Every account is created by an employer, so a child's information reported to
+// privacy@iqsflow.com is removed with the employer that created the account.
+
+const CHILDREN_LINE =
+  "tell us at <a href=\"mailto:privacy@iqsflow.com\">privacy@iqsflow.com</a>. Accounts are created by employers, not by the people who use them, so we work with the employer that created the account to remove the child&rsquo;s information.";
+
+test("fails when section 13 promises that we delete a child's information ourselves", () => {
+  const { site } = fixture({ [PRIVACY]: swap(CHILDREN_LINE, "contact us and we will delete it.") });
+  const r = check(site);
+  expectFailure(r, /privacy: section 13 promises that we delete a child's information ourselves/);
+  assert.match(r.out, /privacy: section 13 does not say to tell us at privacy@iqsflow\.com and that we work with the employer that created the account/);
+});
+
+test("a children commitment that appears only in a TODO(Josh) note does not count", () => {
+  const { site } = fixture({
+    [PRIVACY]: swap(CHILDREN_LINE, "contact us. <span class=\"todo\">TODO(Josh): we work with the employer that created the account; privacy@iqsflow.com.</span>"),
+  });
+  expectFailure(check(site), /privacy: section 13 does not say to tell us at privacy@iqsflow\.com and that we work with the employer that created the account/);
 });
 
 // ---- a response time is not a completion time ---------------------------------------------
