@@ -84,8 +84,23 @@ const STALE_ENTITY = /IQS Flow, Inc\./i;
 const COPYRIGHT = /(?:©|&copy;)\s*\d{4}\s+([^<\n`]+)/g;
 // "Only during scheduled shifts" is false: event locations (clock-in, task, checklist,
 // inspection, issue report, area lookup, map) are recorded for every role at any hour.
-// Only the cleaner 3-minute check-in is limited to the scheduled window.
+// Only the cleaner 3-minute check-in can be limited to the scheduled window (CHECKIN_*).
 const LOCATION_OVERCLAIM = /\b(?:(?<!not )only|location|phone) during (?:your |a |the |their )?scheduled shifts?/i;
+// The cleaner 3-minute location check-in (the PRESENCE ping). App 1.0.1, on phones today,
+// pings whenever the cleaner's shift for the day is ACTIVE (iqs-flow-mobile
+// lib/hooks/use-location-heartbeat.ts): from clock-in until the end-of-shift clock-out,
+// with no check against the scheduled times, and a BREAK or LUNCH check-out leaves the
+// shift ACTIVE (iqs-flow-api src/routes/shifts.ts), so it keeps pinging during breaks and
+// after the scheduled end. Only the gated app (1.1.0, lib/shift-presence.ts
+// maySendPresence) pings just inside the scheduled shift and never on a break. Every
+// mention of the check-in describes the app on every phone, which appVersionWithGates in
+// the sign-off file confirms.
+const CHECKIN = /every 3 minutes/i;
+const CHECKIN_UNGATED = [
+  [/\bincluding during breaks\b/i, "continues during breaks"],
+  [/\bafter the scheduled end of (?:the|your|their) shift\b/i, "continues after the scheduled end of the shift"],
+];
+const CHECKIN_GATED = /(?<!not only )\b(?:during|within|inside) (?:a|the|your|their) scheduled shift\b|\bnot (?:on|during) a break\b/i;
 // Coworkers (every WORKER in the tenant) can see a worker's name and latest position.
 const COWORKER_LOCATION = /\bco-?workers?\b[^.]*\blocation\b/i;
 // Clients see the GPS coordinates where each inspection was submitted.
@@ -332,6 +347,53 @@ function checkNoSelfEmail(page, html) {
   }
 }
 
+/** "section 04" for the numbered <h2> that a position in the privacy page falls under. */
+function sectionLabel(html, index) {
+  const heads = [...html.slice(0, index).matchAll(/<h2 id="[^"]+">(\d{2}) /g)];
+  return heads.length ? `section ${heads.at(-1)[1]}` : "the page";
+}
+
+/**
+ * Each paragraph, list item or table cell of the privacy policy that mentions the 3-minute
+ * check-in must describe the app on every phone: until appVersionWithGates is set, that app
+ * checks in whenever a cleaner is clocked in (CHECKIN_UNGATED); once it is set, the gated
+ * app checks in only during the scheduled shift and not on a break (CHECKIN_GATED).
+ */
+function checkCheckins(claims) {
+  const version = isSet(signoff.appVersionWithGates) ? String(signoff.appVersionWithGates).trim() : null;
+  const gatedApp = `the app on every phone (appVersionWithGates ${version})`;
+  for (const m of claims.matchAll(/<(li|p|td)\b[^>]*>[\s\S]*?<\/\1>/g)) {
+    const text = flat(m[0]);
+    if (!CHECKIN.test(text)) continue;
+    const where = sectionLabel(claims, m.index);
+    if (!version) {
+      if (CHECKIN_GATED.test(text)) {
+        fail(
+          "privacy",
+          `${where} says the 3-minute location check-in runs only during the scheduled shift or stops during a break, but the app on phones today checks in whenever a cleaner is clocked in (set appVersionWithGates in ${signoffName} once an app that stops them is on every phone)`,
+        );
+      }
+      for (const [pattern, what] of CHECKIN_UNGATED) {
+        if (!pattern.test(text)) {
+          fail("privacy", `${where} does not say the 3-minute location check-in ${what}, which the app on phones today does`);
+        }
+      }
+    } else {
+      if (!CHECKIN_GATED.test(text)) {
+        fail("privacy", `${where} does not say the 3-minute location check-in runs only during the scheduled shift, which ${gatedApp} does`);
+      }
+      for (const [pattern, what] of CHECKIN_UNGATED) {
+        if (pattern.test(text)) {
+          fail(
+            "privacy",
+            `${where} says the 3-minute location check-in ${what}, but ${gatedApp} stops it outside the scheduled shift and during breaks`,
+          );
+        }
+      }
+    }
+  }
+}
+
 /** "Providers use data only to provide their service to us" must name the own-terms services. */
 function checkOnlyForUs(page, html) {
   for (const block of blocks(withoutTodos(html))) {
@@ -479,7 +541,7 @@ else {
   if (!/Gemini/.test(privacy)) fail("privacy", "does not disclose Gemini photo analysis");
 
   // Location: say what the code does, not a tidier story.
-  if (!/scheduled shift/i.test(privacy)) fail("privacy", "does not limit the 3-minute check-in to scheduled shifts");
+  checkCheckins(withoutTodos(privacy));
   if (LOCATION_OVERCLAIM.test(privacy)) {
     fail("privacy", "claims location is used only during scheduled shifts, but work-event locations are recorded for every role at any hour");
   }

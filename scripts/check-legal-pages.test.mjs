@@ -161,6 +161,82 @@ test("fails when the policy drops that work-event locations are recorded outside
   expectFailure(check(site), /privacy: does not say that work-event locations are recorded outside scheduled shifts/);
 });
 
+// ---- finding: the 3-minute check-in stops at the scheduled end only on the gated app ----
+// App 1.0.1, on phones today, checks in whenever the cleaner's shift is clocked in
+// (iqs-flow-mobile lib/hooks/use-location-heartbeat.ts), and a break leaves the shift
+// clocked in (iqs-flow-api src/routes/shifts.ts). Only the gated app (1.1.0) stops at the
+// scheduled end and during breaks, so the pages may say that only once appVersionWithGates
+// confirms that app is on every phone.
+
+const CHECKIN_TODAY = /,? from the time they clock in until they clock out at the end of the shift, including during breaks and after the scheduled end of the shift/g;
+const CHECKIN_GATED = " during the scheduled shift, and not during a break";
+/** The four mentions of the 3-minute check-in, rewritten for the gated app. */
+const gateCheckins = (text) => {
+  assert.equal(text.match(CHECKIN_TODAY)?.length, 4, "expected four mentions of the 3-minute check-in on /privacy/");
+  return text.replace(CHECKIN_TODAY, CHECKIN_GATED);
+};
+
+test("fails when section 04 says the 3-minute check-in stops outside the scheduled shift before the gated app is on every phone", () => {
+  const { site } = fixture({
+    [PRIVACY]: swap(
+      "<li>For cleaners, the app also checks in about every 3 minutes while it is open, from the time they clock in until they clock out at the end of the shift, including during breaks and after the scheduled end of the shift.",
+      "<li>For cleaners who are clocked in, the app also checks in about every 3 minutes while it is open during the scheduled shift (from about 15 minutes before it starts to about 15 minutes after it ends), and not during a break.",
+    ),
+  });
+  const r = check(site);
+  expectFailure(r, /privacy: section 04 says the 3-minute location check-in runs only during the scheduled shift or stops during a break, but the app on phones today checks in whenever a cleaner is clocked in/);
+  assert.match(r.out, /privacy: section 04 does not say the 3-minute location check-in continues after the scheduled end of the shift/);
+});
+
+test("fails when the summary says the 3-minute check-in stops outside the scheduled shift before the gated app is on every phone", () => {
+  const { site } = fixture({
+    [PRIVACY]: swap(
+      "For cleaners, it also checks in about every 3 minutes from the time they clock in until they clock out at the end of the shift, including during breaks and after the scheduled end of the shift.",
+      "For cleaners, during a scheduled shift and not on a break, it also checks in about every 3 minutes.",
+    ),
+  });
+  expectFailure(check(site), /privacy: section 01 says the 3-minute location check-in runs only during the scheduled shift or stops during a break/);
+});
+
+test("fails when a mention of the 3-minute check-in leaves out that it continues after the scheduled end", () => {
+  const { site } = fixture({
+    [PRIVACY]: swap(
+      "For cleaners, the app also checks in about every 3 minutes from the time they clock in until they clock out at the end of the shift, including during breaks and after the scheduled end of the shift. Section 04",
+      "For cleaners, the app also checks in about every 3 minutes, including during breaks. Section 04",
+    ),
+  });
+  expectFailure(check(site), /privacy: section 03 does not say the 3-minute location check-in continues after the scheduled end of the shift, which the app on phones today does/);
+});
+
+test("fails when a mention of the 3-minute check-in leaves out that it continues during breaks", () => {
+  const { site } = fixture({
+    [PRIVACY]: swap(
+      "until they clock out at the end of the shift, including during breaks and after the scheduled end of the shift, so",
+      "until they clock out at the end of the shift, even after the scheduled end of the shift, so",
+    ),
+  });
+  expectFailure(check(site), /privacy: section 04 does not say the 3-minute location check-in continues during breaks, which the app on phones today does/);
+});
+
+test("a gate described only in a TODO(Josh) note does not count as a claim", () => {
+  const r = check(SITE);
+  assert.equal(r.code, 0, r.out);
+  assert.match(readFileSync(path.join(SITE, PRIVACY), "utf8"), /<span class="todo">TODO\(Josh\): app version 1\.1\.0 limits these check-ins to the scheduled shift/);
+});
+
+test("once appVersionWithGates confirms the gated app, the pages must say the check-in stops outside the scheduled shift", () => {
+  const { dir, site } = fixture();
+  const r = check(site, `--signoff=${writeSignoff(dir, { appVersionWithGates: "1.1.0" })}`);
+  expectFailure(r, /privacy: section 01 says the 3-minute location check-in continues after the scheduled end of the shift, but the app on every phone \(appVersionWithGates 1\.1\.0\) stops it outside the scheduled shift and during breaks/);
+  assert.match(r.out, /privacy: section 04 does not say the 3-minute location check-in runs only during the scheduled shift, which the app on every phone \(appVersionWithGates 1\.1\.0\) does/);
+});
+
+test("the pages may limit the check-in to the scheduled shift once appVersionWithGates confirms the gated app", () => {
+  const { dir, site } = fixture({ [PRIVACY]: gateCheckins });
+  const r = check(site, `--signoff=${writeSignoff(dir, { appVersionWithGates: "1.1.0" })}`);
+  assert.equal(r.code, 0, r.out);
+});
+
 test("fails when the policy drops that the app never collects location when closed", () => {
   const { site } = fixture({
     [PRIVACY]: swap("never collects location when the app is closed", "does not track you when the app is closed"),
@@ -1013,7 +1089,7 @@ function publishReady(
   homeEdit = swap("© 2026 INTEGRITY QUALITY SOLUTIONS", `© 2026 ${ENTITY.toUpperCase()}`),
 ) {
   const f = fixture({
-    [PRIVACY]: pipe(stripTodos, nameEntity, locationRetention("30 days, then deleted automatically.")),
+    [PRIVACY]: pipe(stripTodos, nameEntity, locationRetention("30 days, then deleted automatically."), gateCheckins),
     [SUBS]: pipe(stripTodos, nameEntity),
     [DELETE]: pipe(stripTodos, nameEntity),
     [SHARED_JS]: pipe(swap("TODO(Josh)", "NOTE"), swap("INTEGRITY QUALITY SOLUTIONS", ENTITY.toUpperCase())),
